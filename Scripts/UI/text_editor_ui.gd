@@ -13,6 +13,7 @@ class_name TextEditorUI
 @export_group("Resize Handles")
 @export var edge_thickness  := 6.0
 @export var corner_size     := 14.0
+@export var top_resize_extension := 6.0 # <--- NEW: Tweak how far up the top resize hitbox goes
 
 @export_group("Padding")
 @export var nine_slice_margin := 16.0
@@ -31,12 +32,12 @@ class_name TextEditorUI
 @onready var title_bar_bg:            NinePatchRect  = $TitleBar/TitleBarBg
 @onready var title_label:             Label          = $TitleBar/TitleLabel
 @onready var close_btn:               TextureButton  = $TitleBar/CloseBtn
-@onready var nav_btn:                 Button         = $TitleBar/NavBarBtn 
+@onready var nav_btn:                 Button         = $TitleBar/NavBarBtn # <--- Fixed Path
 
 @onready var script_selection_panel:  Control        = $ScriptSelectionUI
 @onready var sel_bg:                  NinePatchRect  = $ScriptSelectionUI/SelBG
 @onready var filter_bg:               NinePatchRect  = $ScriptSelectionUI/FilterBG
-@onready var filter_edit:             LineEdit       = $ScriptSelectionUI/FilterBG/FilterEdit # Updated path
+@onready var filter_edit:             LineEdit       = $ScriptSelectionUI/FilterBG/FilterEdit
 @onready var script_tab_list:         VBoxContainer  = $ScriptSelectionUI/ScriptTabList
 
 @onready var code_panel:              Control        = $TextEditorPanel
@@ -244,9 +245,9 @@ func _update_layout() -> void:
 
 	var show_panel: bool = (w >= script_panel_hide_width) or _force_show_panel
 
-	# NavBarBtn only visible when width threshold NOT met and panel isn't forced
+	# NavBarBtn visible ONLY if window width is too narrow for natural spawn
 	if nav_btn:
-		nav_btn.visible = not show_panel
+		nav_btn.visible = (w < script_panel_hide_width)
 
 	script_selection_panel.visible = show_panel
 
@@ -260,15 +261,15 @@ func _update_layout() -> void:
 
 		var panel_inner_w := script_panel_width - p * 2.0
 		
-		# FilterBG (Relative to Script Selection Panel)
+		# FilterBG
 		filter_bg.position = Vector2(p, p) + filter_bg_pos_offset
 		filter_bg.size     = Vector2(panel_inner_w, 24.0) + filter_bg_size_offset
 		
-		# FilterEdit (Now relative to FilterBG because of scene tree change)
-		filter_edit.position = Vector2(p, p) # Small padding inside the 3-slice
+		# FilterEdit
+		filter_edit.position = Vector2(p, p)
 		filter_edit.size     = Vector2(filter_bg.size.x - p * 2.0, filter_bg.size.y - p * 2.0)
 
-		# Tab List (Relative to Script Selection Panel)
+		# Tab List
 		var list_y: float = filter_bg.position.y + filter_bg.size.y + p
 		script_tab_list.position = Vector2(p, list_y)
 		script_tab_list.size     = Vector2(panel_inner_w, below_h - list_y - p)
@@ -281,7 +282,7 @@ func _update_layout() -> void:
 		code_panel.position = Vector2(0.0, below_y)
 		code_panel.size     = Vector2(w, below_h)
 
-	# ── CRITICAL FIX: Text Editor Background & Code Edit sizing ──
+	# ── Text Editor Background & Code Edit ──
 	code_bg.position = Vector2.ZERO
 	code_bg.size     = code_panel.size
 	
@@ -298,16 +299,17 @@ func _position_handles(w: float, h: float) -> void:
 
 	var e: float = edge_thickness
 	var c: float = corner_size
+	var top_ext: float = top_resize_extension # Uses the export variable
 
-	# Top handles extended 20px upwards to grab easily
-	_rh_n.position  = Vector2(c,      -20.0);    _rh_n.size  = Vector2(w - c * 2.0, e + 20.0)
-	_rh_s.position  = Vector2(c,      h - e);    _rh_s.size  = Vector2(w - c * 2.0, e)
-	_rh_e.position  = Vector2(w - e,  c);        _rh_e.size  = Vector2(e, h - c * 2.0)
-	_rh_w.position  = Vector2(0.0,    c);        _rh_w.size  = Vector2(e, h - c * 2.0)
-	_rh_ne.position = Vector2(w - c, -20.0);     _rh_ne.size = Vector2(c, c + 20.0)
-	_rh_nw.position = Vector2(0.0,   -20.0);     _rh_nw.size = Vector2(c, c + 20.0)
-	_rh_se.position = Vector2(w - c,  h - c);    _rh_se.size = Vector2(c, c)
-	_rh_sw.position = Vector2(0.0,    h - c);    _rh_sw.size = Vector2(c, c)
+	# Top handles extended above the window boundary by 'top_ext' pixels
+	_rh_n.position  = Vector2(c, -top_ext);       _rh_n.size  = Vector2(w - c * 2.0, e + top_ext)
+	_rh_s.position  = Vector2(c, h - e);          _rh_s.size  = Vector2(w - c * 2.0, e)
+	_rh_e.position  = Vector2(w - e, c);          _rh_e.size  = Vector2(e, h - c * 2.0)
+	_rh_w.position  = Vector2(0.0, c);            _rh_w.size  = Vector2(e, h - c * 2.0)
+	_rh_ne.position = Vector2(w - c, -top_ext);   _rh_ne.size = Vector2(c, c + top_ext)
+	_rh_nw.position = Vector2(0.0, -top_ext);     _rh_nw.size = Vector2(c, c + top_ext)
+	_rh_se.position = Vector2(w - c, h - c);      _rh_se.size = Vector2(c, c)
+	_rh_sw.position = Vector2(0.0, h - c);        _rh_sw.size = Vector2(c, c)
 
 ## ═══════════════════════════════════════════════════════════════
 ##  TITLE BAR DRAG & CLOSE
@@ -360,14 +362,11 @@ func _apply_resize(mouse_pos: Vector2) -> void:
 		if _resize_dir.y == -1: n_top   = n_bottom - min_window_size.y
 		else:                    n_bottom = n_top    + min_window_size.y
 
-	# By setting offsets simultaneously, both edges move at the exact same time,
-	# preventing the right edge from jittering when dragging left.
 	offset_left   = n_left
 	offset_right  = n_right
 	offset_top    = n_top
 	offset_bottom = n_bottom
 
-	# Force layout to update instantly so visuals don't lag behind the mouse
 	_update_layout()
 
 ## ═══════════════════════════════════════════════════════════════

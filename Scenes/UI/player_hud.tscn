@@ -14,12 +14,17 @@
 [ext_resource type="Texture2D" uid="uid://cs858fx77dpur" path="res://Assets/UI/DocsUI.png" id="8_odvir"]
 [ext_resource type="PackedScene" uid="uid://dee8tkkjyol6q" path="res://Scenes/UI/script_btn.tscn" id="8_x3nwo"]
 [ext_resource type="Texture2D" uid="uid://cvsripbfcivub" path="res://Assets/UI/FilterBG.png" id="9_pdgqq"]
-[ext_resource type="Texture2D" uid="uid://dsxibv1u6dvca" path="res://Assets/Fonts/tiny5/Tiny5-CRT-Sample.png" id="9_tquq1"]
 [ext_resource type="Texture2D" uid="uid://d0nwrbm6r6skq" path="res://Assets/Fonts/tiny5/Tiny5-Presentation.png" id="10_op1xi"]
+[ext_resource type="Texture2D" uid="uid://bp7p3t8aby0lr" path="res://Assets/UI/ScriptBtn.png" id="15_f5p04"]
+[ext_resource type="Texture2D" uid="uid://2yqkep8erg3n" path="res://Assets/UI/ScriptBtn_Pressed.png" id="16_1v2ba"]
 
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
 script = ExtResource("1_y31ga")
+
+[node name="Background" type="ColorRect" parent="." unique_id=411459841]
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="SceneTreePanel" type="Control" parent="." unique_id=986379462]
 layout_mode = 3
@@ -94,6 +99,7 @@ offset_right = 269.0
 offset_bottom = 154.0
 script = ExtResource("4_52770")
 script_panel_overlap = 2.0
+corner_size = 5.0
 filter_bg_size_offset = Vector2(11, 1)
 filter_bg_pos_offset = Vector2(-5, -7)
 title_label_offset = Vector2(20, 5)
@@ -184,6 +190,7 @@ offset_top = 35.0
 offset_right = 90.0
 offset_bottom = 52.0
 scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(0, 10)
 theme = ExtResource("6_eqykv")
 theme_override_constants/minimum_character_width = 4
 placeholder_text = "Cari Script"
@@ -318,11 +325,12 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ScriptBtn" type="TextureButton" parent="." unique_id=1667431789]
-offset_left = 472.0
-offset_top = 314.0
-offset_right = 2520.0
-offset_bottom = 1338.0
-texture_normal = ExtResource("9_tquq1")
+offset_left = 424.0
+offset_top = 320.0
+offset_right = 538.0
+offset_bottom = 359.0
+texture_normal = ExtResource("15_f5p04")
+texture_pressed = ExtResource("16_1v2ba")
 
 [node name="DocumentsBtn" type="TextureButton" parent="." unique_id=788684206]
 offset_left = -1869.0
