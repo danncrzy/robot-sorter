@@ -11,11 +11,13 @@
 [ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="7_pdgqq"]
 [ext_resource type="Texture2D" uid="uid://bmqqb0m4lg8jr" path="res://Assets/UI/NavBarBtn.png" id="8_f5p04"]
 [ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="8_jm178"]
-[ext_resource type="Texture2D" uid="uid://cs858fx77dpur" path="res://Assets/UI/DocsUI.png" id="8_odvir"]
 [ext_resource type="PackedScene" uid="uid://dee8tkkjyol6q" path="res://Scenes/UI/script_btn.tscn" id="8_x3nwo"]
 [ext_resource type="Texture2D" uid="uid://cvsripbfcivub" path="res://Assets/UI/FilterBG.png" id="9_pdgqq"]
 [ext_resource type="Texture2D" uid="uid://d0nwrbm6r6skq" path="res://Assets/Fonts/tiny5/Tiny5-Presentation.png" id="10_op1xi"]
+[ext_resource type="Texture2D" uid="uid://bhwk43p42if7l" path="res://Assets/UI/DocumentsUI_Left.png" id="14_1v2ba"]
+[ext_resource type="Script" uid="uid://c5vmrkrblh13p" path="res://Scripts/UI/documents_ui.gd" id="14_vx2oa"]
 [ext_resource type="Texture2D" uid="uid://bp7p3t8aby0lr" path="res://Assets/UI/ScriptBtn.png" id="15_f5p04"]
+[ext_resource type="Texture2D" uid="uid://djrl4j8sklfb0" path="res://Assets/UI/DocumentsUI_Right.png" id="15_vx2oa"]
 [ext_resource type="Texture2D" uid="uid://2yqkep8erg3n" path="res://Assets/UI/ScriptBtn_Pressed.png" id="16_1v2ba"]
 
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
@@ -198,6 +200,7 @@ offset_bottom = 52.0
 scale = Vector2(0.7, 0.7)
 pivot_offset = Vector2(0, 10)
 theme = ExtResource("6_eqykv")
+theme_override_colors/font_color = Color(0.90588236, 0.88235295, 0.5411765, 1)
 theme_override_constants/minimum_character_width = 4
 placeholder_text = "Cari Script"
 
@@ -275,67 +278,58 @@ layout_mode = 3
 anchors_preset = 0
 offset_left = 327.0
 offset_top = 54.0
-offset_right = 367.0
-offset_bottom = 94.0
+offset_right = 727.0
+offset_bottom = 354.0
+script = ExtResource("14_vx2oa")
 
-[node name="Background" type="NinePatchRect" parent="DocumentsUI" unique_id=1120322376]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("8_odvir")
+[node name="LeftPage" type="NinePatchRect" parent="DocumentsUI" unique_id=436655010]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("14_1v2ba")
 patch_margin_left = 16
 patch_margin_top = 16
 patch_margin_right = 16
 patch_margin_bottom = 16
 
-[node name="TitleBar" type="Control" parent="DocumentsUI" unique_id=494602508]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 40.0
-grow_horizontal = 2
-mouse_filter = 1
-
-[node name="TitleLabel" type="Label" parent="DocumentsUI/TitleBar" unique_id=1484654207]
+[node name="LeftContent" type="RichTextLabel" parent="DocumentsUI/LeftPage" unique_id=532467317]
 layout_mode = 0
 offset_right = 40.0
-offset_bottom = 23.0
-text = "SOR-BOT DOCS"
-
-[node name="CloseBtn" type="TextureButton" parent="DocumentsUI/TitleBar" unique_id=95659993]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
 offset_bottom = 40.0
-grow_horizontal = 0
 
-[node name="NavBar" type="Control" parent="DocumentsUI" unique_id=1998093798]
+[node name="RightPage" type="NinePatchRect" parent="DocumentsUI" unique_id=1342350680]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("15_vx2oa")
+
+[node name="RightContent" type="RichTextLabel" parent="DocumentsUI/RightPage" unique_id=1356387243]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BackPageBtn" type="TextureButton" parent="DocumentsUI" unique_id=1007289826]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NextPageBtn" type="TextureButton" parent="DocumentsUI" unique_id=937713403]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TableOfContentsBtn" type="TextureButton" parent="DocumentsUI" unique_id=861698318]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarkerBtn" type="TextureButton" parent="DocumentsUI" unique_id=1480571704]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ResizeHandles" type="Control" parent="DocumentsUI" unique_id=88629388]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="ScrollContainer" type="ScrollContainer" parent="DocumentsUI/NavBar" unique_id=1612357781]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="NavList" type="VBoxContainer" parent="DocumentsUI/NavBar/ScrollContainer" unique_id=99267715]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="ContentPanel" type="RichTextLabel" parent="DocumentsUI" unique_id=1802972183]
-layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
