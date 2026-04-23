@@ -1,0 +1,332 @@
+[gd_scene format=3 uid="uid://cmrqrpcyqnwfk"]
+
+[ext_resource type="Texture2D" uid="uid://v8gg5hcuxklt" path="res://Assets/UI/SceneTreeUI.png" id="1_vkk4g"]
+[ext_resource type="Script" uid="uid://0ex76ow66ipy" path="res://Scripts/UI/player_hud.gd" id="1_y31ga"]
+[ext_resource type="Script" uid="uid://bp3j0t7b7klr5" path="res://Scripts/UI/text_editor_ui.gd" id="4_52770"]
+[ext_resource type="Texture2D" uid="uid://bgpyl8y8rfsqc" path="res://Assets/UI/TextEditorUI.png" id="5_opvvg"]
+[ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="6_eqykv"]
+[ext_resource type="Texture2D" uid="uid://dprpeef5nu2tx" path="res://Assets/UI/TitleBarBg.png" id="6_jm178"]
+[ext_resource type="Texture2D" uid="uid://hxinwd1ogvmw" path="res://Assets/UI/ScriptSelectionUI.png" id="6_odvir"]
+[ext_resource type="Texture2D" uid="uid://b8dkf3j1mg3cn" path="res://Assets/UI/ScriptTabUI.png" id="7_op1xi"]
+[ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="7_pdgqq"]
+[ext_resource type="Texture2D" uid="uid://bmqqb0m4lg8jr" path="res://Assets/UI/NavBarBtn.png" id="8_f5p04"]
+[ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="8_jm178"]
+[ext_resource type="Texture2D" uid="uid://cs858fx77dpur" path="res://Assets/UI/DocsUI.png" id="8_odvir"]
+[ext_resource type="PackedScene" uid="uid://dee8tkkjyol6q" path="res://Scenes/UI/script_btn.tscn" id="8_x3nwo"]
+[ext_resource type="Texture2D" uid="uid://cvsripbfcivub" path="res://Assets/UI/FilterBG.png" id="9_pdgqq"]
+[ext_resource type="Texture2D" uid="uid://dsxibv1u6dvca" path="res://Assets/Fonts/tiny5/Tiny5-CRT-Sample.png" id="9_tquq1"]
+[ext_resource type="Texture2D" uid="uid://d0nwrbm6r6skq" path="res://Assets/Fonts/tiny5/Tiny5-Presentation.png" id="10_op1xi"]
+
+[node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
+layer = 10
+script = ExtResource("1_y31ga")
+
+[node name="SceneTreePanel" type="Control" parent="." unique_id=986379462]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 104.0
+offset_right = 40.0
+offset_bottom = 144.0
+
+[node name="SceneTreeTexture" type="TextureRect" parent="SceneTreePanel" unique_id=34141381]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("1_vkk4g")
+
+[node name="SceneTabContainer" type="VBoxContainer" parent="SceneTreePanel" unique_id=1601634438]
+layout_mode = 0
+offset_top = 13.0
+offset_right = 40.0
+offset_bottom = 53.0
+theme_override_constants/separation = 0
+
+[node name="DockBtn" type="Button" parent="SceneTreePanel" unique_id=1596301145]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 8.0
+flat = true
+
+[node name="ButtonTexture" type="TextureRect" parent="SceneTreePanel/DockBtn" unique_id=1834046663]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DockArrowRight" type="TextureRect" parent="SceneTreePanel/DockBtn" unique_id=1345250688]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DockArrowLeft" type="TextureRect" parent="SceneTreePanel/DockBtn" unique_id=1875251236]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEditorUI" type="Control" parent="." unique_id=925118085]
+z_index = 5
+layout_mode = 3
+anchors_preset = 0
+offset_left = 229.0
+offset_top = 114.0
+offset_right = 269.0
+offset_bottom = 154.0
+script = ExtResource("4_52770")
+script_panel_overlap = 2.0
+filter_bg_size_offset = Vector2(11, 1)
+filter_bg_pos_offset = Vector2(-5, -7)
+title_label_offset = Vector2(20, 5)
+
+[node name="TitleBar" type="Control" parent="TextEditorUI" unique_id=1830436512]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+mouse_filter = 1
+
+[node name="TitleBarBg" type="NinePatchRect" parent="TextEditorUI/TitleBar" unique_id=1987710070]
+layout_mode = 1
+offset_right = 32.0
+texture = ExtResource("6_jm178")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="TitleLabel" type="Label" parent="TextEditorUI/TitleBar" unique_id=176414062]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("6_eqykv")
+theme_override_font_sizes/font_size = 6
+text = "Font
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseBtn" type="TextureButton" parent="TextEditorUI/TitleBar" unique_id=907133549]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+texture_normal = ExtResource("7_pdgqq")
+texture_pressed = ExtResource("8_jm178")
+
+[node name="NavBarBtn" type="Button" parent="TextEditorUI/TitleBar" unique_id=597006135]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 0
+offset_right = 18.0
+offset_bottom = 18.0
+icon = ExtResource("8_f5p04")
+flat = true
+
+[node name="ScriptSelectionUI" type="Control" parent="TextEditorUI" unique_id=682278655]
+z_index = 1
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="SelBG" type="NinePatchRect" parent="TextEditorUI/ScriptSelectionUI" unique_id=422233589]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_odvir")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="FilterBG" type="NinePatchRect" parent="TextEditorUI/ScriptSelectionUI" unique_id=1738002806]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_pdgqq")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="FilterEdit" type="LineEdit" parent="TextEditorUI/ScriptSelectionUI/FilterBG" unique_id=12062627]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 1
+offset_left = 46.0
+offset_top = 35.0
+offset_right = 90.0
+offset_bottom = 52.0
+scale = Vector2(0.7, 0.7)
+theme = ExtResource("6_eqykv")
+theme_override_constants/minimum_character_width = 4
+placeholder_text = "Cari Script"
+
+[node name="ScriptTabList" type="VBoxContainer" parent="TextEditorUI/ScriptSelectionUI" unique_id=1947146805]
+layout_mode = 0
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="ScriptsTab" type="NinePatchRect" parent="TextEditorUI/ScriptSelectionUI/ScriptTabList" unique_id=942071119]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+texture = ExtResource("7_op1xi")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="ScriptBtn" parent="TextEditorUI/ScriptSelectionUI/ScriptTabList/ScriptsTab" unique_id=622177990 instance=ExtResource("8_x3nwo")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 36.0
+offset_right = 32.0
+offset_bottom = 36.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="TextEditorPanel" type="Control" parent="TextEditorUI" unique_id=1832948525]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CodeBG" type="NinePatchRect" parent="TextEditorUI/TextEditorPanel" unique_id=1937190262]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_opvvg")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="CodeEdit" type="CodeEdit" parent="TextEditorUI/TextEditorPanel" unique_id=1370026334]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 12.0
+offset_bottom = 12.0
+theme = ExtResource("6_eqykv")
+theme_override_font_sizes/font_size = 5
+gutters_draw_line_numbers = true
+indent_automatic = true
+
+[node name="ResizeHandles" type="Control" parent="TextEditorUI" unique_id=930349480]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DocumentsUI" type="Control" parent="." unique_id=1886270900]
+z_index = 5
+layout_mode = 3
+anchors_preset = 0
+offset_left = 327.0
+offset_top = 54.0
+offset_right = 367.0
+offset_bottom = 94.0
+
+[node name="Background" type="NinePatchRect" parent="DocumentsUI" unique_id=1120322376]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_odvir")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="TitleBar" type="Control" parent="DocumentsUI" unique_id=494602508]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+mouse_filter = 1
+
+[node name="TitleLabel" type="Label" parent="DocumentsUI/TitleBar" unique_id=1484654207]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "SOR-BOT DOCS"
+
+[node name="CloseBtn" type="TextureButton" parent="DocumentsUI/TitleBar" unique_id=95659993]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="NavBar" type="Control" parent="DocumentsUI" unique_id=1998093798]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DocumentsUI/NavBar" unique_id=1612357781]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NavList" type="VBoxContainer" parent="DocumentsUI/NavBar/ScrollContainer" unique_id=99267715]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="ContentPanel" type="RichTextLabel" parent="DocumentsUI" unique_id=1802972183]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ScriptBtn" type="TextureButton" parent="." unique_id=1667431789]
+offset_left = 472.0
+offset_top = 314.0
+offset_right = 2520.0
+offset_bottom = 1338.0
+texture_normal = ExtResource("9_tquq1")
+
+[node name="DocumentsBtn" type="TextureButton" parent="." unique_id=788684206]
+offset_left = -1869.0
+offset_top = 322.0
+offset_right = 179.0
+offset_bottom = 1474.0
+texture_normal = ExtResource("10_op1xi")

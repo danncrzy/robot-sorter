@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://revb325vwdcq"]
+
+[ext_resource type="Script" uid="uid://dj4of80l5hmin" path="res://Scripts/UI/scene_tab.gd" id="1_i6df0"]
+[ext_resource type="Texture2D" uid="uid://bqm2oy88j0tj4" path="res://Assets/UI/SceneTabUI.png" id="2_rsinr"]
+[ext_resource type="Texture2D" uid="uid://2fgky6ib1hur" path="res://Assets/UI/InvisibleBtn.png" id="3_5n5ti"]
+[ext_resource type="Texture2D" uid="uid://tsfmw0mkjbkt" path="res://Assets/UI/VisibleBtn.png" id="4_rd2o1"]
+
+[node name="SceneTab" type="Control" unique_id=392746341]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i6df0")
+
+[node name="SceneTabTexture" type="TextureRect" parent="." unique_id=684085012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_rsinr")
+stretch_mode = 5
+
+[node name="Layout" type="HBoxContainer" parent="." unique_id=125973025]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NodeIcon" type="TextureRect" parent="Layout" unique_id=1131409015]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="NodeName" type="Label" parent="Layout" unique_id=1376507142]
+layout_mode = 2
+text = "Character Body2D"
+vertical_alignment = 1
+
+[node name="ScriptBtn" type="TextureButton" parent="Layout" unique_id=1543281873]
+layout_mode = 2
+
+[node name="VisionControl" type="Control" parent="Layout" unique_id=161193517]
+layout_mode = 2
+
+[node name="InvisibleBtn" type="TextureButton" parent="Layout/VisionControl" unique_id=1584562495]
+layout_mode = 0
+offset_left = 316.0
+offset_top = 171.0
+offset_right = 356.0
+offset_bottom = 211.0
+texture_normal = ExtResource("3_5n5ti")
+
+[node name="VisibleBtn" type="TextureButton" parent="Layout/VisionControl" unique_id=535728267]
+layout_mode = 0
+offset_left = 353.0
+offset_top = 168.0
+offset_right = 360.0
+offset_bottom = 528.0
+texture_normal = ExtResource("4_rd2o1")

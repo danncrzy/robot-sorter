@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://de5qgkpehn2kq"]
+
+[ext_resource type="FontFile" uid="uid://dibu6m3immy2a" path="res://Assets/Fonts/edit-undo/editundo.ttf" id="1_pnqae"]
+
+[resource]
+default_font = ExtResource("1_pnqae")
+default_font_size = 28

@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://dee8tkkjyol6q"]
+
+[ext_resource type="Texture2D" uid="uid://b8dkf3j1mg3cn" path="res://Assets/UI/ScriptTabUI.png" id="1_max6f"]
+[ext_resource type="Texture2D" uid="uid://bbfhtjti530w" path="res://Assets/UI/GearIcon.png" id="2_max6f"]
+
+[node name="ScriptTab" type="NinePatchRect" unique_id=16984120]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+texture = ExtResource("1_max6f")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="ScriptBtn" type="TextureButton" parent="." unique_id=1226868029]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1356898694]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GearIcon" type="TextureRect" parent="HBoxContainer" unique_id=1230731375]
+custom_minimum_size = Vector2(9, 11)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_max6f")
+stretch_mode = 5
+
+[node name="ScriptName" type="Label" parent="HBoxContainer" unique_id=902862401]
+layout_mode = 2
