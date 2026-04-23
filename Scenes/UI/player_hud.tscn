@@ -23,8 +23,12 @@ layer = 10
 script = ExtResource("1_y31ga")
 
 [node name="Background" type="ColorRect" parent="." unique_id=411459841]
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8784314, 0.76862746, 0.70980394, 1)
 
 [node name="SceneTreePanel" type="Control" parent="." unique_id=986379462]
 layout_mode = 3
@@ -146,6 +150,8 @@ custom_minimum_size = Vector2(10, 10)
 layout_mode = 0
 offset_right = 18.0
 offset_bottom = 18.0
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(10, 5)
 icon = ExtResource("8_f5p04")
 flat = true
 
@@ -246,8 +252,17 @@ offset_right = 12.0
 offset_bottom = 12.0
 theme = ExtResource("6_eqykv")
 theme_override_font_sizes/font_size = 5
+placeholder_text = "Tulis Kodemu disini"
+minimap_draw = true
+minimap_width = 40
+highlight_all_occurrences = true
+highlight_current_line = true
+draw_tabs = true
 gutters_draw_line_numbers = true
+code_completion_enabled = true
 indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [node name="ResizeHandles" type="Control" parent="TextEditorUI" unique_id=930349480]
 anchors_preset = 0
