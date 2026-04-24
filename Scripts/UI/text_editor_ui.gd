@@ -13,7 +13,7 @@ class_name TextEditorUI
 @export_group("Resize Handles")
 @export var edge_thickness  := 6.0
 @export var corner_size     := 14.0
-@export var top_resize_extension := 6.0 # <--- NEW: Tweak how far up the top resize hitbox goes
+@export var top_resize_extension := 6.0 
 
 @export_group("Padding")
 @export var nine_slice_margin := 16.0
@@ -239,7 +239,6 @@ func _update_layout() -> void:
 	close_btn.position = Vector2(w - 16.0, 5.0)
 	close_btn.size     = Vector2(16.0, title_bar_height)
 
-	# ── Below Title Bar ──
 	var below_y: float = title_bar_height
 	var below_h: float = h - title_bar_height
 
@@ -301,7 +300,6 @@ func _position_handles(w: float, h: float) -> void:
 	var c: float = corner_size
 	var top_ext: float = top_resize_extension # Uses the export variable
 
-	# Top handles extended above the window boundary by 'top_ext' pixels
 	_rh_n.position  = Vector2(c, -top_ext);       _rh_n.size  = Vector2(w - c * 2.0, e + top_ext)
 	_rh_s.position  = Vector2(c, h - e);          _rh_s.size  = Vector2(w - c * 2.0, e)
 	_rh_e.position  = Vector2(w - e, c);          _rh_e.size  = Vector2(e, h - c * 2.0)

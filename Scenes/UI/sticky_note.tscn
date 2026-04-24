@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://vkj6d4jtyfso"]
+
+[ext_resource type="Script" uid="uid://d3714wmifs4ie" path="res://Scripts/UI/sticky_note.gd" id="1_rd6eq"]
+
+[node name="StickyNote" type="Control" unique_id=491500761]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 80.0
+offset_bottom = 80.0
+script = ExtResource("1_rd6eq")
+
+[node name="OverlappingBtn" type="TextureButton" parent="." unique_id=179642217]
+layout_mode = 1
+
+[node name="ClearBtn" type="TextureButton" parent="." unique_id=1004912331]
+layout_mode = 1

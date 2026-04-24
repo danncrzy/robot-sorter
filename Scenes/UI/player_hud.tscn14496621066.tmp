@@ -302,7 +302,6 @@ offset_top = 54.0
 offset_right = 727.0
 offset_bottom = 354.0
 script = ExtResource("14_vx2oa")
-min_window_size = Vector2(300, 100)
 corner_size = 5.0
 edge_extension = 3.0
 
@@ -326,12 +325,8 @@ theme_override_colors/default_color = Color(0, 0, 0, 1)
 
 [node name="LeftStickyNotesContainer" type="HBoxContainer" parent="DocumentsUI/LeftPage" unique_id=1290457053]
 layout_mode = 1
-offset_left = 12.0
-offset_top = -10.0
-offset_right = 12.0
-offset_bottom = -10.0
 mouse_filter = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = -3
 
 [node name="RightPage" type="NinePatchRect" parent="DocumentsUI" unique_id=1342350680]
 layout_mode = 0
@@ -460,6 +455,7 @@ texture_normal = ExtResource("35_htmiw")
 texture_pressed = ExtResource("36_snfao")
 
 [node name="NoteDeleteWarning" type="Control" parent="DocumentsUI" unique_id=1303956817]
+visible = false
 z_index = 25
 anchors_preset = 0
 offset_right = 40.0
@@ -470,8 +466,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -4.0
-offset_right = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("37_snfao")
@@ -480,10 +474,10 @@ patch_margin_right = 16
 
 [node name="WarningLabel" type="Label" parent="DocumentsUI/NoteDeleteWarning" unique_id=1794073609]
 layout_mode = 0
-offset_left = 9.0
-offset_top = 9.0
-offset_right = 250.0
-offset_bottom = 32.0
+offset_left = 8.0
+offset_top = 14.0
+offset_right = 249.0
+offset_bottom = 37.0
 theme = ExtResource("6_eqykv")
 text = "Ketuk Note yang akan di hapus"
 
