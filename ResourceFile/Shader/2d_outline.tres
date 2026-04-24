@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://de8mbd15xcrgp"]
+
+[ext_resource type="Shader" uid="uid://co25rje2bvhdd" path="res://Shaders/2d_outline.gdshader" id="1_82aj4"]
+
+[resource]
+shader = ExtResource("1_82aj4")
+shader_parameter/clr = Color(0.8791056, 0.5348292, 0.23679256, 1)
+shader_parameter/type = 1
+shader_parameter/thickness = 1.0

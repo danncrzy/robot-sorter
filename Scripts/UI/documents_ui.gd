@@ -60,6 +60,7 @@ var _resize_rect_orig:  Rect2    = Rect2()
 var _is_dragging:       bool     = false
 var _drag_offset:       Vector2  = Vector2.ZERO
 var _drag_threshold:    float    = 4.0 
+var _active_resize_handle: TextureButton = null
 
 var current_spread: int = 0
 var marked_page: int = -1
@@ -141,6 +142,13 @@ func _input(event: InputEvent) -> void:
 	if _is_resizing:
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			_is_resizing = false
+			
+			if is_instance_valid(_active_resize_handle):
+				var temp_normal = _active_resize_handle.texture_normal
+				_active_resize_handle.texture_normal = _active_resize_handle.texture_pressed
+				_active_resize_handle.texture_pressed = temp_normal
+				_active_resize_handle = null
+			
 		elif event is InputEventMouseMotion:
 			_apply_resize(get_global_mouse_position())
 
@@ -235,10 +243,10 @@ func _update_layout() -> void:
 	right_content.size = Vector2(half_w - m_spine - m_out, h - m_out * 2.0)
 
 	# --- Bottom Buttons ---
-	back_btn.position = Vector2(btn_m, h - btn_sz - btn_m)
+	back_btn.position = Vector2(btn_m  * (1.1), h - btn_sz - btn_m * (-1.3))
 	back_btn.size = Vector2(btn_sz, btn_sz)
 	
-	next_btn.position = Vector2(w - btn_sz - btn_m, h - btn_sz - btn_m)
+	next_btn.position = Vector2(w - btn_sz - btn_m  * (-1.5), h - btn_sz - btn_m  * (-1.3)) 
 	next_btn.size = Vector2(btn_sz, btn_sz)
 	
 	# StickyNoteBtn: Center Bottom (perfectly between Back and Next)
@@ -277,6 +285,12 @@ func _on_handle_input(event: InputEvent, handle: Control) -> void:
 			(1 if "E" in n else (-1 if "W" in n else 0)),
 			(1 if "S" in n else (-1 if "N" in n else 0))
 		)
+		
+		_active_resize_handle = handle
+		var temp_normal = handle.texture_normal
+		handle.texture_normal = handle.texture_pressed
+		handle.texture_pressed = temp_normal
+		
 		get_viewport().set_input_as_handled()
 
 func _apply_resize(mouse_pos: Vector2) -> void:
