@@ -61,7 +61,7 @@ func setup(color: NoteColor, spread: int, ui_ref: Node) -> void:
 	size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	
-	update_phase(0)
+	update_phase(spread)
 
 func update_phase(current_spread: int) -> void:
 	if current_spread == linked_spread:

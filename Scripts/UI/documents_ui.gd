@@ -26,11 +26,18 @@ class_name DocumentsUI
 @onready var right_content:  RichTextLabel  = $RightPage/RightContent
 @onready var right_sticky_container: HBoxContainer = $RightPage/RightStickyNotesContainer 
 
+@onready var sticky_note_btn: TextureButton = $StickyNoteBtn 
+@onready var sticky_choices: Control = $StickyNotesChoices
+@onready var sticky_choices_bg: TextureRect = $StickyNotesChoices/Bg
+
+@onready var system_marker: VBoxContainer = $SystemMarker # NEW
+@onready var toc_overlap_btn: TextureButton = $SystemMarker/TableOfContentsBtn/OverlappingBtn 
+@onready var toc_clear_btn: TextureButton = $SystemMarker/TableOfContentsBtn/ClearBtn
+@onready var close_overlap_btn: TextureButton = $SystemMarker/CloseBtn/OverlappingBtn
+@onready var close_clear_btn: TextureButton = $SystemMarker/CloseBtn/ClearBtn 
+
 @onready var back_btn:       TextureButton  = $BackPageBtn
 @onready var next_btn:       TextureButton  = $NextPageBtn
-@onready var toc_container:  Control        = $TableOfContentsBtn
-@onready var overlapping_btn:TextureButton  = $TableOfContentsBtn/OverlappingBtn
-@onready var clear_btn:      TextureButton  = $TableOfContentsBtn/ClearBtn
 @onready var marker_btn:     TextureButton  = $MarkerBtn
 
 @onready var delete_mode_btn: TextureButton = $StickyNotesChoices/StickyNotesContainer/DeleteNote
@@ -101,7 +108,15 @@ func _ready() -> void:
 	note_delete_warning.anchor_right = 0.5
 	note_delete_warning.anchor_top = 0.0
 	note_delete_warning.anchor_bottom = 0.0
-	note_delete_warning.grow_horizontal = Control.GROW_DIRECTION_BOTH # Keeps it centered
+	note_delete_warning.grow_horizontal = Control.GROW_DIRECTION_BOTH 
+	
+	system_marker.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	marker_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	sticky_note_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	back_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	next_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	
+	sticky_choices_bg.modulate.a = 0.90
 	
 	_create_resize_handles()
 	_connect_signals()
@@ -172,8 +187,18 @@ func _connect_signals() -> void:
 	next_btn.pressed.connect(_on_next_page)
 	back_btn.pressed.connect(_on_back_page)
 	marker_btn.pressed.connect(_on_marker_pressed)
-	overlapping_btn.pressed.connect(_go_to_toc)
-	clear_btn.pressed.connect(_go_to_toc)
+	
+	# TOC Buttons
+	toc_overlap_btn.pressed.connect(_go_to_toc)
+	toc_clear_btn.pressed.connect(_go_to_toc)
+	
+	# Close Buttons (Both trigger close_ui)
+	close_overlap_btn.pressed.connect(close_ui)
+	close_clear_btn.pressed.connect(close_ui)
+	
+	# Sticky Note Toggle
+	sticky_note_btn.pressed.connect(_toggle_sticky_choices)
+	
 	delete_mode_btn.pressed.connect(_toggle_delete_mode)
 	
 	left_content.meta_clicked.connect(_on_meta_clicked)
@@ -182,9 +207,6 @@ func _connect_signals() -> void:
 	left_page.gui_input.connect(_on_page_gui_input)
 	right_page.gui_input.connect(_on_page_gui_input)
 	left_content.gui_input.connect(_on_page_gui_input)
-	right_content.gui_input.connect(_on_page_gui_input)
-	
-	delete_mode_btn.pressed.connect(_toggle_delete_mode)
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  LAYOUT & MATH
@@ -201,6 +223,7 @@ func _update_layout() -> void:
 	var btn_sz: float = 32.0
 	var ext: float = edge_extension
 
+	# --- Pages ---
 	left_page.position = Vector2.ZERO
 	left_page.size = Vector2(half_w, h)
 	left_content.position = Vector2(m_out, m_out)
@@ -210,25 +233,31 @@ func _update_layout() -> void:
 	right_page.size = Vector2(half_w, h)
 	right_content.position = Vector2(m_spine, m_out)
 	right_content.size = Vector2(half_w - m_spine - m_out, h - m_out * 2.0)
-	
 
+	# --- Bottom Buttons ---
 	back_btn.position = Vector2(btn_m, h - btn_sz - btn_m)
 	back_btn.size = Vector2(btn_sz, btn_sz)
 	
 	next_btn.position = Vector2(w - btn_sz - btn_m, h - btn_sz - btn_m)
 	next_btn.size = Vector2(btn_sz, btn_sz)
 	
-	toc_container.position = Vector2(btn_m, btn_m)
-	toc_container.size = Vector2(btn_sz, btn_sz)
+	# StickyNoteBtn: Center Bottom (perfectly between Back and Next)
+	sticky_note_btn.position = Vector2((w - btn_sz) / 4.0, h - btn_sz - btn_m * (-3.4))
+	sticky_note_btn.size = Vector2(btn_sz, btn_sz)
 	
-	marker_btn.position = Vector2(w - btn_sz - btn_m, btn_m)
+	# --- Top Buttons ---
+	# MarkerBtn: Top Left
+	marker_btn.position = Vector2(btn_m, btn_m)
 	marker_btn.size = Vector2(btn_sz, btn_sz)
-
+	
+	# SystemMarker: Top Right
+	system_marker.position = Vector2(w - system_marker.size.x - btn_m  * (-4.4), btn_m)
+	
+	# --- Resize Handles ---
 	_rh_nw.position = Vector2(-ext, -ext);                               _rh_nw.size = Vector2(corner_size + ext, corner_size + ext)
 	_rh_ne.position = Vector2(w - corner_size, -ext);                    _rh_ne.size = Vector2(corner_size + ext, corner_size + ext)
 	_rh_sw.position = Vector2(-ext, h - corner_size);                    _rh_sw.size = Vector2(corner_size + ext, corner_size + ext)
 	_rh_se.position = Vector2(w - corner_size, h - corner_size);         _rh_se.size = Vector2(corner_size + ext, corner_size + ext)
-
 ## ────────────────────── Dragging Book ──────────────────────
 func _on_page_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -315,14 +344,15 @@ func _update_pages() -> void:
 	else:
 		right_content.text = ""
 		
-	# TOC Buttons
+	# TOC Buttons Phase
 	if current_spread == 0:
-		overlapping_btn.visible = false
-		clear_btn.visible = true
+		toc_overlap_btn.visible = false
+		toc_clear_btn.visible = true
 	else:
-		overlapping_btn.visible = true
-		clear_btn.visible = false
+		toc_overlap_btn.visible = true
+		toc_clear_btn.visible = false
 		
+	# Update Sticky Notes Phase
 	for note in left_sticky_container.get_children():
 		if note is StickyNote:
 			note.update_phase(current_spread)
@@ -385,7 +415,6 @@ func spawn_sticky_note(color: StickyNote.NoteColor, drop_global_pos: Vector2, ta
 	
 	note_instance.navigate_to_spread.connect(_go_to_page)
 	note_instance.request_delete.connect(_on_sticky_note_delete)
-	note_instance.request_delete.connect(_on_sticky_note_delete)
 
 func _toggle_delete_mode() -> void:
 	is_delete_mode = !is_delete_mode
@@ -412,6 +441,10 @@ func _on_sticky_note_delete(note_node: Control) -> void:
 		if is_delete_mode:
 			_toggle_delete_mode() # Automatically turns off delete mode and hides warning
 			
+
+## ────────────────────── Sticky Choices Toggle ──────────────────────
+func _toggle_sticky_choices() -> void:
+	sticky_choices.visible = !sticky_choices.visible
 
 ## ────────────────────── Visibility ──────────────────────
 func toggle_ui() -> void:
