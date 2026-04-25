@@ -3,9 +3,11 @@
 [ext_resource type="Script" uid="uid://dj4of80l5hmin" path="res://Scripts/UI/scene_tab.gd" id="1_i6df0"]
 [ext_resource type="Texture2D" uid="uid://bqm2oy88j0tj4" path="res://Assets/UI/SceneTabUI.png" id="2_rsinr"]
 [ext_resource type="Texture2D" uid="uid://2fgky6ib1hur" path="res://Assets/UI/InvisibleBtn.png" id="3_5n5ti"]
+[ext_resource type="Texture2D" uid="uid://cp3kwrcl6rukx" path="res://icon.svg" id="3_rd2o1"]
 [ext_resource type="Texture2D" uid="uid://tsfmw0mkjbkt" path="res://Assets/UI/VisibleBtn.png" id="4_rd2o1"]
 
 [node name="SceneTab" type="Control" unique_id=392746341]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,16 +16,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_i6df0")
 
-[node name="SceneTabTexture" type="TextureRect" parent="." unique_id=684085012]
+[node name="SceneTabBg" type="NinePatchRect" parent="." unique_id=1561027130]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 texture = ExtResource("2_rsinr")
-stretch_mode = 5
+patch_margin_left = 16
+patch_margin_right = 16
 
 [node name="Layout" type="HBoxContainer" parent="." unique_id=125973025]
 layout_mode = 1
@@ -36,6 +38,7 @@ grow_vertical = 2
 [node name="NodeIcon" type="TextureRect" parent="Layout" unique_id=1131409015]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
+texture = ExtResource("3_rd2o1")
 stretch_mode = 5
 
 [node name="NodeName" type="Label" parent="Layout" unique_id=1376507142]
@@ -44,6 +47,7 @@ text = "Character Body2D"
 vertical_alignment = 1
 
 [node name="ScriptBtn" type="TextureButton" parent="Layout" unique_id=1543281873]
+visible = false
 layout_mode = 2
 
 [node name="VisionControl" type="Control" parent="Layout" unique_id=161193517]
@@ -58,6 +62,7 @@ offset_bottom = 211.0
 texture_normal = ExtResource("3_5n5ti")
 
 [node name="VisibleBtn" type="TextureButton" parent="Layout/VisionControl" unique_id=535728267]
+visible = false
 layout_mode = 0
 offset_left = 353.0
 offset_top = 168.0

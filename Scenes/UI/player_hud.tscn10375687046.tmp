@@ -53,7 +53,6 @@ layer = 10
 script = ExtResource("1_y31ga")
 
 [node name="Background" type="ColorRect" parent="." unique_id=411459841]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -306,7 +305,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="DocumentsUI" type="Control" parent="." unique_id=1886270900]
-visible = false
 z_index = 7
 layout_mode = 3
 anchors_preset = 0
@@ -316,6 +314,9 @@ offset_right = 527.0
 offset_bottom = 254.0
 script = ExtResource("14_vx2oa")
 min_window_size = Vector2(300, 100)
+max_window_size = null
+outer_margin = null
+spine_margin = null
 corner_size = 5.0
 edge_extension = 3.0
 
@@ -453,10 +454,10 @@ stretch_mode = 5
 [node name="StickyNotesContainer" type="HBoxContainer" parent="DocumentsUI/StickyNotesChoices" unique_id=1560306162]
 z_index = 8
 layout_mode = 0
-offset_left = 8.0
+offset_left = 12.0
 offset_top = -40.0
-offset_right = 142.0
-offset_bottom = -17.0
+offset_right = 138.0
+offset_bottom = -18.0
 mouse_filter = 2
 theme_override_constants/separation = 8
 

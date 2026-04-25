@@ -38,7 +38,6 @@ class_name DocumentsUI
 
 @onready var back_btn:       TextureButton  = $BackPageBtn
 @onready var next_btn:       TextureButton  = $NextPageBtn
-@onready var marker_btn:     TextureButton  = $MarkerBtn
 
 @onready var delete_mode_btn: TextureButton = $StickyNotesChoices/StickyNotesContainer/DeleteNote
 @onready var note_delete_warning: Control = $NoteDeleteWarning
@@ -112,7 +111,6 @@ func _ready() -> void:
 	note_delete_warning.grow_horizontal = Control.GROW_DIRECTION_BOTH 
 	
 	system_marker.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	marker_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	sticky_note_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	back_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	next_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -194,7 +192,6 @@ func _assign_corner_texture(btn: TextureButton, base_name: String) -> void:
 func _connect_signals() -> void:
 	next_btn.pressed.connect(_on_next_page)
 	back_btn.pressed.connect(_on_back_page)
-	marker_btn.pressed.connect(_on_marker_pressed)
 	
 	# TOC Buttons
 	toc_overlap_btn.pressed.connect(_go_to_toc)
@@ -253,10 +250,6 @@ func _update_layout() -> void:
 	sticky_note_btn.position = Vector2((w - btn_sz) / 4.0, h - btn_sz - btn_m * (-3.4))
 	sticky_note_btn.size = Vector2(btn_sz, btn_sz)
 	
-	# --- Top Buttons ---
-	# MarkerBtn: Top Left
-	marker_btn.position = Vector2(btn_m, btn_m)
-	marker_btn.size = Vector2(btn_sz, btn_sz)
 	
 	# SystemMarker: Top Right
 	system_marker.position = Vector2(w - system_marker.size.x - btn_m  * (-4.4), btn_m)
@@ -408,14 +401,6 @@ func _on_back_page() -> void:
 		current_spread -= 1
 		_update_pages()
 
-func _on_marker_pressed() -> void:
-	var current_left_index = current_spread * 2
-	if marked_page == current_left_index:
-		marked_page = -1
-		marker_btn.self_modulate = Color(1, 1, 1, 0.5) 
-	else:
-		marked_page = current_left_index
-		marker_btn.self_modulate = Color(1, 1, 1, 1) 
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  STICKY NOTES SPAWNING & DELETE MODE
@@ -425,9 +410,13 @@ func spawn_sticky_note(color: StickyNote.NoteColor, drop_global_pos: Vector2, ta
 	var note_instance := STICKY_NOTE_SCENE.instantiate()
 	target_container.add_child(note_instance)
 	
-	note_instance.setup(color, current_spread, self)
+	var page_index := current_spread * 2
+	if target_container == right_sticky_container:
+		page_index += 1
 	
-	note_instance.navigate_to_spread.connect(_go_to_page)
+	note_instance.setup(color, page_index, self)
+	
+	note_instance.navigate_to_page.connect(_go_to_page)
 	note_instance.request_delete.connect(_on_sticky_note_delete)
 
 func _toggle_delete_mode() -> void:
