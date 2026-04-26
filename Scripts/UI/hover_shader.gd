@@ -2,7 +2,7 @@
 extends TextureButton
 
 # Preload your shader
-const OUTLINE_SHADER = preload("res://ResourceFile/Shader/2d_outline.tres")
+const OUTLINE_SHADER = preload("res://Resources/Shader/2d_outline.tres")
 
 var _outline_material: ShaderMaterial
 

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://dyn52ebm6bopa"]
+
+[ext_resource type="Script" uid="uid://diw4cry25rcr8" path="res://Scripts/Resources/node_definition.gd" id="1_kaej2"]
+[ext_resource type="Script" uid="uid://c2l2nn08fabd4" path="res://Scripts/Resources/level_data.gd" id="2_g62qf"]
+
+[sub_resource type="Resource" id="Resource_kaej2"]
+script = ExtResource("1_kaej2")
+script_state = "enabled"
+script_name = "main.gd"
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_g62qf"]
+script = ExtResource("1_kaej2")
+structure = "Main/UI"
+node_type = "Control"
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[resource]
+script = ExtResource("2_g62qf")
+nodes = Array[ExtResource("1_kaej2")]([SubResource("Resource_kaej2"), SubResource("Resource_g62qf")])
+metadata/_custom_type_script = "uid://c2l2nn08fabd4"

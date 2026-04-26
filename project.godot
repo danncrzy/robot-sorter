@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameDocs="*uid://bm5cqdnh886xs"
+LevelManager="*uid://ddod7003rnwup"
 
 [display]
 
@@ -26,6 +27,11 @@ window/size/mode=4
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/stretch/scale_mode="integer"
+
+[global_group]
+
+scene_tree_panel=""
+text_editor_ui=""
 
 [input]
 

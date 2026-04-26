@@ -11,16 +11,18 @@
 [ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="6_eqykv"]
 [ext_resource type="Texture2D" uid="uid://dprpeef5nu2tx" path="res://Assets/UI/TitleBarBg.png" id="6_jm178"]
 [ext_resource type="Texture2D" uid="uid://hxinwd1ogvmw" path="res://Assets/UI/ScriptSelectionUI.png" id="6_odvir"]
+[ext_resource type="Texture2D" uid="uid://b8dkf3j1mg3cn" path="res://Assets/UI/ScriptTabUI.png" id="7_op1xi"]
 [ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="7_pdgqq"]
 [ext_resource type="Texture2D" uid="uid://bmqqb0m4lg8jr" path="res://Assets/UI/NavBarBtn.png" id="8_f5p04"]
 [ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="8_jm178"]
+[ext_resource type="PackedScene" uid="uid://dee8tkkjyol6q" path="res://Scenes/UI/script_btn.tscn" id="8_x3nwo"]
 [ext_resource type="Texture2D" uid="uid://cvsripbfcivub" path="res://Assets/UI/FilterBG.png" id="9_pdgqq"]
 [ext_resource type="Texture2D" uid="uid://bhwk43p42if7l" path="res://Assets/UI/DocumentsUI_Left.png" id="14_1v2ba"]
 [ext_resource type="Script" uid="uid://c5vmrkrblh13p" path="res://Scripts/UI/documents_ui.gd" id="14_vx2oa"]
 [ext_resource type="Texture2D" uid="uid://bp7p3t8aby0lr" path="res://Assets/UI/ScriptBtn.png" id="15_f5p04"]
 [ext_resource type="Texture2D" uid="uid://djrl4j8sklfb0" path="res://Assets/UI/DocumentsUI_Right.png" id="15_vx2oa"]
 [ext_resource type="Texture2D" uid="uid://2yqkep8erg3n" path="res://Assets/UI/ScriptBtn_Pressed.png" id="16_1v2ba"]
-[ext_resource type="Theme" uid="uid://ce3l3cl342wpg" path="res://Resources/Text/BookTheme.tres" id="16_htoqs"]
+[ext_resource type="Theme" uid="uid://ce3l3cl342wpg" path="res://Resource/Text/BookTheme.tres" id="16_htoqs"]
 [ext_resource type="Texture2D" uid="uid://dh08h255pofgw" path="res://Assets/UI/BackPageBtn.png" id="17_2e3f2"]
 [ext_resource type="Texture2D" uid="uid://bo41ndgnn7thc" path="res://Assets/UI/NextPageBtn.png" id="17_a68bl"]
 [ext_resource type="Texture2D" uid="uid://sv1qr51qg1e" path="res://Assets/UI/BackPageBtn_Pressed.png" id="18_htoqs"]
@@ -67,7 +69,9 @@ offset_top = 104.0
 offset_right = 40.0
 offset_bottom = 144.0
 script = ExtResource("2_bwg1y")
-min_height = 130.0
+min_width = 110.0
+min_height = 150.0
+dock_btn_width = 10.0
 
 [node name="SceneTreeBg" type="NinePatchRect" parent="SceneTreePanel" unique_id=1956743784]
 layout_mode = 1
@@ -97,8 +101,16 @@ offset_bottom = 40.0
 
 [node name="DockBtn" type="TextureButton" parent="SceneTreePanel" unique_id=774777192]
 layout_mode = 1
-offset_right = 69.0
-offset_bottom = 71.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = -71.0
+offset_right = 35.0
+grow_horizontal = 2
+grow_vertical = 0
 texture_normal = ExtResource("3_535bs")
 texture_pressed = ExtResource("4_51q86")
 
@@ -114,7 +126,7 @@ grow_vertical = 2
 
 [node name="SceneTabContainer" type="VBoxContainer" parent="SceneTreePanel/ScrollContainer" unique_id=694778724]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 0
 
 [node name="TextEditorUI" type="Control" parent="." unique_id=925118085 groups=["text_editor_ui"]]
 z_index = 5
@@ -147,7 +159,7 @@ patch_margin_left = 16
 patch_margin_right = 16
 
 [node name="TitleLabel" type="Label" parent="TextEditorUI/TitleBar" unique_id=176414062]
-layout_mode = 1
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 theme = ExtResource("6_eqykv")
@@ -201,7 +213,6 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
 [node name="FilterBG" type="NinePatchRect" parent="TextEditorUI/ScriptSelectionUI" unique_id=1738002806]
-custom_minimum_size = Vector2(0, 16)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -230,6 +241,24 @@ placeholder_text = "Cari Script"
 layout_mode = 0
 mouse_filter = 2
 theme_override_constants/separation = 2
+
+[node name="ScriptsTab" type="NinePatchRect" parent="TextEditorUI/ScriptSelectionUI/ScriptTabList" unique_id=942071119]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+texture = ExtResource("7_op1xi")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="ScriptBtn" parent="TextEditorUI/ScriptSelectionUI/ScriptTabList/ScriptsTab" unique_id=622177990 instance=ExtResource("8_x3nwo")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 36.0
+offset_right = 32.0
+offset_bottom = 36.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="TextEditorPanel" type="Control" parent="TextEditorUI" unique_id=1832948525]
 anchors_preset = 0

@@ -233,7 +233,7 @@ func _update_layout() -> void:
 	title_bar_bg.position = Vector2.ZERO
 	title_bar_bg.size     = title_bar.size
 	
-	title_label.position = title_label_offset
+	title_label.position = title_label_offset * 1.1
 	title_label.size     = Vector2(w - 36.0, title_bar_height)
 	
 	close_btn.position = Vector2(w - 16.0, 5.0)
@@ -261,11 +261,11 @@ func _update_layout() -> void:
 		var panel_inner_w := script_panel_width - p * 2.0
 		
 		# FilterBG
-		filter_bg.position = Vector2(p, p) + filter_bg_pos_offset
-		filter_bg.size     = Vector2(panel_inner_w, 24.0) + filter_bg_size_offset
+		filter_bg.position = Vector2(p, p + 3) + filter_bg_pos_offset
+		filter_bg.size     = Vector2(panel_inner_w, 16) + filter_bg_size_offset
 		
 		# FilterEdit
-		filter_edit.position = Vector2(p, p)
+		filter_edit.position = Vector2(p, p - 5)
 		filter_edit.size     = Vector2(filter_bg.size.x - p * 2.0, filter_bg.size.y - p * 2.0)
 
 		# Tab List
