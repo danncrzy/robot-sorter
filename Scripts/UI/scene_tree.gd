@@ -33,6 +33,7 @@ var _resize_rect_orig: Rect2 = Rect2()
 var is_docked: bool = true
 var _dock_tween: Tween = null # FIX: Changed 'nil' to 'null'
 
+
 # Handles
 var _rh_e: Control
 var _rh_ne: Control
@@ -56,11 +57,11 @@ func _ready() -> void:
 	
 	dock_btn.flip_h = false 
 	_update_layout()
+	_toggle_dock()
 
 func _input(event: InputEvent) -> void:
 	if not visible: return
 
-	# --- Smart Dragging (Y-axis only) ---
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			if get_global_rect().has_point(event.global_position):
@@ -78,20 +79,21 @@ func _input(event: InputEvent) -> void:
 				_is_dragging = true
 				_potential_drag = false
 				scroll_container.release_focus()
-		
+
 		if _is_dragging:
-			var delta_y = event.global_position.y - _drag_start_pos.y
+			var delta_y: float = event.global_position.y - _drag_start_pos.y
 			global_position.y = _drag_panel_start_y + delta_y
-			global_position.x = _initial_x
+			# X locked to docked position OR initial — never changes during drag
+			global_position.x = _initial_x - size.x + dock_btn_width + 16.0 \
+				if is_docked else _initial_x
 			get_viewport().set_input_as_handled()
 
-	# --- Resizing ---
 	if _is_resizing:
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			_is_resizing = false
 		elif event is InputEventMouseMotion:
 			_apply_resize(get_global_mouse_position())
-			
+
 	if event.is_action_pressed("dock"):
 		_toggle_dock()
 

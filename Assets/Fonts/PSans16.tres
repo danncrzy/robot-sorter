@@ -1,7 +1,0 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://bobk85cwoaho7"]
-
-[ext_resource type="FontFile" uid="uid://dqjgfxnx5aju2" path="res://Assets/Fonts/fs-pixel-sans-unicode-regular/fs-pixel-sans-unicode-regular.ttf" id="1_qw56a"]
-
-[resource]
-default_font = ExtResource("1_qw56a")
-default_font_size = 16

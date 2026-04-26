@@ -25,14 +25,14 @@ class_name TextEditorUI
 @export var filter_bg_pos_offset := Vector2(0.0, 0.0)  
 
 @export_group("Title Bar Customization")
-@export var title_label_offset := Vector2(20.0, 0.0)
+@export var title_label_offset := Vector2(-10.0, 5.0)
 
 ## ────────────────────── Scene References ──────────────────────
 @onready var title_bar:               Control        = $TitleBar
 @onready var title_bar_bg:            NinePatchRect  = $TitleBar/TitleBarBg
 @onready var title_label:             Label          = $TitleBar/TitleLabel
 @onready var close_btn:               TextureButton  = $TitleBar/CloseBtn
-@onready var nav_btn:                 Button         = $TitleBar/NavBarBtn # <--- Fixed Path
+@onready var nav_btn:                 TextureButton         = $TitleBar/NavBarBtn 
 
 @onready var script_selection_panel:  Control        = $ScriptSelectionUI
 @onready var sel_bg:                  NinePatchRect  = $ScriptSelectionUI/SelBG
@@ -88,6 +88,14 @@ func _ready() -> void:
 
 	if resize_handles.get_index() < get_child_count() - 1:
 		move_child(resize_handles, get_child_count() - 1)
+
+	# Reset ALL child anchors
+	for node in [
+		title_bar, title_bar_bg, title_label, close_btn,
+		script_selection_panel, sel_bg, filter_bg, filter_edit, script_tab_list,
+		code_panel, code_bg, code_edit, resize_handles
+	]:
+		node.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	custom_minimum_size = min_window_size
@@ -174,6 +182,8 @@ func _configure_styles() -> void:
 	filter_edit.add_theme_stylebox_override("normal", empty_style)
 	filter_edit.add_theme_stylebox_override("focus", empty_style)
 
+	code_edit.syntax_highlighter = _create_highlighter()
+
 
 func _create_resize_handles() -> void:
 	_rh_n  = _make_handle("ResizeN",  Control.CURSOR_VSIZE)
@@ -233,8 +243,8 @@ func _update_layout() -> void:
 	title_bar_bg.position = Vector2.ZERO
 	title_bar_bg.size     = title_bar.size
 	
-	title_label.position = title_label_offset * 1.1
-	title_label.size     = Vector2(w - 36.0, title_bar_height)
+	title_label.position = title_label_offset
+	title_label.size     = Vector2(w - 36.0, title_bar_height - 10)
 	
 	close_btn.position = Vector2(w - 16.0, 5.0)
 	close_btn.size     = Vector2(16.0, title_bar_height)
@@ -371,12 +381,12 @@ func _apply_resize(mouse_pos: Vector2) -> void:
 ##  SCRIPT MANAGEMENT
 ## ═══════════════════════════════════════════════════════════════
 func add_script(script_name: String, content: String = "") -> void:
-	if _scripts.has(script_name):
-		push_warning("TextEditorUI: script '%s' already added" % script_name)
-		return
+	print("ADD SCRIPT: ", script_name, " content_len=", content.length())
 	_scripts[script_name] = content
+	for child in script_tab_list.get_children():
+		if _get_tab_name(child) == script_name:
+			return
 	_spawn_script_tab(script_name)
-
 
 func remove_script(script_name: String) -> void:
 	_scripts.erase(script_name)
@@ -390,72 +400,47 @@ func remove_script(script_name: String) -> void:
 		code_edit.text   = ""
 
 
+
+
 func _spawn_script_tab(script_name: String) -> void:
-	var tab: NinePatchRect
-	
+	for child in script_tab_list.get_children():
+		if _get_tab_name(child) == script_name:
+			child.queue_free()
+			break
+
+	var tab: Control
 	if ResourceLoader.exists(SCRIPT_BTN_SCENE):
 		tab = load(SCRIPT_BTN_SCENE).instantiate()
+		tab.setup(script_name)
+		tab.tab_pressed.connect(_on_tab_pressed)
 	else:
-		tab = NinePatchRect.new()
-		tab.name = "ScriptTab"
-		tab.patch_margin_left = 16
-		tab.patch_margin_right = 16
-		tab.custom_minimum_size = Vector2(0, 34)
-		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		tab.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		tab.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-		var btn := TextureButton.new()
-		btn.name = "ScriptsBtn"
-		btn.set_anchors_preset(Control.PRESET_FULL_RECT)
-		btn.ignore_texture_size = true
-		btn.stretch_mode = TextureButton.STRETCH_SCALE
-
-		var hbox := HBoxContainer.new()
-		hbox.name = "HBox"
-		hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-		hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-		var gear := TextureRect.new()
-		gear.name = "GearIcon"
-		gear.custom_minimum_size = Vector2(16, 16)
-		gear.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		gear.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		gear.mouse_filter = Control.MOUSE_FILTER_PASS
-
-		var lbl := Label.new()
-		lbl.name = "ScriptName"
-		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		lbl.mouse_filter = Control.MOUSE_FILTER_PASS
-
-		hbox.add_child(gear)
-		hbox.add_child(lbl)
-		btn.add_child(hbox)
-		tab.add_child(btn)
-		
-	var script_label: Label = null
-	if tab.has_node("ScriptsBtn/HBox/ScriptName"):
-		script_label = tab.get_node("ScriptsBtn/HBox/ScriptName")
-	elif tab.has_node("ScriptsBtn/ScriptName"):
-		script_label = tab.get_node("ScriptsBtn/ScriptName")
-	
-	if script_label:
-		script_label.text = script_name
-		
-	if tab.has_node("ScriptsBtn"):
-		var btn: TextureButton = tab.get_node("ScriptsBtn")
+		# Fallback plain button if scene missing
+		var btn := Button.new()
+		btn.text      = script_name
+		btn.flat      = true
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		btn.set_meta("script_name", script_name)
 		btn.pressed.connect(_on_tab_pressed.bind(script_name))
-		
+		tab = btn
+
+	tab.custom_minimum_size = Vector2(0, 28)
+	tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	script_tab_list.add_child(tab)
 
 
-func _get_tab_name(tab: NinePatchRect) -> String:
-	if tab.has_node("ScriptsBtn/HBox/ScriptName"):
-		return tab.get_node("ScriptsBtn/HBox/ScriptName").text
-	elif tab.has_node("ScriptsBtn/ScriptName"):
-		return tab.get_node("ScriptsBtn/ScriptName").text
+func _get_tab_name(tab: Control) -> String:
+	if tab.has_meta("script_name"):
+		return tab.get_meta("script_name")
 	return ""
+
+
+func _highlight_active_tab() -> void:
+	for child in script_tab_list.get_children():
+		if child.has_method("set_active"):
+			child.set_active(_get_tab_name(child) == _current_script)
+		elif child is Button:
+			child.button_pressed = (_get_tab_name(child) == _current_script)
+
 
 
 func _on_tab_pressed(script_name: String) -> void:
@@ -469,14 +454,8 @@ func open_script(script_name: String) -> void:
 	title_label.text  = script_name
 	code_edit.text    = _scripts[script_name]
 	_highlight_active_tab()
+	_update_layout()
 
-
-func _highlight_active_tab() -> void:
-	for child in script_tab_list.get_children():
-		if _get_tab_name(child) == _current_script:
-			child.self_modulate = Color.WHITE
-		else:
-			child.self_modulate = Color(0.6, 0.6, 0.6, 1.0)
 
 ## ═══════════════════════════════════════════════════════════════
 ##  FILTER
@@ -493,6 +472,7 @@ func _on_filter_text_changed(new_text: String) -> void:
 func _on_code_edit_text_changed() -> void:
 	if _current_script != "":
 		_scripts[_current_script] = code_edit.text
+		ScriptManager.update_content(_current_script, code_edit.text)
 		script_content_changed.emit(_current_script, code_edit.text)
 
 ## ═══════════════════════════════════════════════════════════════
@@ -531,6 +511,12 @@ func get_current_script_content() -> String:
 
 func get_all_script_names() -> PackedStringArray:
 	return PackedStringArray(_scripts.keys())
+	
+func update_script_content(script_name: String, new_content: String) -> void:
+	if _scripts.has(script_name):
+		_scripts[script_name] = new_content
+		if _current_script == script_name:
+			code_edit.text = new_content
 
 ## ═══════════════════════════════════════════════════════════════
 ##  UTILITY
@@ -539,3 +525,75 @@ func _try_load(path: String) -> Texture2D:
 	if ResourceLoader.exists(path):
 		return load(path)
 	return null
+	
+## ═══════════════════════════════════════════════════════════════
+##  CODE HIGHLIGHT
+## ═══════════════════════════════════════════════════════════════
+	
+	
+func _create_highlighter() -> CodeHighlighter:
+	var hl := CodeHighlighter.new()
+
+	# ── Control flow — pink/magenta ────────────────────────────
+	var control_flow_color := Color("ff7085ff")
+	for kw in ["if", "elif", "else", "for", "while", "match",
+			   "break", "continue", "return", "pass", "await"]:
+		hl.add_keyword_color(kw, control_flow_color)
+
+	# ── Declarations — light pink ──────────────────────────────
+	var declaration_color := Color("FD6E85")
+	for kw in ["func", "var", "const", "class", "class_name",
+			   "extends", "signal", "enum", "static", "in", "not",
+			   "and", "or", "as", "is", "new"]:
+		hl.add_keyword_color(kw, declaration_color)
+
+	# ── Built-in types — mint green ────────────────────────────
+	var base_type_color := Color(0.26, 1.0, 0.76)
+	for kw in ["int", "float", "bool", "String", "void",
+			   "Vector2", "Vector2i", "Vector3", "Vector3i",
+			   "Vector4", "Rect2", "Rect2i", "Color", "Plane",
+			   "Quaternion", "AABB", "Basis", "Transform2D",
+			   "Transform3D", "Array", "Dictionary", "Object",
+			   "Node", "PackedScene", "Resource", "Callable",
+			   "StringName", "NodePath", "RID"]:
+		hl.add_keyword_color(kw, base_type_color)
+
+	# ── Literals — same mint, slightly dimmer ──────────────────
+	var literal_color := Color("#FD6E85")
+	for kw in ["true", "false", "null", "self", "super",
+			   "PI", "TAU", "INF", "NAN"]:
+		hl.add_keyword_color(kw, literal_color)
+
+	# ── Annotations — light yellow-green ──────────────────────
+	var annotation_color := Color("#E19E67")
+	for kw in ["export", "onready", "tool", "static_unload",
+			   "export_group", "export_subgroup", "export_range",
+			   "export_enum", "warning_ignore"]:
+		hl.add_keyword_color(kw, annotation_color)
+
+	# ── Token colors ───────────────────────────────────────────
+	hl.number_color          = Color(0.63, 1.00, 0.88)   # mint 
+	hl.symbol_color = Color(0.67, 0.85, 1.00)   # blue — default operators
+	hl.function_color        = Color(0.34, 0.70, 1.00)   # blue
+	hl.member_variable_color = Color(0.90, 0.93, 1.00)   # near white/light lavender
+	
+	# ── Per-symbol colors via single-char regions ──────────────
+	# symbol_color handles everything else (operators: = + - * / etc.)
+
+	# @ — orange
+	hl.add_color_region("@", " ", Color(1.00, 0.60, 0.20), false)
+
+	# $ — green
+	hl.add_color_region("$", " ", Color(0.40, 1.00, 0.50), false)
+
+	# ── Color regions ──────────────────────────────────────────
+	var string_color := Color(1.00, 0.93, 0.63)           # warm yellow
+	hl.add_color_region('"',   '"',   string_color)
+	hl.add_color_region("'",   "'",   string_color)
+	hl.add_color_region('"""', '"""', string_color)
+	hl.add_color_region("'''", "'''", string_color)
+
+	# Comments — blue-gray
+	hl.add_color_region("#", "", Color(0.50, 0.60, 0.70), true)
+
+	return hl

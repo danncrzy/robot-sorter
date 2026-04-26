@@ -4,14 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://bqm2oy88j0tj4" path="res://Assets/UI/SceneTabUI.png" id="2_rsinr"]
 [ext_resource type="Texture2D" uid="uid://2fgky6ib1hur" path="res://Assets/UI/InvisibleBtn.png" id="3_5n5ti"]
 [ext_resource type="Texture2D" uid="uid://cp3kwrcl6rukx" path="res://icon.svg" id="3_rd2o1"]
-[ext_resource type="FontFile" uid="uid://u2xxsxp0e505" path="res://Assets/Fonts/culturedfont.ttf" id="4_lwqe1"]
+[ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="4_0itdu"]
 [ext_resource type="Texture2D" uid="uid://tsfmw0mkjbkt" path="res://Assets/UI/VisibleBtn.png" id="4_rd2o1"]
 [ext_resource type="Texture2D" uid="uid://d0uoj8aeqmwmh" path="res://Assets/UI/ScriptBtnTab.png" id="5_lwqe1"]
 [ext_resource type="Texture2D" uid="uid://ca1n4a8g23gs1" path="res://Assets/UI/ChildIcon.png" id="8_vf3p7"]
-
-[sub_resource type="Theme" id="Theme_vf3p7"]
-default_font = ExtResource("4_lwqe1")
-default_font_size = 9
 
 [node name="SceneTab" type="Control" unique_id=392746341]
 custom_minimum_size = Vector2(50, 16)
@@ -77,8 +73,7 @@ offset_left = 135.0
 offset_top = 175.0
 offset_right = 239.0
 offset_bottom = 184.0
-theme = SubResource("Theme_vf3p7")
-theme_override_font_sizes/font_size = 8
+theme = ExtResource("4_0itdu")
 text = "Character Body2D"
 
 [node name="ScriptBtn" type="TextureButton" parent="Layout" unique_id=1543281873]
@@ -105,13 +100,13 @@ grow_horizontal = 0
 grow_vertical = 2
 
 [node name="InvisibleBtn" type="TextureButton" parent="Layout/VisionControl" unique_id=1584562495]
+visible = false
 layout_mode = 0
 offset_right = 7.0
 offset_bottom = 7.0
 texture_normal = ExtResource("3_5n5ti")
 
 [node name="VisibleBtn" type="TextureButton" parent="Layout/VisionControl" unique_id=535728267]
-visible = false
 layout_mode = 0
 offset_right = 7.0
 offset_bottom = 7.0

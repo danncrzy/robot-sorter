@@ -15,11 +15,15 @@
 [ext_resource type="Texture2D" uid="uid://bmqqb0m4lg8jr" path="res://Assets/UI/NavBarBtn.png" id="8_f5p04"]
 [ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="8_jm178"]
 [ext_resource type="Texture2D" uid="uid://cvsripbfcivub" path="res://Assets/UI/FilterBG.png" id="9_pdgqq"]
+[ext_resource type="Texture2D" uid="uid://bjlxr0w6svxhj" path="res://Assets/UI/Text_Editor_SettingBtn.png" id="12_51q86"]
+[ext_resource type="Texture2D" uid="uid://cl36lo23q1pdr" path="res://Assets/UI/NavBarBtn_Pressed.png" id="13_gp13m"]
 [ext_resource type="Texture2D" uid="uid://bhwk43p42if7l" path="res://Assets/UI/DocumentsUI_Left.png" id="14_1v2ba"]
+[ext_resource type="Texture2D" uid="uid://cvfae6bp7hkco" path="res://Assets/UI/Text_Editor_SettingBtn_Pressed.png" id="14_2ia8l"]
 [ext_resource type="Script" uid="uid://c5vmrkrblh13p" path="res://Scripts/UI/documents_ui.gd" id="14_vx2oa"]
 [ext_resource type="Texture2D" uid="uid://bp7p3t8aby0lr" path="res://Assets/UI/ScriptBtn.png" id="15_f5p04"]
 [ext_resource type="Texture2D" uid="uid://djrl4j8sklfb0" path="res://Assets/UI/DocumentsUI_Right.png" id="15_vx2oa"]
 [ext_resource type="Texture2D" uid="uid://2yqkep8erg3n" path="res://Assets/UI/ScriptBtn_Pressed.png" id="16_1v2ba"]
+[ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="16_2uf08"]
 [ext_resource type="Theme" uid="uid://ce3l3cl342wpg" path="res://Resources/Text/BookTheme.tres" id="16_htoqs"]
 [ext_resource type="Texture2D" uid="uid://dh08h255pofgw" path="res://Assets/UI/BackPageBtn.png" id="17_2e3f2"]
 [ext_resource type="Texture2D" uid="uid://bo41ndgnn7thc" path="res://Assets/UI/NextPageBtn.png" id="17_a68bl"]
@@ -45,6 +49,8 @@
 [ext_resource type="Texture2D" uid="uid://badxk3jxidlu2" path="res://Assets/UI/DocumentsBtn.png" id="42_22it0"]
 [ext_resource type="Script" uid="uid://cgalkilev53vj" path="res://Scripts/UI/hover_shader.gd" id="42_wx7vk"]
 [ext_resource type="Texture2D" uid="uid://5h5lqniuqf3a" path="res://Assets/UI/DocumentsBtn_Pressed.png" id="43_71ecm"]
+[ext_resource type="Texture2D" uid="uid://dgs8fwtqx7lol" path="res://Assets/Cursor/Test.png" id="47_bwg1y"]
+[ext_resource type="Script" uid="uid://dtmunv1akydex" path="res://Scripts/UI/cursor.gd" id="48_535bs"]
 
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
@@ -133,50 +139,59 @@ title_label_offset = Vector2(20, 5)
 
 [node name="TitleBar" type="Control" parent="TextEditorUI" unique_id=1830436512]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-grow_horizontal = 2
+anchors_preset = 0
+offset_right = 178.0
+offset_bottom = 18.0
 mouse_filter = 1
 
 [node name="TitleBarBg" type="NinePatchRect" parent="TextEditorUI/TitleBar" unique_id=1987710070]
-layout_mode = 1
+layout_mode = 0
 offset_right = 32.0
+offset_bottom = 18.0
 texture = ExtResource("6_jm178")
 patch_margin_left = 16
 patch_margin_right = 16
 
 [node name="TitleLabel" type="Label" parent="TextEditorUI/TitleBar" unique_id=176414062]
-layout_mode = 1
-offset_right = 40.0
-offset_bottom = 23.0
+layout_mode = 0
+offset_left = 36.0
+offset_right = 140.0
+offset_bottom = 17.0
 theme = ExtResource("6_eqykv")
 theme_override_font_sizes/font_size = 6
-text = "Font
+text = "Tidak ada Script yang terbuka
 "
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CloseBtn" type="TextureButton" parent="TextEditorUI/TitleBar" unique_id=907133549]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 40.0
+layout_mode = 0
+offset_left = 144.0
+offset_right = 152.0
+offset_bottom = 18.0
 grow_horizontal = 0
 texture_normal = ExtResource("7_pdgqq")
 texture_pressed = ExtResource("8_jm178")
 
-[node name="NavBarBtn" type="Button" parent="TextEditorUI/TitleBar" unique_id=597006135]
+[node name="SettingBtn" type="TextureButton" parent="TextEditorUI/TitleBar" unique_id=1007658652]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 2.0
+offset_right = 16.0
+offset_bottom = 14.0
+texture_normal = ExtResource("12_51q86")
+texture_pressed = ExtResource("14_2ia8l")
+
+[node name="NavBarBtn" type="TextureButton" parent="TextEditorUI/TitleBar" unique_id=904751215]
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 0
-offset_right = 18.0
-offset_bottom = 18.0
-scale = Vector2(0.7, 0.7)
+offset_left = 20.0
+offset_top = 3.0
+offset_right = 38.0
+offset_bottom = 21.0
 pivot_offset = Vector2(10, 5)
-icon = ExtResource("8_f5p04")
-flat = true
+texture_normal = ExtResource("8_f5p04")
+texture_pressed = ExtResource("13_gp13m")
 
 [node name="ScriptSelectionUI" type="Control" parent="TextEditorUI" unique_id=682278655]
 z_index = 1
@@ -258,7 +273,8 @@ offset_top = 4.0
 offset_right = 12.0
 offset_bottom = 12.0
 theme = ExtResource("6_eqykv")
-theme_override_font_sizes/font_size = 5
+theme_override_fonts/font = ExtResource("16_2uf08")
+theme_override_font_sizes/font_size = 9
 placeholder_text = "Tulis Kodemu disini"
 minimap_draw = true
 minimap_width = 40
@@ -520,3 +536,13 @@ offset_bottom = 360.0
 texture_normal = ExtResource("42_22it0")
 texture_pressed = ExtResource("43_71ecm")
 script = ExtResource("42_wx7vk")
+
+[node name="Cursor" type="TextureRect" parent="." unique_id=1430354279]
+z_index = 1000
+custom_minimum_size = Vector2(15, 15)
+offset_right = 139.0
+offset_bottom = 138.0
+scale = Vector2(0.1, 0.1)
+mouse_filter = 2
+texture = ExtResource("47_bwg1y")
+script = ExtResource("48_535bs")

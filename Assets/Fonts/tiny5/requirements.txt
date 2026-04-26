@@ -1,5 +1,0 @@
-bdflib
-gftools
-numpy
-ufoLib2
-unicodedata2

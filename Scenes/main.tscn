@@ -1,8 +1,71 @@
 [gd_scene format=4 uid="uid://dh48nmho3ngk0"]
 
+[ext_resource type="Shader" uid="uid://ctmc5hfr3fo8v" path="res://Shaders/cloud.gdshader" id="1_6bp64"]
 [ext_resource type="PackedScene" uid="uid://cmrqrpcyqnwfk" path="res://Scenes/UI/player_hud.tscn" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://m8npayhjqkdn" path="res://Assets/Tile/FactoryWalls.png" id="2_8gbba"]
+[ext_resource type="Shader" uid="uid://dtk4lk3glcwb7" path="res://Shaders/vignette.gdshader" id="2_344ge"]
 [ext_resource type="Texture2D" uid="uid://ce4bhtobt5ceu" path="res://Assets/Tile/FloorTileset.png" id="2_bo1nx"]
+[ext_resource type="Script" uid="uid://crgx5b0gaohc" path="res://Scripts/Game/main.gd" id="2_jjvhh"]
+[ext_resource type="Texture2D" uid="uid://cwf6arfis743s" path="res://Assets/Character/Robot-Sheet.png" id="5_kry3j"]
+[ext_resource type="Script" uid="uid://bstfgyrlt7p2q" path="res://Scripts/Player/player.gd" id="6_21xkr"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6bp64"]
+frequency = 0.0218
+offset = Vector3(260.87, 0, 0)
+fractal_weighted_strength = 1.0
+domain_warp_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6bp64"]
+noise = SubResource("FastNoiseLite_6bp64")
+
+[sub_resource type="Gradient" id="Gradient_344ge"]
+offsets = PackedFloat32Array(0, 0, 1)
+colors = PackedColorArray(0.18899998, 0.81704986, 0.9, 1, 0.54523486, 3.946722e-06, 0.3012396, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ynf5e"]
+frequency = 0.0005
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_344ge"]
+noise = SubResource("FastNoiseLite_ynf5e")
+color_ramp = SubResource("Gradient_344ge")
+
+[sub_resource type="Gradient" id="Gradient_ynf5e"]
+offsets = PackedFloat32Array(0, 0, 1)
+colors = PackedColorArray(0.30980393, 0.45882353, 0.56078434, 1, 0.5803922, 0.70980394, 0.7372549, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hptm8"]
+gradient = SubResource("Gradient_ynf5e")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_344ge"]
+shader = ExtResource("1_6bp64")
+shader_parameter/pixelation = Vector2(256, 256)
+shader_parameter/cloud_noise1 = SubResource("NoiseTexture2D_6bp64")
+shader_parameter/scroll_speed1 = Vector2(0.02, 0.007)
+shader_parameter/cloud_noise2 = SubResource("NoiseTexture2D_344ge")
+shader_parameter/scroll_speed2 = Vector2(0.59, -0.004)
+shader_parameter/center_pos = Vector2(0.655, 0)
+shader_parameter/position_impact = 0.75
+shader_parameter/color_gardient = SubResource("GradientTexture1D_hptm8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ynf5e"]
+shader = ExtResource("2_344ge")
+shader_parameter/fog_strength = 0.090000004275
+shader_parameter/noise_scale = 0.97500004305262
+shader_parameter/noise_speed = 0.10000000475
+shader_parameter/noise_direction = Vector2(1, 0.5)
+shader_parameter/vignette_strength = 0.3450000163875
+shader_parameter/rect_width = 0.942000044745
+shader_parameter/rect_height = 0.7
+shader_parameter/edge_softness = 0.3710000176225
+shader_parameter/edge_wave_scale = 4.0
+shader_parameter/edge_wave_strength = 0.15
+shader_parameter/edge_wave_speed = 0.08
+shader_parameter/edge_chaos = 0.12
+shader_parameter/tendril_scale = 6.0
+shader_parameter/tendril_strength = 0.2
+shader_parameter/pulse_speed = 0.3
+shader_parameter/pulse_amount = 0.05
+shader_parameter/fog_color = Color(0.6349189, 0.89553297, 0.97698194, 1)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8gbba"]
 texture = ExtResource("2_bo1nx")
@@ -14,23 +77,52 @@ texture = ExtResource("2_bo1nx")
 [sub_resource type="TileSet" id="TileSet_jjvhh"]
 sources/0 = SubResource("TileSetAtlasSource_8gbba")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_21xkr"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(85, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6bp64"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(102, 0, 17, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_344ge"]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_21xkr")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_6bp64")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
 [node name="Main" type="Node2D" unique_id=1417042214]
 
 [node name="Background" type="ColorRect" parent="." unique_id=1049126244]
+material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1000.0
-offset_bottom = 600.0
+offset_right = 739.0
+offset_bottom = 364.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.8784314, 0.76862746, 0.70980394, 1)
+
+[node name="Vignette" type="ColorRect" parent="." unique_id=799111294]
+material = SubResource("ShaderMaterial_ynf5e")
+offset_right = 682.0
+offset_bottom = 366.0
 
 [node name="PlayerHUD" parent="." unique_id=1140191964 instance=ExtResource("1_jjgbg")]
 
 [node name="GameNodes" type="Node2D" parent="." unique_id=631463655]
 
 [node name="GameMain" type="Node2D" parent="GameNodes" unique_id=868521722]
+script = ExtResource("2_jjvhh")
 
 [node name="FactoryTilesets" type="TileMapLayer" parent="GameNodes/GameMain" unique_id=745600187]
 position = Vector2(30, -6)
@@ -43,3 +135,9 @@ offset_top = 37.0
 offset_right = 531.0
 offset_bottom = 256.0
 texture = ExtResource("2_8gbba")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GameNodes/GameMain" unique_id=306957809]
+position = Vector2(230, 105)
+sprite_frames = SubResource("SpriteFrames_344ge")
+animation = &"idle"
+script = ExtResource("6_21xkr")

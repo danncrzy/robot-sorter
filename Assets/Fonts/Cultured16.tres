@@ -1,6 +1,6 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://814xcewrjila"]
+[gd_resource type="Theme" format=3 uid="uid://814xcewrjila"]
 
-[ext_resource type="FontFile" uid="uid://u2xxsxp0e505" path="res://Assets/Fonts/culturedfont.ttf" id="1_7dnd8"]
+[ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="1_7dnd8"]
 
 [resource]
 default_font = ExtResource("1_7dnd8")

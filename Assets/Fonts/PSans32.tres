@@ -1,7 +1,0 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://bkqs28no4vlr0"]
-
-[ext_resource type="FontFile" uid="uid://dqjgfxnx5aju2" path="res://Assets/Fonts/fs-pixel-sans-unicode-regular/fs-pixel-sans-unicode-regular.ttf" id="1_miumy"]
-
-[resource]
-default_font = ExtResource("1_miumy")
-default_font_size = 32

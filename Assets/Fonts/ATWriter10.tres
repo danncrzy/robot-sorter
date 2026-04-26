@@ -1,7 +1,0 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cp62jxon8rq5a"]
-
-[ext_resource type="FontFile" uid="uid://cut0pltuafcei" path="res://Assets/Fonts/culturedfont.ttf" id="1_f5p43"]
-
-[resource]
-default_font = ExtResource("1_f5p43")
-default_font_size = 10

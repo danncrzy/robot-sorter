@@ -78,7 +78,7 @@ func _update_manual_layout() -> void:
 	
 	# NodeName
 	var name_x: float = node_icon.position.x + icon_sz + pad
-	node_name_label.position = Vector2(name_x / 2.2, (h - btn_sz) * (-0.52))
+	node_name_label.position = Vector2(name_x / 2.2, (h - btn_sz) * (-0.56))
 	
 	# ScriptBtn
 	script_btn.position = Vector2(w - pad - vision_w - pad - btn_sz * (-1.15), (h - btn_sz) * (-0.5))
