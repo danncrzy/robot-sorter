@@ -6,3 +6,4 @@ extends Resource
 @export var node_type: String = "Node2D" 
 @export var script_state: String = "disabled" # "enabled" or "disabled"
 @export var script_name: String = "" # e.g., "main.gd"
+@export var node_path:    NodePath = ^"" 

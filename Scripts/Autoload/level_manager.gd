@@ -4,6 +4,7 @@ extends Node
 var current_level: LevelData = null
 var scene_tree_panel: SceneTreePanel = null
 var text_editor_ui: TextEditorUI = null
+var _game_root: Node = null
 
 const SCRIPTS_DIR: String = "res://Scripts/Game/"
 
@@ -25,6 +26,8 @@ func _wait_for_ui() -> void:
 
 func load_level(level_res: LevelData) -> void:
 	current_level = level_res
+	# GameNodes/GameMain is where all "Game" nodes live
+	_game_root = get_tree().current_scene
 	_populate_scene_tree()
 	_register_level_scripts()
 
@@ -32,14 +35,19 @@ func _populate_scene_tree() -> void:
 	if not current_level or not scene_tree_panel: return
 	scene_tree_panel.clear_tabs()
 	for node_def in current_level.nodes:
-		var data = {
-			"structure": node_def.structure,
-			"node_type": node_def.node_type,
+		# Resolve actual node reference
+		var node_ref: Node = null
+		if _game_root and node_def.node_path != ^"":
+			node_ref = _game_root.get_node_or_null(node_def.node_path)
+
+		var data := {
+			"structure":    node_def.structure,
+			"node_type":    node_def.node_type,
 			"script_state": node_def.script_state,
-			"script_name": node_def.script_name
+			"script_name":  node_def.script_name,
+			"node_ref":     node_ref,   # ← actual node
 		}
-		var node_name = node_def.structure.get_file()
-		scene_tree_panel.add_scene_tab(node_name, data)
+		scene_tree_panel.add_scene_tab(node_def.structure.get_file(), data)
 
 func _register_level_scripts() -> void:
 	if not current_level: return

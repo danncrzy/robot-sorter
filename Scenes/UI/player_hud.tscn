@@ -51,6 +51,11 @@
 [ext_resource type="Texture2D" uid="uid://5h5lqniuqf3a" path="res://Assets/UI/DocumentsBtn_Pressed.png" id="43_71ecm"]
 [ext_resource type="Texture2D" uid="uid://dgs8fwtqx7lol" path="res://Assets/Cursor/Test.png" id="47_bwg1y"]
 [ext_resource type="Script" uid="uid://dtmunv1akydex" path="res://Scripts/UI/cursor.gd" id="48_535bs"]
+[ext_resource type="Script" uid="uid://w012jnei2gdm" path="res://Scripts/UI/game_controller.gd" id="52_u643f"]
+[ext_resource type="Texture2D" uid="uid://imt7b6qi44ol" path="res://Assets/UI/PlayBtn.png" id="53_flvkn"]
+[ext_resource type="Texture2D" uid="uid://c4ff232er7mb0" path="res://Assets/UI/PlayBtn_Pressed.png" id="54_7c8do"]
+[ext_resource type="Texture2D" uid="uid://tb52bpu7n75t" path="res://Assets/UI/ResetBtn.png" id="55_rmbpn"]
+[ext_resource type="Texture2D" uid="uid://cejjyht233jmc" path="res://Assets/UI/ResetBtn_Pressed.png" id="56_742jb"]
 
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
@@ -73,7 +78,8 @@ offset_top = 104.0
 offset_right = 40.0
 offset_bottom = 144.0
 script = ExtResource("2_bwg1y")
-min_height = 130.0
+min_width = 140.0
+min_height = 140.0
 
 [node name="SceneTreeBg" type="NinePatchRect" parent="SceneTreePanel" unique_id=1956743784]
 layout_mode = 1
@@ -546,3 +552,25 @@ scale = Vector2(0.1, 0.1)
 mouse_filter = 2
 texture = ExtResource("47_bwg1y")
 script = ExtResource("48_535bs")
+
+[node name="GameController" type="Control" parent="." unique_id=206267171]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 454.0
+offset_top = 2.0
+offset_right = 494.0
+offset_bottom = 42.0
+script = ExtResource("52_u643f")
+
+[node name="PlayBtn" type="TextureButton" parent="GameController" unique_id=790169757]
+layout_mode = 0
+offset_left = 45.0
+offset_right = 77.0
+offset_bottom = 34.0
+texture_normal = ExtResource("53_flvkn")
+texture_pressed = ExtResource("54_7c8do")
+
+[node name="ResetBtn" type="TextureButton" parent="GameController" unique_id=1909118721]
+layout_mode = 0
+texture_normal = ExtResource("55_rmbpn")
+texture_pressed = ExtResource("56_742jb")

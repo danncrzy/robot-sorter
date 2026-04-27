@@ -6,16 +6,61 @@
 [sub_resource type="Resource" id="Resource_kaej2"]
 script = ExtResource("1_kaej2")
 script_state = "enabled"
-script_name = "main.gd"
+script_name = "game_main.gd"
+node_path = NodePath("GameNodes/GameMain")
 metadata/_custom_type_script = "uid://diw4cry25rcr8"
 
 [sub_resource type="Resource" id="Resource_g62qf"]
 script = ExtResource("1_kaej2")
-structure = "Main/UI"
-node_type = "Control"
+structure = "Main/FactoryFloor"
+node_type = "TileMapLayer"
+node_path = NodePath("GameNodes/GameMain/GameFactoryFloor")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_rquka"]
+script = ExtResource("1_kaej2")
+structure = "Main/FactoryWalls"
+node_type = "TextureRect"
+node_path = NodePath("GameNodes/GameMain/GameFactoryWalls")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_q2w2l"]
+script = ExtResource("1_kaej2")
+structure = "Main/FactoryWalls/WallCollision"
+node_type = "CollisionPolygon2D"
+node_path = NodePath("GameNodes/GameMain/GameFactoryWalls/GameWallCollision")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_8mv3r"]
+script = ExtResource("1_kaej2")
+structure = "Main/Player"
+node_type = "CharacterBody2D"
+script_state = "enabled"
+script_name = "game_player.gd"
+node_path = NodePath("GameNodes/GameMain/GamePlayer")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_vkc5f"]
+script = ExtResource("1_kaej2")
+structure = "Main/Player/PlayerAnimations"
+node_type = "AnimatedSprite2D"
+node_path = NodePath("GameNodes/GameMain/GamePlayer/GamePlayerAnimations")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_vud4v"]
+script = ExtResource("1_kaej2")
+structure = "Main/Player/MovementComponent"
+node_type = "Node"
+node_path = NodePath("GameNodes/GameMain/GamePlayer/GameMovementComponent")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
+[sub_resource type="Resource" id="Resource_2iv8n"]
+script = ExtResource("1_kaej2")
+structure = "Main/Player/InteractionComponent"
+node_type = "Node"
 metadata/_custom_type_script = "uid://diw4cry25rcr8"
 
 [resource]
 script = ExtResource("2_g62qf")
-nodes = Array[ExtResource("1_kaej2")]([SubResource("Resource_kaej2"), SubResource("Resource_g62qf")])
+nodes = Array[ExtResource("1_kaej2")]([SubResource("Resource_kaej2"), SubResource("Resource_g62qf"), SubResource("Resource_rquka"), SubResource("Resource_q2w2l"), SubResource("Resource_8mv3r"), SubResource("Resource_vkc5f"), SubResource("Resource_vud4v"), SubResource("Resource_2iv8n")])
 metadata/_custom_type_script = "uid://c2l2nn08fabd4"

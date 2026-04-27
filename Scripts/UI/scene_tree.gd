@@ -32,7 +32,7 @@ var _resize_rect_orig: Rect2 = Rect2()
 
 var is_docked: bool = true
 var _dock_tween: Tween = null # FIX: Changed 'nil' to 'null'
-
+var _active_tab: Control = null
 
 # Handles
 var _rh_e: Control
@@ -118,7 +118,7 @@ func _update_layout() -> void:
 	tab_container.size.x = scroll_container.size.x
 	tab_container.custom_minimum_size.x = scroll_container.size.x
 	
-	dock_btn.position = Vector2(w - dock_btn_width + 25.0, 24.0)
+	dock_btn.position = Vector2(w - dock_btn_width + 25.0, h  * (0.4))
 	dock_btn.size = Vector2(dock_btn_width, dock_btn_width)
 	
 	var e: float = 6.0
@@ -211,20 +211,25 @@ func clear_tabs() -> void:
 		child.queue_free()
 
 func add_scene_tab(node_name: String, data: Dictionary) -> void:
-	if not is_node_ready() or not tab_container: return
-	
 	var tab_instance := SCENE_TAB_SCENE.instantiate()
 	tab_container.add_child(tab_instance)
-	
 	tab_instance.set_node_name(node_name)
 	tab_instance.set_data(data)
-	
-	# VBoxContainer handles the Y position automatically.
-	# We just ensure it stretches horizontally.
 	tab_instance.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	
 	tab_instance.script_requested.connect(_on_tab_script_requested)
+	tab_instance.tab_clicked.connect(_on_tab_clicked)        # ← new
 
+func _on_tab_clicked(data: Dictionary) -> void:
+	for child in tab_container.get_children():
+		if not child.has_method("set_selected"):
+			continue
+		# Match by script_name or structure string — not dictionary identity
+		var child_data: Dictionary = child.get("_script_data") if child.get("_script_data") else {}
+		var same: bool = child_data.get("structure") == data.get("structure") \
+				and child_data.get("script_name") == data.get("script_name")
+		child.set_selected(same)
+		if same:
+			_active_tab = child
 
 func _update_tab_container_bounds() -> void:
 	# Calculate the total height of all tabs so ScrollContainer knows when to scroll

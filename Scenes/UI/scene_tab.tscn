@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://revb325vwdcq"]
 
 [ext_resource type="Script" uid="uid://dj4of80l5hmin" path="res://Scripts/UI/scene_tab.gd" id="1_i6df0"]
+[ext_resource type="Material" uid="uid://cwhav1fs2bq5q" path="res://Resources/Shader/2d_outline_3px.tres" id="2_c6bnv"]
 [ext_resource type="Texture2D" uid="uid://bqm2oy88j0tj4" path="res://Assets/UI/SceneTabUI.png" id="2_rsinr"]
 [ext_resource type="Texture2D" uid="uid://2fgky6ib1hur" path="res://Assets/UI/InvisibleBtn.png" id="3_5n5ti"]
 [ext_resource type="Texture2D" uid="uid://cp3kwrcl6rukx" path="res://icon.svg" id="3_rd2o1"]
@@ -22,6 +23,7 @@ size_flags_vertical = 4
 script = ExtResource("1_i6df0")
 
 [node name="SceneTabBg" type="NinePatchRect" parent="." unique_id=1561027130]
+material = ExtResource("2_c6bnv")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

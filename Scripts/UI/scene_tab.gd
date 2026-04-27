@@ -5,6 +5,8 @@ extends Control
 const ICON_NODE2D = preload("res://Assets/Icons/IconNode2D.png")
 const ICON_CONTROL = preload("res://Assets/Icons/IconControl.png")
 const ICON_DEFAULT = preload("res://Assets/Icons/IconNode.png")
+const ICON_TILEMAPLAYER = preload("res://Assets/Icons/TileMapLayer.png")
+const ICON_TEXTURERECT = preload("res://Assets/Icons/TextureRect.png")
 
 const BASE_INDENT: float = 10.0 # Pixels to indent per depth level
 
@@ -19,9 +21,17 @@ const BASE_INDENT: float = 10.0 # Pixels to indent per depth level
 
 var _script_data: Dictionary = {}
 var _current_indent: float = 0.0
+var _node_ref:     Node     = null
+var _is_selected:  bool     = false
+
+signal tab_clicked(data: Dictionary)
+
 
 signal script_requested(data: Dictionary)
 signal visibility_toggled(is_visible)
+
+const OUTLINE_MATERIAL: Material = preload("res://Resources/Shader/2d_outline.tres")
+
 
 func _ready() -> void:
 	# Force internal nodes to fill the root Control
@@ -39,9 +49,20 @@ func _ready() -> void:
 	visible_btn.pressed.connect(_toggle_visibility)
 	script_btn.pressed.connect(_on_script_pressed)
 
+	
+	layout.gui_input.connect(_on_tab_gui_input)
+	layout.mouse_filter = Control.MOUSE_FILTER_STOP
+	
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_update_manual_layout()
+
+func _on_tab_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+	   and event.button_index == MOUSE_BUTTON_LEFT \
+	   and event.pressed:
+		tab_clicked.emit(_script_data)
+		get_viewport().set_input_as_handled()
 
 # ────────────────────── MANUAL LAYOUT ──────────────────────
 func _update_manual_layout() -> void:
@@ -90,6 +111,8 @@ func set_node_name(new_name: String) -> void:
 
 func set_data(data: Dictionary) -> void:
 	_script_data = data
+	_node_ref    = data.get("node_ref", null)
+
 	
 	# --- Calculate Indent based on Structure ---
 	# "Main" -> 1 segment -> depth 0 -> 0px indent
@@ -107,6 +130,10 @@ func set_data(data: Dictionary) -> void:
 			node_icon.texture = ICON_NODE2D
 		"Control", "Button", "Panel", "Label":
 			node_icon.texture = ICON_CONTROL
+		"TileMapLayer":
+			node_icon.texture = ICON_TILEMAPLAYER
+		"TextureRect":
+			node_icon.texture = ICON_TEXTURERECT
 		_:
 			node_icon.texture = ICON_DEFAULT
 
@@ -133,15 +160,32 @@ func set_data(data: Dictionary) -> void:
 func _on_script_pressed() -> void:
 	script_requested.emit(_script_data)
 
+# ── Visibility ─────────────────────────────────────────────────
 func _toggle_visibility() -> void:
-	var is_now_visible = !visible_btn.visible
-	visible_btn.visible = is_now_visible
+	if not _node_ref: return
+	var is_now_visible: bool = !_node_ref.visible
+	_node_ref.visible = is_now_visible
+	visible_btn.visible   =  is_now_visible
 	invisible_btn.visible = !is_now_visible
 	visibility_toggled.emit(is_now_visible)
 
-func _on_mouse_entered() -> void:
-	if _script_data.get("script_state") == "enabled":
-		script_btn.visible = true
+# ── Outline on select ───────────────────────────────────
+func set_selected(selected: bool) -> void:
+	_is_selected = selected
+	if is_instance_valid(bg):
+		bg.modulate = Color(1, 1, 1, 0.7) if selected else Color(1, 1, 1, 1)
+	if _node_ref and _node_ref is CanvasItem:
+		(_node_ref as CanvasItem).material = OUTLINE_MATERIAL if selected else null
+	_set_outline(selected)
 
-func _on_mouse_exited() -> void:
-	pass
+
+func _set_outline(enable: bool) -> void:
+	# Tab itself
+	bg.material = OUTLINE_MATERIAL if enable else null
+
+	# Actual game node — only CanvasItem supports material
+	if _node_ref and _node_ref is CanvasItem:
+		(_node_ref as CanvasItem).material = OUTLINE_MATERIAL if enable else null
+		
+func _scene_pressed() -> void:
+	bg.modulate = Color(1, 1, 1, 0.1) if _is_selected else Color(1.0, 0.0, 0.0, 1.0)
