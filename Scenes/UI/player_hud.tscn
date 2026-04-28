@@ -329,6 +329,7 @@ offset_bottom = 40.0
 mouse_filter = 1
 theme = ExtResource("16_htoqs")
 theme_override_colors/default_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
 
 [node name="LeftStickyNotesContainer" type="HBoxContainer" parent="DocumentsUI/LeftPage" unique_id=1290457053]
 layout_mode = 1
@@ -352,6 +353,7 @@ offset_bottom = 40.0
 mouse_filter = 1
 theme = ExtResource("16_htoqs")
 theme_override_colors/default_color = Color(0.050980393, 0.05490196, 0.14901961, 1)
+bbcode_enabled = true
 
 [node name="RightStickyNotesContainer" type="HBoxContainer" parent="DocumentsUI/RightPage" unique_id=1932064241]
 layout_mode = 0

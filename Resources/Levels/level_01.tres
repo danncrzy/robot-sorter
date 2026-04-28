@@ -60,7 +60,14 @@ structure = "Main/Player/InteractionComponent"
 node_type = "Node"
 metadata/_custom_type_script = "uid://diw4cry25rcr8"
 
+[sub_resource type="Resource" id="Resource_keb6q"]
+script = ExtResource("1_kaej2")
+structure = "Main/Player/PllayerCollision"
+node_type = "CollisionShape2D"
+node_path = NodePath("GameNodes/GameMain/GamePlayer/GamePlayerCollision")
+metadata/_custom_type_script = "uid://diw4cry25rcr8"
+
 [resource]
 script = ExtResource("2_g62qf")
-nodes = Array[ExtResource("1_kaej2")]([SubResource("Resource_kaej2"), SubResource("Resource_g62qf"), SubResource("Resource_rquka"), SubResource("Resource_q2w2l"), SubResource("Resource_8mv3r"), SubResource("Resource_vkc5f"), SubResource("Resource_vud4v"), SubResource("Resource_2iv8n")])
+nodes = Array[ExtResource("1_kaej2")]([SubResource("Resource_kaej2"), SubResource("Resource_g62qf"), SubResource("Resource_rquka"), SubResource("Resource_q2w2l"), SubResource("Resource_8mv3r"), SubResource("Resource_vkc5f"), SubResource("Resource_vud4v"), SubResource("Resource_2iv8n"), SubResource("Resource_keb6q")])
 metadata/_custom_type_script = "uid://c2l2nn08fabd4"

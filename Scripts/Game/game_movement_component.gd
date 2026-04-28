@@ -1,34 +1,38 @@
 extends Node
 
-const TILE_SIZE:  float = 32.0
-const MOVE_SPEED: float = 120.0
+const TILE_SIZE:  float = 16.0          # ← was 32, matches your 16×16 tileset
+const MOVE_SPEED: float = 100.0
 
 enum Direction { RIGHT, LEFT, UP, DOWN }
 
 var _parent:         CharacterBody2D = null
 var _animations:     AnimatedSprite2D = null
+var _tilemap:        TileMapLayer = null   # ← NEW
 var _facing:         Direction = Direction.RIGHT
 var _is_moving:      bool = false
 var _move_queue:     Array[Vector2] = []
 var _start_position: Vector2 = Vector2.ZERO
 var _start_facing:   Direction = Direction.RIGHT
 var _tween:          Tween = null
+var _processing:     bool = false          # re-entrancy guard
 
 func _ready() -> void:
-	if _parent != null:
-		return
-	_parent         = get_parent() as CharacterBody2D
-	_animations     = _parent.get_node_or_null("GamePlayerAnimations")
+	_parent      = get_parent() as CharacterBody2D
+	_animations  = _parent.get_node_or_null("PlayerAnimations")
+	# Walk up the tree to find the TileMapLayer
+	_tilemap     = _parent.get_node_or_null("../../FactoryFloor")
 	_start_position = _parent.global_position
 	_start_facing   = _facing
-	_process_next()
+	# ← NO _process_next() here
 
-# ── Queue processing ───────────────────────────────────────────
 func _process_next() -> void:
-	print("PROCESS_NEXT | queue: ", _move_queue.size(), " | _is_moving: ", _is_moving, " | tween_valid: ", is_instance_valid(_tween), " | tween_running: ", _tween.is_running() if is_instance_valid(_tween) else false)
-	print("PROCESS_NEXT | queue: ", _move_queue.size())
+	if _processing:
+		return
+	_processing = true
+
 	if _move_queue.is_empty():
-		_is_moving = false
+		_is_moving  = false
+		_processing = false
 		_play_anim("Idle")
 		return
 
@@ -38,31 +42,45 @@ func _process_next() -> void:
 	var target: Vector2 = _move_queue[0]
 	var dist:   float   = _parent.global_position.distance_to(target)
 	var dur:    float   = dist / MOVE_SPEED
-	print("TWEEN | dist: ", dist, " | dur: ", dur, " | target: ", target)
 
 	if is_instance_valid(_tween):
 		_tween.kill()
 
-	# ← get_tree().create_tween() not _parent.create_tween()
 	_tween = _parent.create_tween()
 	_tween.tween_property(_parent, "global_position", target, dur) \
 		.set_trans(Tween.TRANS_LINEAR)
 	_tween.tween_callback(func() -> void:
-		print("TWEEN DONE")
+		_processing = false
 		_move_queue.pop_front()
 		_process_next()
 	)
-# ═══════════════════════════════════════════════════════════════
-#  PUBLIC COMMANDS
-# ═══════════════════════════════════════════════════════════════
+
+# ── PUBLIC COMMANDS ────────────────────────────────────────────
+
 func move(x: int, y: int) -> void:
-	print("MOVE called: ", x, y, " | queue size: ", _move_queue.size(), " | _parent: ", _parent)
 	var target := _last_queued_pos() + Vector2(x, y) * TILE_SIZE
-	print("TARGET: ", target, " | current pos: ", _parent.global_position)
 	_move_queue.append(target)
 	if not _is_moving:
-		_process_next()
+		call_deferred("_process_next")
 
+func move_to(x: int, y: int) -> void:
+	# (1,1) = top-left tile of the TileMapLayer
+	if _tilemap:
+		var cell   := Vector2i(x - 1, y - 1)
+		var target := _tilemap.to_global(_tilemap.map_to_local(cell))
+		_move_queue.append(target)
+	else:
+		# Fallback if tilemap not found
+		_move_queue.append(Vector2(x - 1, y - 1) * TILE_SIZE)
+	if not _is_moving:
+		call_deferred("_process_next")
+
+func get_grid_position() -> Vector2:
+	# Returns 1-indexed tile coordinate
+	if _tilemap:
+		var cell := _tilemap.local_to_map(_tilemap.to_local(_parent.global_position))
+		return Vector2(cell.x + 1, cell.y + 1)
+	return _parent.global_position / TILE_SIZE
 
 func step_forward() -> void:
 	var v := _facing_vector()
@@ -76,7 +94,8 @@ func stop() -> void:
 	_move_queue.clear()
 	if is_instance_valid(_tween):
 		_tween.kill()
-	_is_moving = false
+	_is_moving  = false
+	_processing = false
 	_play_anim("Idle")
 
 func turn_left() -> void:
@@ -114,12 +133,8 @@ func move_left(steps: int  = 1) -> void: move(-steps, 0)
 func move_up(steps: int    = 1) -> void: move(0, -steps)
 func move_down(steps: int  = 1) -> void: move(0,  steps)
 
-func move_to(x: int, y: int) -> void:
-	_move_queue.append(Vector2(x, y) * TILE_SIZE)
-	if not _is_moving:
-		_process_next()
+func is_moving() -> bool:   return _is_moving
 
-func is_moving() -> bool:      return _is_moving
 func get_facing() -> String:
 	match _facing:
 		Direction.RIGHT: return "right"
@@ -128,9 +143,6 @@ func get_facing() -> String:
 		Direction.DOWN:  return "down"
 	return "right"
 
-func get_grid_position() -> Vector2:
-	return _parent.global_position / TILE_SIZE
-
 func reset() -> void:
 	stop()
 	_parent.global_position = _start_position
@@ -138,6 +150,7 @@ func reset() -> void:
 	_sync_sprite_flip()
 
 # ── Helpers ────────────────────────────────────────────────────
+
 func _last_queued_pos() -> Vector2:
 	if _move_queue.is_empty():
 		return _parent.global_position

@@ -1,6 +1,7 @@
 # res://Scripts/Game/game_player.gd
 extends CharacterBody2D
 
+@onready var animasi : AnimatedSprite2D = $PlayerAnimations
 # ═══════════════════════════════════════════════════════════════
 #  Panduan Perintah
 #  ─────────────────────────────────────────────────────────────
@@ -39,9 +40,9 @@ func _ready() -> void:
 	_start_position = global_position
 
 func run() -> void:
-	pass # Tulis kode Anda di sini
+	pass
 
 func reset() -> void:
-	_start_position = get_node("GameMovementCompon")._start_position
-	get_node("GameMovementCompon").reset()
-	get_node("GameInteractionComponent").reset()
+	_start_position = get_node("MovementComponent")._start_position
+	get_node("MovementComponent").reset()
+	get_node("InteractionComponent").reset()
