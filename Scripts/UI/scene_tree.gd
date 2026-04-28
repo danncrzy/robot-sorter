@@ -7,6 +7,7 @@ class_name SceneTreePanel
 @export var min_height := 200.0
 @export var max_width := 400.0
 @export var max_height := 800.0
+@export var m_r: float = 12.0 
 
 @export var dock_btn_width := 32.0
 
@@ -15,6 +16,9 @@ class_name SceneTreePanel
 @onready var tab_container: Control = $ScrollContainer/SceneTabContainer
 @onready var dock_btn: TextureButton = $DockBtn
 @onready var resize_handles: Control = $ResizeHandles
+@onready var v_scroll_bar: VScrollBar = $VScrollBar
+@export var initial_width:  float = 160.0
+@export var initial_height: float = 200.0
 
 # Drag State
 var _is_dragging: bool = false
@@ -31,7 +35,7 @@ var _resize_mouse_orig: Vector2 = Vector2.ZERO
 var _resize_rect_orig: Rect2 = Rect2()
 
 var is_docked: bool = true
-var _dock_tween: Tween = null # FIX: Changed 'nil' to 'null'
+var _dock_tween: Tween = null
 var _active_tab: Control = null
 
 # Handles
@@ -42,11 +46,13 @@ var _rh_se: Control
 const SCENE_TAB_SCENE: PackedScene = preload("res://Scenes/UI/scene_tab.tscn")
 
 func _ready() -> void:
+	custom_minimum_size = Vector2(min_width, min_height)
+	size = Vector2(initial_width, initial_height)
+	
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	
 	if size.x < min_width: size.x = min_width
 	if size.y < min_height: size.y = min_height
-	custom_minimum_size = Vector2(min_width, min_height)
 	
 	_initial_x = global_position.x
 	
@@ -58,12 +64,24 @@ func _ready() -> void:
 	dock_btn.flip_h = false 
 	_update_layout()
 	_toggle_dock()
+	_setup_scrollbar()
 
 func _input(event: InputEvent) -> void:
 	if not visible: return
 
+	# Sync custom scrollbar on mouse wheel
+	if event is InputEventMouseMotion and get_global_rect().has_point(event.global_position):
+		await get_tree().process_frame
+		v_scroll_bar.max_value = scroll_container.get_v_scroll_bar().max_value
+		v_scroll_bar.page      = scroll_container.get_v_scroll_bar().page
+		v_scroll_bar.set_value_no_signal(scroll_container.get_v_scroll_bar().value)
+
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
+			# ← block drag if clicking on custom scrollbar
+			if v_scroll_bar.get_global_rect().has_point(event.global_position):
+				_potential_drag = false
+				return
 			if get_global_rect().has_point(event.global_position):
 				_potential_drag = true
 				_drag_start_pos = event.global_position
@@ -83,7 +101,6 @@ func _input(event: InputEvent) -> void:
 		if _is_dragging:
 			var delta_y: float = event.global_position.y - _drag_start_pos.y
 			global_position.y = _drag_panel_start_y + delta_y
-			# X locked to docked position OR initial — never changes during drag
 			global_position.x = _initial_x - size.x + dock_btn_width + 16.0 \
 				if is_docked else _initial_x
 			get_viewport().set_input_as_handled()
@@ -113,18 +130,26 @@ func _update_layout() -> void:
 	bg.size = Vector2(w, h)
 	
 	scroll_container.position = Vector2(m, m)
-	scroll_container.size = Vector2(w - m * 2.0, h - m * 2.0)
+	scroll_container.size     = Vector2(w - m - m_r - m, h - m * 2.0)
+	
+	# Custom scrollbar — sits in the m_r gap on the right
+	v_scroll_bar.position = Vector2(w - m_r * 1.6, m)
+	v_scroll_bar.size     = Vector2(m_r - 2.0, h - m * 2)
+
+	# Sync max/page every layout pass
+	v_scroll_bar.max_value = scroll_container.get_v_scroll_bar().max_value
+	v_scroll_bar.page      = scroll_container.get_v_scroll_bar().page
 	
 	tab_container.size.x = scroll_container.size.x
 	tab_container.custom_minimum_size.x = scroll_container.size.x
 	
-	dock_btn.position = Vector2(w - dock_btn_width + 25.0, h  * (0.4))
+	dock_btn.position = Vector2(w - dock_btn_width * (2.77), h  * (0.947))
 	dock_btn.size = Vector2(dock_btn_width, dock_btn_width)
 	
 	var e: float = 6.0
-	_rh_e.position = Vector2(w - e, 16.0);      _rh_e.size = Vector2(e, h - 32.0)
-	_rh_ne.position = Vector2(w - 16.0, 0.0);    _rh_ne.size = Vector2(16.0, 16.0)
-	_rh_se.position = Vector2(w - 16.0, h - 16.0);_rh_se.size = Vector2(16.0, 16.0)
+	_rh_e.position  = Vector2(w - e,       16.0);      _rh_e.size  = Vector2(e,    h - 32.0)
+	_rh_ne.position = Vector2(w - 16.0,    0.0);       _rh_ne.size = Vector2(16.0, 16.0)
+	_rh_se.position = Vector2(w - 16.0,    h - 16.0);  _rh_se.size = Vector2(16.0, 16.0)
 
 func _create_resize_handles() -> void:
 	_rh_e = _make_handle("ResizeE", Control.CURSOR_HSIZE)
@@ -248,3 +273,19 @@ func _update_tab_container_bounds() -> void:
 
 func _on_tab_script_requested(data: Dictionary) -> void:
 	LevelManager.open_script_for_node(data)
+
+func _setup_scrollbar() -> void:
+	var built_in := scroll_container.get_v_scroll_bar()
+	built_in.modulate.a = 0
+	built_in.custom_minimum_size.x = 0
+
+	# Auto-syncs whenever built-in scrollbar changes for ANY reason
+	built_in.changed.connect(func() -> void:
+		v_scroll_bar.max_value = built_in.max_value
+		v_scroll_bar.page      = built_in.page
+		v_scroll_bar.set_value_no_signal(built_in.value)
+	)
+
+	v_scroll_bar.value_changed.connect(func(val: float) -> void:
+		scroll_container.scroll_vertical = int(val)
+	)

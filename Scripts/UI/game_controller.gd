@@ -31,6 +31,7 @@ func is_holding() -> bool:                 return get_node("InteractionComponent
 """
 
 func _ready() -> void:
+	add_to_group("game_controller")
 	play_btn.pressed.connect(_on_play)
 	reset_btn.pressed.connect(_on_reset)
 	await get_tree().process_frame
@@ -39,6 +40,8 @@ func _ready() -> void:
 		_original_script = _player.get_script()
 
 func _on_play() -> void:
+	if ErrorHandler._error_control and ErrorHandler._error_control.visible:
+		return
 	if _play_running:
 		return
 	_play_running = true
@@ -99,6 +102,8 @@ func _on_play() -> void:
 		_player.run()
 
 func _on_reset() -> void:
+	if ErrorHandler._error_control and ErrorHandler._error_control.visible:
+		return
 	if not _player: return
 
 	# ── Lock reset, unlock play ──

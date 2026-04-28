@@ -11,9 +11,12 @@
 [ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="6_eqykv"]
 [ext_resource type="Texture2D" uid="uid://dprpeef5nu2tx" path="res://Assets/UI/TitleBarBg.png" id="6_jm178"]
 [ext_resource type="Texture2D" uid="uid://hxinwd1ogvmw" path="res://Assets/UI/ScriptSelectionUI.png" id="6_odvir"]
+[ext_resource type="Texture2D" uid="uid://ddq4ylrfm38wk" path="res://Assets/UI/VScrollBarTrack.png" id="7_742jb"]
 [ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="7_pdgqq"]
 [ext_resource type="Texture2D" uid="uid://bmqqb0m4lg8jr" path="res://Assets/UI/NavBarBtn.png" id="8_f5p04"]
+[ext_resource type="Texture2D" uid="uid://o3734pqcwqep" path="res://Assets/UI/VScrollBar.png" id="8_jcjkd"]
 [ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="8_jm178"]
+[ext_resource type="Texture2D" uid="uid://cnd32sn33oy2w" path="res://Assets/UI/VScrollBar_Pressed.png" id="9_ekh5o"]
 [ext_resource type="Texture2D" uid="uid://cvsripbfcivub" path="res://Assets/UI/FilterBG.png" id="9_pdgqq"]
 [ext_resource type="Texture2D" uid="uid://bjlxr0w6svxhj" path="res://Assets/UI/Text_Editor_SettingBtn.png" id="12_51q86"]
 [ext_resource type="Texture2D" uid="uid://cl36lo23q1pdr" path="res://Assets/UI/NavBarBtn_Pressed.png" id="13_gp13m"]
@@ -31,6 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://in4ge4nr2vvl" path="res://Assets/UI/NextPageBtn_Pressed.png" id="18_yp1bd"]
 [ext_resource type="Texture2D" uid="uid://bwa8s4aum8taq" path="res://Assets/UI/TableOfContentsBtn.png" id="22_epqro"]
 [ext_resource type="Texture2D" uid="uid://dl03d2queplnb" path="res://Assets/UI/TableOfContentsBtn_Pressed.png" id="23_dlma0"]
+[ext_resource type="Script" uid="uid://c1vk6ekqd5uo6" path="res://Scripts/UI/error_control.gd" id="23_tck48"]
 [ext_resource type="Texture2D" uid="uid://bbxamt8okmpkk" path="res://Assets/UI/TableOfContentsBtn_Visible.png" id="24_a3btw"]
 [ext_resource type="Texture2D" uid="uid://dcwsanm73xlvx" path="res://Assets/UI/TableOfContentsBtn_Visible_Pressed.png" id="25_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://b751cl7lvvkop" path="res://Assets/UI/PinkStickyNotes_Visible.png" id="27_2kxgo"]
@@ -57,6 +61,29 @@
 [ext_resource type="Texture2D" uid="uid://tb52bpu7n75t" path="res://Assets/UI/ResetBtn.png" id="55_rmbpn"]
 [ext_resource type="Texture2D" uid="uid://cejjyht233jmc" path="res://Assets/UI/ResetBtn_Pressed.png" id="56_742jb"]
 
+[sub_resource type="Theme" id="Theme_rmbpn"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jcjkd"]
+texture = ExtResource("7_742jb")
+texture_margin_top = 1.0
+texture_margin_right = 16.0
+texture_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ekh5o"]
+texture = ExtResource("8_jcjkd")
+texture_margin_top = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tck48"]
+texture = ExtResource("9_ekh5o")
+texture_margin_top = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w24h7"]
+texture = ExtResource("9_ekh5o")
+texture_margin_top = 16.0
+texture_margin_bottom = 16.0
+
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
 script = ExtResource("1_y31ga")
@@ -71,7 +98,7 @@ grow_vertical = 2
 color = Color(0.8784314, 0.76862746, 0.70980394, 1)
 
 [node name="SceneTreePanel" type="Control" parent="." unique_id=986379462 groups=["scene_tree_panel"]]
-custom_minimum_size = Vector2(110, 150)
+custom_minimum_size = Vector2(140, 140)
 layout_mode = 3
 anchors_preset = 0
 offset_top = 104.0
@@ -80,6 +107,8 @@ offset_bottom = 144.0
 script = ExtResource("2_bwg1y")
 min_width = 140.0
 min_height = 140.0
+initial_width = 200.0
+initial_height = 195.0
 
 [node name="SceneTreeBg" type="NinePatchRect" parent="SceneTreePanel" unique_id=1956743784]
 layout_mode = 1
@@ -107,13 +136,6 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="DockBtn" type="TextureButton" parent="SceneTreePanel" unique_id=774777192]
-layout_mode = 1
-offset_right = 69.0
-offset_bottom = 71.0
-texture_normal = ExtResource("3_535bs")
-texture_pressed = ExtResource("4_51q86")
-
 [node name="ScrollContainer" type="ScrollContainer" parent="SceneTreePanel" unique_id=940719585]
 layout_mode = 1
 anchors_preset = 15
@@ -123,10 +145,33 @@ offset_top = 1.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_rmbpn")
+theme_override_colors/scroll_hint_vertical_color = Color(1, 1, 1, 1)
+theme_override_colors/scroll_hint_horizontal_color = Color(1, 1, 1, 1)
 
 [node name="SceneTabContainer" type="VBoxContainer" parent="SceneTreePanel/ScrollContainer" unique_id=694778724]
 layout_mode = 2
 theme_override_constants/separation = 4
+
+[node name="DockBtn" type="TextureButton" parent="SceneTreePanel" unique_id=774777192]
+layout_mode = 1
+offset_right = 69.0
+offset_bottom = 71.0
+texture_normal = ExtResource("3_535bs")
+texture_pressed = ExtResource("4_51q86")
+
+[node name="VScrollBar" type="VScrollBar" parent="SceneTreePanel" unique_id=1327236597]
+z_index = 2
+layout_mode = 0
+offset_left = 91.0
+offset_top = 2.0
+offset_right = 107.0
+offset_bottom = 105.0
+theme_override_styles/scroll = SubResource("StyleBoxTexture_jcjkd")
+theme_override_styles/grabber = SubResource("StyleBoxTexture_ekh5o")
+theme_override_styles/grabber_highlight = SubResource("StyleBoxTexture_tck48")
+theme_override_styles/grabber_pressed = SubResource("StyleBoxTexture_w24h7")
+value = 20.0
 
 [node name="TextEditorUI" type="Control" parent="." unique_id=925118085 groups=["text_editor_ui"]]
 z_index = 5
@@ -250,7 +295,7 @@ placeholder_text = "Cari Script"
 [node name="ScriptTabList" type="VBoxContainer" parent="TextEditorUI/ScriptSelectionUI" unique_id=1947146805]
 layout_mode = 0
 mouse_filter = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = -10
 
 [node name="TextEditorPanel" type="Control" parent="TextEditorUI" unique_id=1832948525]
 anchors_preset = 0
@@ -292,6 +337,23 @@ code_completion_enabled = true
 indent_automatic = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
+
+[node name="ErrorControl" type="Control" parent="TextEditorUI/TextEditorPanel" unique_id=937772478]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("23_tck48")
+
+[node name="ErrorBg" type="NinePatchRect" parent="TextEditorUI/TextEditorPanel/ErrorControl" unique_id=573271459]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ErrorMessage" type="RichTextLabel" parent="TextEditorUI/TextEditorPanel/ErrorControl" unique_id=544740464]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("6_eqykv")
 
 [node name="ResizeHandles" type="Control" parent="TextEditorUI" unique_id=930349480]
 anchors_preset = 0

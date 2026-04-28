@@ -32,7 +32,7 @@ class_name TextEditorUI
 @onready var title_bar_bg:            NinePatchRect  = $TitleBar/TitleBarBg
 @onready var title_label:             Label          = $TitleBar/TitleLabel
 @onready var close_btn:               TextureButton  = $TitleBar/CloseBtn
-@onready var nav_btn:                 TextureButton         = $TitleBar/NavBarBtn 
+@onready var nav_btn:                 TextureButton  = $TitleBar/NavBarBtn 
 
 @onready var script_selection_panel:  Control        = $ScriptSelectionUI
 @onready var sel_bg:                  NinePatchRect  = $ScriptSelectionUI/SelBG
@@ -45,6 +45,8 @@ class_name TextEditorUI
 @onready var code_edit:               CodeEdit       = $TextEditorPanel/CodeEdit
 
 @onready var resize_handles:          Control        = $ResizeHandles
+
+@onready var error_control:           Control        = $TextEditorPanel/ErrorControl
 
 # Resize handle nodes
 var _rh_n:  Control
@@ -85,6 +87,9 @@ func _ready() -> void:
 	_configure_styles()
 	_create_resize_handles()
 	_connect_internal_signals()
+	
+	error_control.init(code_edit)
+	ErrorHandler.init(self, error_control)
 
 	if resize_handles.get_index() < get_child_count() - 1:
 		move_child(resize_handles, get_child_count() - 1)

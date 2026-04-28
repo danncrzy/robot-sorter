@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 GameDocs="*uid://bm5cqdnh886xs"
 LevelManager="*uid://ddod7003rnwup"
 ScriptManager="*uid://cdsc1xumgww0v"
+ErrorHandler="*uid://bj1nx3dplnysc"
 
 [display]
 

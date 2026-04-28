@@ -79,13 +79,17 @@ texture = ExtResource("2_bo1nx")
 [sub_resource type="TileSet" id="TileSet_jjvhh"]
 sources/0 = SubResource("TileSetAtlasSource_8gbba")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_21xkr"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("5_kry3j")
-region = Rect2(85, 0, 17, 32)
+region = Rect2(119, 0, 17, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6bp64"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_hibaj"]
 atlas = ExtResource("5_kry3j")
-region = Rect2(102, 0, 17, 32)
+region = Rect2(136, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hptm8"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(0, 0, 17, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d1ilt"]
 atlas = ExtResource("5_kry3j")
@@ -103,20 +107,31 @@ region = Rect2(51, 0, 17, 32)
 atlas = ExtResource("5_kry3j")
 region = Rect2(68, 0, 17, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsu2k"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(85, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k12tt"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(102, 0, 17, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_344ge"]
 animations = [{
 "frames": [{
 "duration": 2.0,
-"texture": SubResource("AtlasTexture_21xkr")
+"texture": SubResource("AtlasTexture_fevyy")
 }, {
 "duration": 3.0,
-"texture": SubResource("AtlasTexture_6bp64")
+"texture": SubResource("AtlasTexture_hibaj")
 }],
 "loop": true,
 "name": &"Idle",
 "speed": 5.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hptm8")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_d1ilt")
 }, {
@@ -131,7 +146,23 @@ animations = [{
 }],
 "loop": true,
 "name": &"Walk",
-"speed": 9.0
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wsu2k")
+}],
+"loop": true,
+"name": &"Walk_Down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k12tt")
+}],
+"loop": true,
+"name": &"Walk_Up",
+"speed": 5.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hptm8"]

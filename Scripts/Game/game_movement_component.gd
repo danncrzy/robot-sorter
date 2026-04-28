@@ -1,30 +1,32 @@
 extends Node
 
-const TILE_SIZE:  float = 16.0          # ← was 32, matches your 16×16 tileset
-const MOVE_SPEED: float = 100.0
+const TILE_SIZE:  float = 16.0
+const MOVE_SPEED: float = 120.0
 
 enum Direction { RIGHT, LEFT, UP, DOWN }
 
 var _parent:         CharacterBody2D = null
 var _animations:     AnimatedSprite2D = null
-var _tilemap:        TileMapLayer = null   # ← NEW
+var _tilemap:        TileMapLayer = null
 var _facing:         Direction = Direction.RIGHT
 var _is_moving:      bool = false
 var _move_queue:     Array[Vector2] = []
 var _start_position: Vector2 = Vector2.ZERO
 var _start_facing:   Direction = Direction.RIGHT
 var _tween:          Tween = null
-var _processing:     bool = false          # re-entrancy guard
+var _processing:     bool = false
 
 func _ready() -> void:
-	_parent      = get_parent() as CharacterBody2D
-	_animations  = _parent.get_node_or_null("PlayerAnimations")
-	# Walk up the tree to find the TileMapLayer
-	_tilemap     = _parent.get_node_or_null("../../FactoryFloor")
+	_parent         = get_parent() as CharacterBody2D
+	_animations     = _parent.get_node_or_null("PlayerAnimations")
+	_tilemap        = _parent.get_node_or_null("../../FactoryFloor")
 	_start_position = _parent.global_position
 	_start_facing   = _facing
-	# ← NO _process_next() here
+	_play_anim("Idle")
 
+# ══════════════════════════════════════════════════════════════
+#  QUEUE PROCESSOR
+# ══════════════════════════════════════════════════════════════
 func _process_next() -> void:
 	if _processing:
 		return
@@ -37,11 +39,33 @@ func _process_next() -> void:
 		return
 
 	_is_moving = true
-	_play_anim("Walk")
 
-	var target: Vector2 = _move_queue[0]
-	var dist:   float   = _parent.global_position.distance_to(target)
-	var dur:    float   = dist / MOVE_SPEED
+	var target:    Vector2 = _move_queue[0]
+	var direction: Vector2 = (target - _parent.global_position).normalized()
+
+	# ── Raycast — check one tile ahead before committing ──────
+	var space_state := _parent.get_world_2d().direct_space_state
+	var ray_end     := _parent.global_position + direction * (TILE_SIZE - 2.0)
+	var query       := PhysicsRayQueryParameters2D.create(
+		_parent.global_position,
+		ray_end,
+		0xFFFFFFFF,
+		[_parent.get_rid()]          # exclude self
+	)
+	var hit := space_state.intersect_ray(query)
+
+	if not hit.is_empty():
+		# Blocked — skip this tile, continue with next queued command
+		_move_queue.pop_front()
+		_processing = false
+		_process_next()
+		return
+
+	# ── Animation based on direction ──────────────────────────
+	_play_directional_anim(direction)
+
+	var dist: float = _parent.global_position.distance_to(target)
+	var dur:  float = dist / MOVE_SPEED
 
 	if is_instance_valid(_tween):
 		_tween.kill()
@@ -55,32 +79,49 @@ func _process_next() -> void:
 		_process_next()
 	)
 
-# ── PUBLIC COMMANDS ────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════
+#  ANIMATION HELPER
+# ══════════════════════════════════════════════════════════════
+func _play_directional_anim(direction: Vector2) -> void:
+	if not _animations:
+		return
+	# Vertical dominates
+	if abs(direction.y) > abs(direction.x):
+		if direction.y > 0:
+			_play_anim("Walk_Down")
+		else:
+			_play_anim("Walk_Up")
+	else:
+		# Horizontal — flip sprite for left
+		_animations.flip_h = direction.x < 0
+		_play_anim("Walk")
 
+# ══════════════════════════════════════════════════════════════
+#  PUBLIC COMMANDS
+# ══════════════════════════════════════════════════════════════
 func move(x: int, y: int) -> void:
-	var target := _last_queued_pos() + Vector2(x, y) * TILE_SIZE
-	_move_queue.append(target)
+	# ── Split diagonal into two cardinal steps ─────────────────
+	# move(1,1) → right one tile THEN down one tile, no diagonal
+	if x != 0 and y != 0:
+		var after_h := _last_queued_pos() + Vector2(x, 0) * TILE_SIZE
+		_move_queue.append(after_h)
+		var after_v := after_h + Vector2(0, y) * TILE_SIZE
+		_move_queue.append(after_v)
+	else:
+		_move_queue.append(_last_queued_pos() + Vector2(x, y) * TILE_SIZE)
+
 	if not _is_moving:
 		call_deferred("_process_next")
 
 func move_to(x: int, y: int) -> void:
-	# (1,1) = top-left tile of the TileMapLayer
 	if _tilemap:
 		var cell   := Vector2i(x - 1, y - 1)
 		var target := _tilemap.to_global(_tilemap.map_to_local(cell))
 		_move_queue.append(target)
 	else:
-		# Fallback if tilemap not found
 		_move_queue.append(Vector2(x - 1, y - 1) * TILE_SIZE)
 	if not _is_moving:
 		call_deferred("_process_next")
-
-func get_grid_position() -> Vector2:
-	# Returns 1-indexed tile coordinate
-	if _tilemap:
-		var cell := _tilemap.local_to_map(_tilemap.to_local(_parent.global_position))
-		return Vector2(cell.x + 1, cell.y + 1)
-	return _parent.global_position / TILE_SIZE
 
 func step_forward() -> void:
 	var v := _facing_vector()
@@ -143,14 +184,22 @@ func get_facing() -> String:
 		Direction.DOWN:  return "down"
 	return "right"
 
+func get_grid_position() -> Vector2:
+	if _tilemap:
+		var cell := _tilemap.local_to_map(_tilemap.to_local(_parent.global_position))
+		return Vector2(cell.x + 1, cell.y + 1)
+	return _parent.global_position / TILE_SIZE
+
 func reset() -> void:
 	stop()
 	_parent.global_position = _start_position
 	_facing = _start_facing
 	_sync_sprite_flip()
+	_play_anim("Idle") 
 
-# ── Helpers ────────────────────────────────────────────────────
-
+# ══════════════════════════════════════════════════════════════
+#  HELPERS
+# ══════════════════════════════════════════════════════════════
 func _last_queued_pos() -> Vector2:
 	if _move_queue.is_empty():
 		return _parent.global_position
