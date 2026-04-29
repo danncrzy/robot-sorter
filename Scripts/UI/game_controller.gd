@@ -55,22 +55,22 @@ func _on_play() -> void:
 		_play_running = false
 		return
 
-	var user_code := ScriptManager.get_content("game_player.gd")
+	var user_code = ScriptManager.get_content("game_player.gd")
 	if user_code == "":
 		_play_running = false
 		return
 
-	var lines    := user_code.split("\n")
+	var lines    = user_code.split("\n")
 	var filtered := PackedStringArray()
 	var skipping_func := false
 
 	for line in lines:
-		var stripped := line.strip_edges()
+		var stripped = line.strip_edges()
 		if stripped.begins_with("func _ready") or stripped.begins_with("func reset"):
 			skipping_func = true
 			continue
 		if skipping_func:
-			var is_indented := line.begins_with("\t") or line.begins_with("    ")
+			var is_indented = line.begins_with("\t") or line.begins_with("    ")
 			if stripped != "" and not is_indented:
 				skipping_func = false
 			else:

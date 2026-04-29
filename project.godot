@@ -20,6 +20,8 @@ GameDocs="*uid://bm5cqdnh886xs"
 LevelManager="*uid://ddod7003rnwup"
 ScriptManager="*uid://cdsc1xumgww0v"
 ErrorHandler="*uid://bj1nx3dplnysc"
+AudioManager="*uid://c2006b8452fky"
+GDScriptErrors="*uid://b7dyhubhy6fvq"
 
 [display]
 
