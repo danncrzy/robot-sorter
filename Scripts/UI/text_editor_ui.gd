@@ -229,6 +229,7 @@ func _connect_internal_signals() -> void:
 func _on_nav_bar_btn_pressed() -> void:
 	_force_show_panel = !_force_show_panel
 	_update_layout()
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_6.ogg"))
 
 ## ═══════════════════════════════════════════════════════════════
 ##  LAYOUT
@@ -450,6 +451,7 @@ func _highlight_active_tab() -> void:
 
 func _on_tab_pressed(script_name: String) -> void:
 	open_script(script_name)
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_6.ogg"))
 
 
 func open_script(script_name: String) -> void:
@@ -484,6 +486,7 @@ func _on_code_edit_text_changed() -> void:
 ##  VISIBILITY
 ## ═══════════════════════════════════════════════════════════════
 func toggle_editor() -> void:
+
 	if _editor_open:
 		close_editor()
 	else:
@@ -498,6 +501,7 @@ func close_editor() -> void:
 	_editor_open = false
 	visible      = false
 	editor_closed.emit()
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_6.ogg"))
 
 func is_editor_open() -> bool:
 	return _editor_open

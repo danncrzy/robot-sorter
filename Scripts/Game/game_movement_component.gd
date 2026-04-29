@@ -36,10 +36,17 @@ func _process_next() -> void:
 		_is_moving  = false
 		_processing = false
 		_play_anim("Idle")
+		AudioManager.stop_footsteps()  
 		return
 
 	_is_moving = true
-
+	
+	AudioManager.start_footsteps(
+		preload("res://Assets/Sfx/walk.ogg"),
+		0.85, 1.15,
+		0.30,
+		0.8
+	)
 	var target:    Vector2 = _move_queue[0]
 	var direction: Vector2 = (target - _parent.global_position).normalized()
 

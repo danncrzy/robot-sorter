@@ -385,9 +385,11 @@ func _go_to_page(index: int) -> void:
 	if index % 2 != 0: index -= 1 
 	current_spread = index / 2
 	_update_pages()
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/page_turn.ogg"))
 
 func _go_to_toc() -> void:
 	_go_to_page(0)
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/toc.ogg"))
 
 func _on_next_page() -> void:
 	var next_spread = current_spread + 1
@@ -395,12 +397,13 @@ func _on_next_page() -> void:
 	if left_idx < game_docs.pages.size():
 		current_spread = next_spread
 		_update_pages()
+		AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/page_turn.ogg"))
 
 func _on_back_page() -> void:
 	if current_spread > 0:
 		current_spread -= 1
 		_update_pages()
-
+		AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/page_turn.ogg"))
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  STICKY NOTES SPAWNING & DELETE MODE
@@ -419,6 +422,7 @@ func spawn_sticky_note(color: StickyNote.NoteColor, drop_global_pos: Vector2, ta
 	note_instance.navigate_to_page.connect(_go_to_page)
 	note_instance.request_delete.connect(_on_sticky_note_delete)
 
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/sticky_note.ogg"))
 func _toggle_delete_mode() -> void:
 	is_delete_mode = !is_delete_mode
 	delete_mode_btn.self_modulate = Color(1, 0.5, 0.5) if is_delete_mode else Color(1, 1, 1)
@@ -448,6 +452,7 @@ func _on_sticky_note_delete(note_node: Control) -> void:
 ## ────────────────────── Sticky Choices Toggle ──────────────────────
 func _toggle_sticky_choices() -> void:
 	sticky_choices.visible = !sticky_choices.visible
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/sticky_note_container.ogg"))
 
 ## ────────────────────── Visibility ──────────────────────
 func toggle_ui() -> void:

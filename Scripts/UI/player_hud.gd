@@ -5,12 +5,15 @@ extends CanvasLayer
 @onready var documents:        Control      = $DocumentsUI
 @onready var script_btn:       TextureButton = $ScriptBtn
 @onready var documents_btn:    TextureButton = $DocumentsBtn
+@onready var setting_btn: TextureButton = $SettingBtn
+@onready var setting_ui:  Control       = $SettingUI
 
 func _ready() -> void:
 	script_btn.pressed.connect(_toggle_editor)
 	documents_btn.pressed.connect(_toggle_docs)
 	text_editor.visible = false
 	documents.visible   = false
+	setting_btn.pressed.connect(setting_ui.toggle)
 	AudioManager.play_music(preload("res://Assets/Sfx/rainy_day_bgm.ogg"))
 
 func _toggle_editor() -> void:

@@ -44,6 +44,7 @@ func _on_play() -> void:
 		return
 	if _play_running:
 		return
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	_play_running = true
 
 	# ── Lock play, unlock reset ──
@@ -105,7 +106,7 @@ func _on_reset() -> void:
 	if ErrorHandler._error_control and ErrorHandler._error_control.visible:
 		return
 	if not _player: return
-
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	# ── Lock reset, unlock play ──
 	reset_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	play_btn.mouse_filter  = Control.MOUSE_FILTER_STOP

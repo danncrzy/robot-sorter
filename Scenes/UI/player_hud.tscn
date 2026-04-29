@@ -55,11 +55,14 @@
 [ext_resource type="Texture2D" uid="uid://5h5lqniuqf3a" path="res://Assets/UI/DocumentsBtn_Pressed.png" id="43_71ecm"]
 [ext_resource type="Texture2D" uid="uid://dgs8fwtqx7lol" path="res://Assets/Cursor/Test.png" id="47_bwg1y"]
 [ext_resource type="Script" uid="uid://dtmunv1akydex" path="res://Scripts/UI/cursor.gd" id="48_535bs"]
+[ext_resource type="Script" uid="uid://gviuq3b86mig" path="res://Scripts/UI/setting_ui.gd" id="49_8aao3"]
+[ext_resource type="Texture2D" uid="uid://dp2s1bheal16b" path="res://Assets/UI/SettingUITexture.png" id="50_yt6eb"]
 [ext_resource type="Script" uid="uid://w012jnei2gdm" path="res://Scripts/UI/game_controller.gd" id="52_u643f"]
 [ext_resource type="Texture2D" uid="uid://imt7b6qi44ol" path="res://Assets/UI/PlayBtn.png" id="53_flvkn"]
 [ext_resource type="Texture2D" uid="uid://c4ff232er7mb0" path="res://Assets/UI/PlayBtn_Pressed.png" id="54_7c8do"]
 [ext_resource type="Texture2D" uid="uid://tb52bpu7n75t" path="res://Assets/UI/ResetBtn.png" id="55_rmbpn"]
 [ext_resource type="Texture2D" uid="uid://cejjyht233jmc" path="res://Assets/UI/ResetBtn_Pressed.png" id="56_742jb"]
+[ext_resource type="Shader" uid="uid://b8hokr7b4y51h" path="res://Shaders/gray_overlay.gdshader" id="61_w24h7"]
 
 [sub_resource type="Theme" id="Theme_rmbpn"]
 
@@ -83,6 +86,15 @@ texture_margin_bottom = 16.0
 texture = ExtResource("9_ekh5o")
 texture_margin_top = 16.0
 texture_margin_bottom = 16.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8aao3"]
+shader = ExtResource("61_w24h7")
+shader_parameter/fog_strength = 0.0
+shader_parameter/noise_scale = 10.0
+shader_parameter/noise_speed = 0.1
+shader_parameter/noise_direction = Vector2(1, 0.5)
+shader_parameter/vignette_strength = 0.0
+shader_parameter/vignette_size = 0.8
 
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
@@ -590,6 +602,75 @@ offset_bottom = 188.0
 texture_normal = ExtResource("38_ddnq0")
 texture_pressed = ExtResource("39_22it0")
 
+[node name="SettingUI" type="Control" parent="." unique_id=714969755]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -96.0
+offset_right = 64.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("49_8aao3")
+
+[node name="SettingUITexture" type="TextureRect" parent="SettingUI" unique_id=1164067373]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("50_yt6eb")
+
+[node name="SettingLabel" type="Label" parent="SettingUI" unique_id=1498714321]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 7.0
+offset_right = 91.0
+offset_bottom = 30.0
+theme = ExtResource("6_eqykv")
+text = "Pengaturan"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SettingContainer" type="VBoxContainer" parent="SettingUI" unique_id=1163315157]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 47.0
+offset_right = 53.0
+offset_bottom = 104.0
+theme_override_constants/separation = 25
+
+[node name="MasterVolume" type="HBoxContainer" parent="SettingUI/SettingContainer" unique_id=764535022]
+layout_mode = 2
+
+[node name="VolumeIcon" type="TextureRect" parent="SettingUI/SettingContainer/MasterVolume" unique_id=1021627511]
+layout_mode = 2
+
+[node name="VolumeSlider" type="HSlider" parent="SettingUI/SettingContainer/MasterVolume" unique_id=1744917859]
+layout_mode = 2
+
+[node name="MusicVolume" type="HBoxContainer" parent="SettingUI/SettingContainer" unique_id=63077731]
+layout_mode = 2
+
+[node name="MusicIcon" type="TextureRect" parent="SettingUI/SettingContainer/MusicVolume" unique_id=1642310714]
+layout_mode = 2
+
+[node name="MusicSlider" type="HSlider" parent="SettingUI/SettingContainer/MusicVolume" unique_id=1883679126]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="SettingUI" unique_id=570972499]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HomeBtn" type="TextureButton" parent="SettingUI/ButtonContainer" unique_id=728058623]
+layout_mode = 2
+
+[node name="BackBtn" type="TextureButton" parent="SettingUI/ButtonContainer" unique_id=1143542076]
+layout_mode = 2
+
 [node name="ScriptBtn" type="TextureButton" parent="." unique_id=1667431789]
 offset_left = 426.0
 offset_top = 321.0
@@ -606,6 +687,14 @@ offset_bottom = 360.0
 texture_normal = ExtResource("42_22it0")
 texture_pressed = ExtResource("43_71ecm")
 script = ExtResource("42_wx7vk")
+
+[node name="SettingBtn" type="TextureButton" parent="." unique_id=1618019375]
+offset_left = 7.0
+offset_top = 3.0
+offset_right = 39.0
+offset_bottom = 37.0
+texture_normal = ExtResource("53_flvkn")
+texture_pressed = ExtResource("54_7c8do")
 
 [node name="Cursor" type="TextureRect" parent="." unique_id=1430354279]
 z_index = 1000
@@ -638,3 +727,15 @@ texture_pressed = ExtResource("54_7c8do")
 layout_mode = 0
 texture_normal = ExtResource("55_rmbpn")
 texture_pressed = ExtResource("56_742jb")
+
+[node name="GrayOverlay" type="ColorRect" parent="." unique_id=862548913]
+z_index = 2000
+material = SubResource("ShaderMaterial_8aao3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 51.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

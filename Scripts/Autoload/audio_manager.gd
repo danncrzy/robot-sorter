@@ -19,6 +19,24 @@ var _music_volume: float = 1.0
 var _sfx_volume:   float = 1.0
 var _ui_volume:    float = 1.0
 
+
+# ── Internal ───────────────────────────────────────────
+const FOOTSTEP_POOL_SIZE := 2
+
+var _footstep_pool:   Array[AudioStreamPlayer] = []
+var _footstep_timer:  Timer                    = null
+var _footstep_active: bool                     = false
+
+var _footstep_stream:    AudioStream = null
+var _footstep_pitch_min: float       = 0.9
+var _footstep_pitch_max: float       = 1.1
+var _footstep_volume:    float       = 1.0
+
+
+@export var footstep_interval: float = 0.32  # seconds between steps
+
+
+
 ## ═══════════════════════════════════════════════════════
 ##  LIFECYCLE
 ## ═══════════════════════════════════════════════════════
@@ -27,6 +45,7 @@ func _ready() -> void:
 	_create_music_player()
 	_create_ui_player()
 	_create_sfx_pool()
+	_create_footstep_pool() 
 
 func _ensure_buses() -> void:
 	for bus in [BUS_SFX, BUS_MUSIC, BUS_UI]:
@@ -89,7 +108,7 @@ func play_sfx(stream: AudioStream, pitch: float = 1.0, volume: float = 1.0) -> v
 	if not player: return
 	player.stream    = stream
 	player.pitch_scale  = pitch
-	player.volume_db = linear_to_db(volume * _sfx_volume)
+	player.volume_db = _safe_db(volume * _sfx_volume)
 	player.play()
 
 func play_sfx_random_pitch(stream: AudioStream,
@@ -100,7 +119,7 @@ func set_sfx_volume(linear: float) -> void:
 	_sfx_volume = clampf(linear, 0.0, 1.0)
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_SFX),
-		linear_to_db(_sfx_volume)
+		_safe_db(_sfx_volume)
 	)
 
 ## ═══════════════════════════════════════════════════════
@@ -108,15 +127,86 @@ func set_sfx_volume(linear: float) -> void:
 ## ═══════════════════════════════════════════════════════
 func play_ui(stream: AudioStream, volume: float = 1.0) -> void:
 	_ui_player.stream    = stream
-	_ui_player.volume_db = linear_to_db(volume * _ui_volume)
+	_ui_player.volume_db = _safe_db(volume * _ui_volume)
 	_ui_player.play()
 
 func set_ui_volume(linear: float) -> void:
 	_ui_volume = clampf(linear, 0.0, 1.0)
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_UI),
-		linear_to_db(_ui_volume)
+		_safe_db(_ui_volume)
 	)
+
+## ═══════════════════════════════════════════════════════
+##  FOOTSTEPS
+## ═══════════════════════════════════════════════════════
+
+func _create_footstep_pool() -> void:
+	for i in FOOTSTEP_POOL_SIZE:
+		var p := AudioStreamPlayer.new()
+		p.name = "Footstep_%d" % i
+		p.bus  = BUS_SFX
+		add_child(p)
+		_footstep_pool.append(p)
+
+	_footstep_timer              = Timer.new()
+	_footstep_timer.wait_time    = footstep_interval
+	_footstep_timer.one_shot     = false
+	_footstep_timer.timeout.connect(_on_footstep_tick)
+	add_child(_footstep_timer)
+
+## Call in _ready alongside other pool creations
+## _create_footstep_pool()
+
+## Start looping footstep sound — call when player starts moving
+func start_footsteps(stream: AudioStream,
+		pitch_min: float = 0.9, pitch_max: float = 1.1,
+		interval: float = 0.32, volume: float = 1.0) -> void:
+	if _footstep_active: return
+	_footstep_active             = true
+	_footstep_timer.wait_time    = interval
+	# Store stream + pitch range for the tick callback
+	_footstep_stream      = stream
+	_footstep_pitch_min   = pitch_min
+	_footstep_pitch_max   = pitch_max
+	_footstep_volume      = volume
+	# Play first step immediately, then timer handles the rest
+	_play_footstep_once()
+	_footstep_timer.start()
+
+## Stop looping — call when player stops moving
+func stop_footsteps() -> void:
+	if not _footstep_active: return
+	_footstep_active = false
+	_footstep_timer.stop()
+
+## Play a single footstep — call manually if you prefer step-by-step control
+func play_footstep_once(stream: AudioStream,
+		pitch_min: float = 0.9, pitch_max: float = 1.1,
+		volume: float = 1.0) -> void:
+	_footstep_stream    = stream
+	_footstep_pitch_min = pitch_min
+	_footstep_pitch_max = pitch_max
+	_footstep_volume    = volume
+	_play_footstep_once()
+
+func _on_footstep_tick() -> void:
+	_play_footstep_once()
+
+func _play_footstep_once() -> void:
+	if not _footstep_stream: return
+	var player := _get_free_footstep_player()
+	if not player: return
+	player.stream      = _footstep_stream
+	player.pitch_scale = randf_range(_footstep_pitch_min, _footstep_pitch_max)
+	player.volume_db   = _safe_db(_footstep_volume * _sfx_volume)
+	player.play()
+
+func _get_free_footstep_player() -> AudioStreamPlayer:
+	for p in _footstep_pool:
+		if not p.playing:
+			return p
+	return _footstep_pool[0]
 
 ## ═══════════════════════════════════════════════════════
 ##  MASTER
@@ -124,7 +214,7 @@ func set_ui_volume(linear: float) -> void:
 func set_master_volume(linear: float) -> void:
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_MASTER),
-		linear_to_db(clampf(linear, 0.0, 1.0))
+		_safe_db(clampf(linear, 0.0, 1.0))
 	)
 
 func mute_all(muted: bool) -> void:
@@ -143,11 +233,14 @@ func _get_free_sfx_player() -> AudioStreamPlayer:
 func _fade_in(player: AudioStreamPlayer, target: float, dur: float) -> void:
 	var t := create_tween()
 	t.tween_property(player, "volume_db",
-		linear_to_db(target), dur).set_trans(Tween.TRANS_LINEAR)
+		_safe_db(target), dur).set_trans(Tween.TRANS_LINEAR)
 	await t.finished
 
 func _fade_out(player: AudioStreamPlayer, dur: float) -> void:
 	var t := create_tween()
 	t.tween_property(player, "volume_db",
-		linear_to_db(0.001), dur).set_trans(Tween.TRANS_LINEAR)
+		_safe_db(0.001), dur).set_trans(Tween.TRANS_LINEAR)
 	await t.finished
+	
+func _safe_db(linear: float) -> float:
+	return linear_to_db(maxf(linear, 0.0001))
