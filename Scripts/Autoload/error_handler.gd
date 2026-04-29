@@ -14,6 +14,7 @@ var _error_control: Control        = null
 var _check_timer:   Timer          = null
 var _lang:          ScriptLanguage = null   # cached once at startup
 
+var all_errors: Array = []
 ## ═══════════════════════════════════════════════════════════════
 ##  SETUP
 ## ═══════════════════════════════════════════════════════════════
@@ -24,6 +25,7 @@ func _ready() -> void:
 	_check_timer.one_shot  = true
 	_check_timer.timeout.connect(_run_check)
 	add_child(_check_timer)
+
 
 	_lang = _find_gdscript_language()
 	if _lang:
@@ -51,9 +53,13 @@ func _on_content_changed(_script_name: String, _content: String) -> void:
 func _run_check() -> void:
 	if not _text_editor: return
 	var content := _text_editor.get_current_script_content()
+	var undeclared := GDScriptErrors.check_undeclared(content)
+	if not undeclared.is_empty():
+		all_errors.append_array(undeclared)
 
 	if content.strip_edges() == "":
 		errors_cleared.emit()
+
 		if _error_control: _error_control.hide_error()
 		_unblock_play()
 		return

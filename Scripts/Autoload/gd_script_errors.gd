@@ -4,12 +4,13 @@
 #  Uses Levenshtein fuzzy matching + dirty token detection for special chars.
 #  error_handler.gd calls into this exclusively.
 #
-#  VERSION 5 — adds four more Pass-0/Pass-1 checks (J / K / L / indentation):
-#    J) space vs tab indentation mismatch (parse_structural pre-scan + per-line)
-#    K) bare "for" with nothing after it  (check H extended)
-#    L) "for ... :" with no indented body (parse_structural look-ahead)
-#    + _count_indent helper, new PATTERNS entries for engine indentation messages
-#  Plus all v4/v3 improvements.
+#  VERSION 6 — three more fixes:
+#    Check B FIX: "funcs run():" no longer skipped — lines ending ":" bypass
+#                 _looks_like_expression, so func typos are always caught.
+#    Check H FIX: token-based is_for_line → catches "for:" (colon, no variable).
+#    Check L EXT: empty-body look-ahead now covers ALL block-starters
+#                 (func, for, if, elif, else, while, match, class).
+#  Plus all v5/v4/v3 improvements.
 # ─────────────────────────────────────────────────────────────────────────────
 extends Node
 
@@ -86,6 +87,63 @@ const BUILTIN_TYPES: Array[String] = [
 ]
 
 ## ═══════════════════════════════════════════════════════════════
+##  PASS-2  UNDECLARED IDENTIFIER CHECK
+##  Collects all declared names in scope, flags unknowns.
+## ═══════════════════════════════════════════════════════════════
+
+# GDScript built-in functions always available globally
+const BUILTIN_FUNCTIONS: Array[String] = [
+	"print", "printerr", "printraw", "print_rich", "push_error", "push_warning",
+	"range", "len", "abs", "sign", "ceil", "floor", "round", "sqrt", "pow",
+	"min", "max", "clamp", "lerp", "remap", "smoothstep", "move_toward",
+	"deg_to_rad", "rad_to_deg", "sin", "cos", "tan", "atan", "atan2",
+	"snapped", "wrap", "fmod", "fposmod", "posmod",
+	"randf", "randi", "randf_range", "randi_range", "randomize", "seed",
+	"str", "int", "float", "bool",
+	"typeof", "type_string", "is_instance_of", "is_instance_valid",
+	"weakref", "inst_to_dict", "dict_to_inst",
+	"load", "preload", "ResourceLoader",
+	"get_node", "has_node", "add_child", "remove_child", "queue_free",
+	"create_tween", "get_tree", "get_parent", "get_children",
+	"emit_signal", "connect", "disconnect", "has_signal",
+	"set", "get", "call", "callv", "has_method",
+	"await", "yield",
+	"linear_to_db", "db_to_linear",
+	"bytes_to_var", "var_to_bytes", "var_to_str", "str_to_var",
+	"assert", "breakpoint",
+	"Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4",
+	"Rect2", "Rect2i", "Color", "Transform2D", "Transform3D",
+	"Basis", "Quaternion", "Plane", "AABB",
+	"Array", "Dictionary", "PackedStringArray", "PackedInt32Array",
+	"PackedFloat32Array", "PackedVector2Array", "PackedColorArray",
+	"OS", "Engine", "Input", "InputMap", "ProjectSettings",
+	"FileAccess", "DirAccess", "JSON",
+	"Time", "Performance",
+]
+
+# Always-valid bare names (not functions, not types)
+const ALWAYS_VALID: Array[String] = [
+	"self", "super", "null", "true", "false",
+	"PI", "TAU", "INF", "NAN",
+	"OK", "FAILED", "ERR_UNAVAILABLE",
+	"TYPE_NIL", "TYPE_BOOL", "TYPE_INT", "TYPE_FLOAT", "TYPE_STRING",
+	"CONNECT_ONE_SHOT", "CONNECT_DEFERRED",
+	"MOUSE_BUTTON_LEFT", "MOUSE_BUTTON_RIGHT", "MOUSE_BUTTON_MIDDLE",
+	"KEY_ESCAPE", "KEY_ENTER", "KEY_SPACE",
+	"NOTIFICATION_RESIZED", "NOTIFICATION_READY", "NOTIFICATION_PROCESS",
+	"SIZE_EXPAND_FILL", "SIZE_EXPAND", "SIZE_SHRINK_BEGIN", "SIZE_SHRINK_CENTER",
+	"MOUSE_FILTER_STOP", "MOUSE_FILTER_PASS", "MOUSE_FILTER_IGNORE",
+	"PRESET_FULL_RECT", "PRESET_TOP_LEFT", "PRESET_CENTER",
+	"HORIZONTAL_ALIGNMENT_LEFT", "HORIZONTAL_ALIGNMENT_CENTER", "HORIZONTAL_ALIGNMENT_RIGHT",
+	"VERTICAL_ALIGNMENT_TOP", "VERTICAL_ALIGNMENT_CENTER", "VERTICAL_ALIGNMENT_BOTTOM",
+	"CURSOR_ARROW", "CURSOR_HSIZE", "CURSOR_VSIZE", "CURSOR_FDIAGSIZE", "CURSOR_BDIAGSIZE",
+	"_delta", "_event", "_process", "_physics_process",
+	"global_position", "position", "rotation", "scale", "size",
+	"visible", "modulate", "z_index", "name", "owner",
+	"velocity", "speed", "direction",
+]
+
+## ═══════════════════════════════════════════════════════════════
 ##  DIRTY TOKEN DETECTION
 ##
 ##  A "dirty token" is a whitespace-separated chunk that contains BOTH
@@ -153,8 +211,11 @@ func check_keywords(content: String) -> Array:
 							% [ann, s] })
 
 		# ── B) Line-starting declaration keywords  (funcs→func, vaer→var) ──
+		# Lines ending with ":" are always block-starters, never expressions.
+		# Bypassing _looks_like_expression for them catches "funcs run():" etc.
 		var first = tokens[0]
-		if not reported.has(first) and not _looks_like_expression(stripped):
+		var is_block_line := stripped.ends_with(":")
+		if not reported.has(first) and (is_block_line or not _looks_like_expression(stripped)):
 			if not first in LINE_KEYWORDS and not first.begins_with("_"):
 				var s := _fuzzy_match(first, LINE_KEYWORDS, _max_dist(first))
 				if s != "":
@@ -267,18 +328,19 @@ func check_keywords(content: String) -> Array:
 						"message": 'Tipe data tidak ditulis setelah ":" — tulis tipe yang valid (misal: int, String, Vector2) setelah tanda titik dua.' })
 
 		# ── H) Missing or invalid loop variable after "for" ─────────────────
-		# Catches:
-		#   for              → bare "for" with nothing written after it
-		#   for in range():  → "in" is the first token after "for", variable missing
-		var is_for_line := (stripped == "for") or stripped.begins_with("for ")
+		# Token-based check covers all sub-cases:
+		#   "for"    → lone keyword,  tokens == ["for"]
+		#   "for:"   → ":" is stripped by tokenizer, leaves ["for"]
+		#   "for in" → variable missing before "in"
+		var is_for_line = not tokens.is_empty() and tokens[0] == "for"
 		if is_for_line and not reported.has("__for_var__"):
 			if tokens.size() == 1:
-				# Bare "for" — nothing at all after the keyword.
+				# "for" or "for:" — nothing meaningful after the keyword.
 				reported["__for_var__"] = true
 				errors.append({ "line": i + 1,
 					"message": 'Pernyataan "for" tidak lengkap — format yang benar: for <variabel> in <iterable>:  (contoh: for i in range(5):).' })
 			elif tokens[1] == "in":
-				# "for in ..." — variable name is missing before "in".
+				# "for in ..." — variable name missing before "in".
 				reported["__for_var__"] = true
 				errors.append({ "line": i + 1,
 					"message": 'Nama variabel loop tidak ada setelah "for" — tulis nama variabel sebelum "in" (contoh: for i in range(5):).' })
@@ -455,28 +517,27 @@ func parse_structural(content: String) -> Array:
 				errors.append({ "line": i + 1,
 					"message": "'%s' block missing ':'" % stripped.split(" ")[0] })
 
-		# ── L) "for" block with no indented body ─────────────────────────
-		# Catches: a syntactically valid "for ... :" whose next non-blank,
-		# non-comment line is NOT more indented — meaning no loop body exists.
-		# (A missing ":" is already caught above, so this only fires when
-		#  the colon IS present but nothing is indented inside.)
-		if stripped.begins_with("for ") and stripped.ends_with(":"):
-			# Find the next non-blank, non-comment line
+		# ── L) Block with no indented body (func / for / if / while / else …) ─
+		# Any block-starter ending in ":" whose next non-blank, non-comment
+		# line is NOT indented deeper has an empty body → GDScript will crash.
+		# Tab depth is the signal: each nested level adds one more leading \t.
+		var BLOCK_STARTERS_L := ["for ", "func ", "if ", "elif ", "else", "while ", "match ", "class "]
+		var _is_block_starter_L := false
+		for _bs in BLOCK_STARTERS_L:
+			if stripped.begins_with(_bs) or stripped == _bs.strip_edges():
+				_is_block_starter_L = true; break
+		if _is_block_starter_L and stripped.ends_with(":"):
 			var ni := i + 1
 			while ni < lines.size():
 				var ns := lines[ni].strip_edges()
 				if ns != "" and not ns.begins_with("#"):
 					break
 				ni += 1
-			var for_indent := _count_indent(lines[i])
-			if ni >= lines.size():
-				# The for-line is the last meaningful line in the file.
+			var block_indent := _count_indent(lines[i])
+			var block_word   := stripped.split(" ")[0].trim_suffix(":")
+			if ni >= lines.size() or _count_indent(lines[ni]) <= block_indent:
 				errors.append({ "line": i + 1,
-					"message": 'Blok "for" tidak memiliki isi — tambahkan setidaknya satu perintah di dalam loop, atau tulis "pass" jika belum ada kode.' })
-			elif _count_indent(lines[ni]) <= for_indent:
-				# Next real line is at the same or lower indentation — no body.
-				errors.append({ "line": i + 1,
-					"message": 'Blok "for" tidak memiliki isi — tambahkan setidaknya satu perintah di dalam loop, atau tulis "pass" jika belum ada kode.' })
+					"message": 'Blok "%s" tidak memiliki isi — tambahkan setidaknya satu perintah di dalamnya, atau tulis "pass" jika belum ada kode.' % block_word })
 
 	if open_parens > 0:
 		errors.append({ "line": lines.size(), "message": "Unclosed '('" })
@@ -539,6 +600,8 @@ const PATTERNS: Array = [
 	{ "p": "unexpected token",
 	  "t": "Token atau simbol yang tidak terduga di sini." },
 	{ "p": "unexpected character",  "t": "Karakter yang tidak dikenal di sini." },
+	{ "p": "expected indented block after function",
+	  "t": 'Fungsi ini tidak memiliki isi — tambahkan setidaknya satu perintah, atau tulis "pass".' },
 	{ "p": "expected indented block",
 	  "t": "Blok kode setelah pernyataan ini harus di-indent — tambahkan isi blok, atau tulis 'pass'." },
 	{ "p": "unindent does not match",
@@ -789,3 +852,175 @@ func _extract_quoted(msg: String) -> String:
 	var sq_o := msg.find("'");  var sq_c := msg.find("'", sq_o + 1)
 	if sq_o != -1 and sq_c != -1: return msg.substr(sq_o + 1, sq_c - sq_o - 1)
 	return msg
+	
+	
+func check_undeclared(content: String) -> Array:
+	var errors: Array = []
+	var lines := content.split("\n")
+
+	# ── Step 1: collect global scope names ──────────────────────
+	var global_names: Dictionary = {}
+	for kw in LINE_KEYWORDS:       global_names[kw]  = true
+	for kw in ANNOTATIONS:         global_names[kw]  = true
+	for kw in TYPE_NAMES:          global_names[kw]  = true
+	for kw in BUILTIN_TYPES:       global_names[kw]  = true
+	for kw in BUILTIN_FUNCTIONS:   global_names[kw]  = true
+	for kw in ALWAYS_VALID:        global_names[kw]  = true
+
+	# Collect class-level var/const/func/signal names
+	var func_names: Dictionary = {}
+	for line in lines:
+		var s := line.strip_edges()
+		if s.begins_with("var ")    or s.begins_with("const ") \
+		or s.begins_with("@onready var ") or s.begins_with("@export var "):
+			var name := _extract_declared_name(s)
+			if name != "": global_names[name] = true
+		elif s.begins_with("func "):
+			var fname := _extract_func_name(s)
+			if fname != "":
+				global_names[fname] = true
+				func_names[fname]   = true
+		elif s.begins_with("signal "):
+			var sname := s.substr(7).split("(")[0].strip_edges()
+			if sname != "": global_names[sname] = true
+		elif s.begins_with("enum "):
+			var ename := s.substr(5).split("{")[0].strip_edges()
+			if ename != "": global_names[ename] = true
+		elif s.begins_with("class_name "):
+			var cname := s.substr(11).strip_edges()
+			if cname != "": global_names[cname] = true
+
+	# ── Step 2: per-function scope check ────────────────────────
+	var in_func       := false
+	var func_scope:   Dictionary = {}
+	var func_indent   := 0
+	var current_func  := ""
+
+	for i in lines.size():
+		var raw      := lines[i]
+		var stripped := raw.strip_edges()
+		if stripped == "" or stripped.begins_with("#"): continue
+
+		var indent := _count_indent(raw)
+
+		# Entering a new function
+		if stripped.begins_with("func "):
+			in_func      = true
+			current_func = _extract_func_name(stripped)
+			func_indent  = indent
+			func_scope   = global_names.duplicate()
+
+			# Add parameters to scope
+			var params := _extract_func_params(stripped)
+			for p in params:
+				func_scope[p] = true
+			continue
+
+		if not in_func: continue
+
+		# Left function scope
+		if indent <= func_indent and stripped != "" and not stripped.begins_with("#"):
+			if not stripped.begins_with("func "):
+				in_func = false
+				func_scope = {}
+				continue
+
+		# Collect local var declarations inside function
+		if stripped.begins_with("var ") or stripped.begins_with("const "):
+			var lname := _extract_declared_name(stripped)
+			if lname != "": func_scope[lname] = true
+			continue
+
+		# Collect for-loop variable
+		if stripped.begins_with("for "):
+			var fvar := _extract_for_var(stripped)
+			if fvar != "": func_scope[fvar] = true
+			continue
+
+		# Skip lines that are pure structure (else:, elif ...:, match ...:)
+		if stripped == "else:" or stripped.begins_with("elif ") \
+		or stripped.begins_with("match ") or stripped == "pass" \
+		or stripped.begins_with("return") or stripped.begins_with("break") \
+		or stripped.begins_with("continue"):
+			continue
+
+		# ── Check identifiers on this line ──────────────────────
+		var code    := _remove_comment(stripped)
+		var clean   := _strip_strings(code)
+		# Strip node paths ($Node) and annotations (@name)
+		clean = _strip_node_paths(clean)
+		var tokens  := _tokenize(clean)
+
+		for token in tokens:
+			# Skip pure numbers
+			if token.is_valid_int() or token.is_valid_float(): continue
+			# Skip single chars likely to be loop vars (i, j, k, x, y, z, n)
+			if token.length() == 1: continue
+			# Skip _ prefix (private/unused convention)
+			if token.begins_with("_"): continue
+			# Skip if declared
+			if func_scope.has(token): continue
+			# Skip ALL_CAPS constants (user-defined enums etc.)
+			if token == token.to_upper() and token.length() > 1: continue
+
+			errors.append({
+				"line":    i + 1,
+				"message": 'Identifier "%s" tidak dikenal di fungsi ini — apakah sudah dideklarasikan?' % token
+			})
+			# Only report first unknown per line to avoid spam
+			break
+
+	return errors
+
+# ── Helpers ────────────────────────────────────────────────────
+func _extract_declared_name(line: String) -> String:
+	# "var foo : int = 5"  →  "foo"
+	# "@onready var foo"   →  "foo"
+	var s := line
+	if s.begins_with("@"): s = s.split("var ", true, 1)[-1]
+	else: s = s.substr(s.find(" ") + 1)
+	s = s.split(":")[0].split("=")[0].split(" ")[0].strip_edges()
+	return s if s != "" else ""
+
+func _extract_func_name(line: String) -> String:
+	# "func my_func(a, b) -> void:"  →  "my_func"
+	var after := line.substr(5).strip_edges()
+	return after.split("(")[0].strip_edges()
+
+func _extract_func_params(line: String) -> Array:
+	# "func run(speed: int, name: String) -> void:"  →  ["speed", "name"]
+	var params: Array = []
+	var op := line.find("(")
+	var cp := line.find(")")
+	if op == -1 or cp == -1 or cp <= op + 1: return params
+	var inner := line.substr(op + 1, cp - op - 1)
+	for part in inner.split(","):
+		var pname := part.strip_edges().split(":")[0].strip_edges()
+		if pname != "" and not pname.begins_with("_"):
+			params.append(pname)
+	return params
+
+func _extract_for_var(line: String) -> String:
+	# "for i in range(5):"  →  "i"
+	var after := line.substr(4).strip_edges()
+	return after.split(" ")[0].split(":")[0].strip_edges()
+
+func _strip_node_paths(line: String) -> String:
+	# Replace $NodeName and %NodeName with spaces so tokens aren't flagged
+	var result := ""
+	var i := 0
+	while i < line.length():
+		var ch := line[i]
+		if ch == "$" or ch == "%":
+			result += " "
+			i += 1
+			while i < line.length():
+				var c := line[i].unicode_at(0)
+				if _is_word_char_code(c) or line[i] == "/":
+					result += " "
+					i += 1
+				else: break
+		else:
+			result += ch
+			i += 1
+	return result
