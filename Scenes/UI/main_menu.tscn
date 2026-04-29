@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://d20618lbjxefw"]
+
+[ext_resource type="Shader" uid="uid://bv6y7ynmt10g8" path="res://Shaders/space.gdshader" id="1_5wsvm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i2xx2"]
+shader = ExtResource("1_5wsvm")
+shader_parameter/bg_color = Color(0.011701066, 0.004128255, 0.00014858527, 1)
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/bigStarSlow = 2.0
+shader_parameter/mediumStarSlow = 6.0
+shader_parameter/smallStarSlow = 7.96
+shader_parameter/smallStarAmount = 0.002
+shader_parameter/mediumStarAmount = 0.01
+shader_parameter/bigStarAmount = 0.02
+
+[node name="MainMenu" type="Control" unique_id=851984471]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Bg" type="ColorRect" parent="." unique_id=1885293056]
+material = SubResource("ShaderMaterial_i2xx2")
+custom_minimum_size = Vector2(700, 360)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MenuOptions" type="VBoxContainer" parent="." unique_id=874768015]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

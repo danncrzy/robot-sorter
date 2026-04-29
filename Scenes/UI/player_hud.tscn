@@ -57,8 +57,16 @@
 [ext_resource type="Script" uid="uid://dtmunv1akydex" path="res://Scripts/UI/cursor.gd" id="48_535bs"]
 [ext_resource type="Script" uid="uid://gviuq3b86mig" path="res://Scripts/UI/setting_ui.gd" id="49_8aao3"]
 [ext_resource type="Texture2D" uid="uid://dp2s1bheal16b" path="res://Assets/UI/SettingUITexture.png" id="50_yt6eb"]
+[ext_resource type="Texture2D" uid="uid://dfqslus72yvj8" path="res://Assets/UI/HomeBtn.png" id="51_04ph4"]
+[ext_resource type="Texture2D" uid="uid://coybx8ow72vh5" path="res://Assets/UI/MasterVolumeIcon.png" id="51_b1ecp"]
+[ext_resource type="Texture2D" uid="uid://c2mwtgx1la1jb" path="res://Assets/UI/BackBtn.png" id="51_gt56o"]
+[ext_resource type="Texture2D" uid="uid://ctgmqnfdwwd5" path="res://Assets/UI/HomeBtn_Pressed.png" id="52_b1ecp"]
+[ext_resource type="Texture2D" uid="uid://ds8r1bijxnpdx" path="res://Assets/UI/MusicIcon.png" id="52_ki8ok"]
 [ext_resource type="Script" uid="uid://w012jnei2gdm" path="res://Scripts/UI/game_controller.gd" id="52_u643f"]
+[ext_resource type="Texture2D" uid="uid://dpgku05vs2cer" path="res://Assets/UI/BackBtn_Pressed.png" id="52_v8j2s"]
 [ext_resource type="Texture2D" uid="uid://imt7b6qi44ol" path="res://Assets/UI/PlayBtn.png" id="53_flvkn"]
+[ext_resource type="Texture2D" uid="uid://c3ijhmi0i2pvs" path="res://Assets/UI/SettingGrabber.png" id="53_tjl1h"]
+[ext_resource type="Texture2D" uid="uid://ctcwsakq8qmlv" path="res://Assets/UI/SettingGrabber_Held.png" id="53_yvk2s"]
 [ext_resource type="Texture2D" uid="uid://c4ff232er7mb0" path="res://Assets/UI/PlayBtn_Pressed.png" id="54_7c8do"]
 [ext_resource type="Texture2D" uid="uid://tb52bpu7n75t" path="res://Assets/UI/ResetBtn.png" id="55_rmbpn"]
 [ext_resource type="Texture2D" uid="uid://cejjyht233jmc" path="res://Assets/UI/ResetBtn_Pressed.png" id="56_742jb"]
@@ -186,6 +194,7 @@ theme_override_styles/grabber_pressed = SubResource("StyleBoxTexture_w24h7")
 value = 20.0
 
 [node name="TextEditorUI" type="Control" parent="." unique_id=925118085 groups=["text_editor_ui"]]
+visible = false
 z_index = 5
 layout_mode = 3
 anchors_preset = 0
@@ -636,40 +645,59 @@ vertical_alignment = 1
 
 [node name="SettingContainer" type="VBoxContainer" parent="SettingUI" unique_id=1163315157]
 layout_mode = 0
-offset_left = 13.0
-offset_top = 47.0
-offset_right = 53.0
-offset_bottom = 104.0
+offset_left = 8.0
+offset_top = 34.0
+offset_right = 52.0
+offset_bottom = 123.0
 theme_override_constants/separation = 25
 
 [node name="MasterVolume" type="HBoxContainer" parent="SettingUI/SettingContainer" unique_id=764535022]
 layout_mode = 2
 
 [node name="VolumeIcon" type="TextureRect" parent="SettingUI/SettingContainer/MasterVolume" unique_id=1021627511]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
+texture = ExtResource("51_b1ecp")
+stretch_mode = 5
 
 [node name="VolumeSlider" type="HSlider" parent="SettingUI/SettingContainer/MasterVolume" unique_id=1744917859]
 layout_mode = 2
+theme_override_icons/grabber = ExtResource("53_tjl1h")
+theme_override_icons/grabber_highlight = ExtResource("53_yvk2s")
+theme_override_icons/grabber_disabled = ExtResource("53_yvk2s")
 
 [node name="MusicVolume" type="HBoxContainer" parent="SettingUI/SettingContainer" unique_id=63077731]
 layout_mode = 2
 
 [node name="MusicIcon" type="TextureRect" parent="SettingUI/SettingContainer/MusicVolume" unique_id=1642310714]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
+texture = ExtResource("52_ki8ok")
+stretch_mode = 5
 
 [node name="MusicSlider" type="HSlider" parent="SettingUI/SettingContainer/MusicVolume" unique_id=1883679126]
 layout_mode = 2
+theme_override_icons/grabber = ExtResource("53_tjl1h")
+theme_override_icons/grabber_highlight = ExtResource("53_yvk2s")
+theme_override_icons/grabber_disabled = ExtResource("53_yvk2s")
 
 [node name="ButtonContainer" type="HBoxContainer" parent="SettingUI" unique_id=570972499]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 20.0
+offset_top = 144.0
+offset_right = 109.0
+offset_bottom = 184.0
+theme_override_constants/separation = 25
 
 [node name="HomeBtn" type="TextureButton" parent="SettingUI/ButtonContainer" unique_id=728058623]
 layout_mode = 2
+texture_normal = ExtResource("51_04ph4")
+texture_pressed = ExtResource("52_b1ecp")
 
 [node name="BackBtn" type="TextureButton" parent="SettingUI/ButtonContainer" unique_id=1143542076]
 layout_mode = 2
+texture_normal = ExtResource("51_gt56o")
+texture_pressed = ExtResource("52_v8j2s")
 
 [node name="ScriptBtn" type="TextureButton" parent="." unique_id=1667431789]
 offset_left = 426.0

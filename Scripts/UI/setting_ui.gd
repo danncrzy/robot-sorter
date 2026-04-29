@@ -1,28 +1,30 @@
 # res://Scripts/UI/setting_ui.gd
 extends Control
 
-@onready var setting_texture:   TextureRect  = $SettingUITexture
-@onready var setting_label:     Label        = $SettingLabel
-@onready var master_slider:     HSlider      = $SettingContainer/MasterVolume/VolumeSlider
-@onready var music_slider:      HSlider      = $SettingContainer/MusicVolume/MusicSlider
-@onready var gray_overlay:      ColorRect    = get_parent().get_node("GrayOverlay")
+@onready var setting_texture:   TextureRect   = $SettingUITexture
+@onready var setting_label:     Label         = $SettingLabel
+@onready var setting_container: VBoxContainer = $SettingContainer
+@onready var master_slider:     HSlider       = $SettingContainer/MasterVolume/VolumeSlider
+@onready var music_slider:      HSlider       = $SettingContainer/MusicVolume/MusicSlider
+@onready var btn_container:     HBoxContainer = $ButtonContainer
+@onready var home_btn:          TextureButton = $ButtonContainer/HomeBtn
+@onready var back_btn:          TextureButton = $ButtonContainer/BackBtn
 
-const TWEEN_DUR := 0.35
+@export var slider_width_ratio: float = 0.65
+@export var slider_height:      float = 16.0
 
-# Shader param targets
-const PARAMS_ACTIVE := {
-	"fog_strength":      0.2,
-	"vignette_strength": 0.058,
-}
-const PARAMS_INACTIVE := {
-	"fog_strength":      0.0,
-	"vignette_strength": 0.0,
-}
-
-var _open:  bool  = false
-var _tween: Tween = null
+var _open: bool = false
 
 func _ready() -> void:
+	_setup_slider(master_slider)
+	_setup_slider(music_slider)
+
+	# Make the parent HBoxContainers (MasterVolume / MusicVolume)
+	# also expand horizontally inside the VBoxContainer
+	for volume_row in setting_container.get_children():
+		if volume_row is HBoxContainer:
+			volume_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
 	master_slider.min_value = 0.0
 	master_slider.max_value = 1.0
 	master_slider.step      = 0.01
@@ -40,10 +42,35 @@ func _ready() -> void:
 		AudioManager.set_music_volume(v)
 	)
 
-	visible = false
-	_set_shader_params(PARAMS_INACTIVE, false)
+	home_btn.pressed.connect(_on_home_pressed)
+	back_btn.pressed.connect(_on_back_pressed)
 
-# ── Toggle ─────────────────────────────────────────────────────
+	visible = false
+	_update_layout()
+
+func _setup_slider(slider: HSlider) -> void:
+	# ── These two lines are the key fix ──
+	# 1) Expand + fill tells the container to stretch this slider
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# 2) custom_minimum_size is the ONLY size property containers respect
+	slider.custom_minimum_size = Vector2(0, slider_height)
+
+	# Optional: make the grabber easier to tap
+	slider.custom_minimum_size.y = maxf(slider_height, 32.0)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_update_layout()
+
+func _update_layout() -> void:
+	if not is_node_ready(): return
+	var w := size.x
+	# The slider width is now handled by SIZE_EXPAND_FILL,
+	# but we can set a minimum so it never shrinks below this
+	var min_slider_w := w * slider_width_ratio
+	master_slider.custom_minimum_size.x = min_slider_w
+	music_slider.custom_minimum_size.x  = min_slider_w
+
 func toggle() -> void:
 	if _open: close()
 	else:     open()
@@ -51,37 +78,14 @@ func toggle() -> void:
 func open() -> void:
 	_open   = true
 	visible = true
-	_animate_shader(PARAMS_ACTIVE)
 
 func close() -> void:
-	_open = false
-	_animate_shader(PARAMS_INACTIVE)
-	# Hide after tween finishes
-	if is_instance_valid(_tween):
-		_tween.finished.connect(func() -> void:
-			visible = false
-		, CONNECT_ONE_SHOT)
+	_open   = false
+	visible = false
 
-# ── Shader animation ───────────────────────────────────────────
-func _animate_shader(target_params: Dictionary) -> void:
-	if is_instance_valid(_tween):
-		_tween.kill()
-	_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	var mat := gray_overlay.material as ShaderMaterial
-	if not mat: return
-	for param in target_params:
-		var from: float = mat.get_shader_parameter(param)
-		var to:   float = target_params[param]
-		_tween.parallel().tween_method(
-			func(v: float) -> void: mat.set_shader_parameter(param, v),
-			from, to, TWEEN_DUR
-		)
+func _on_home_pressed() -> void:
+	close()
+	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
 
-func _set_shader_params(params: Dictionary, animated: bool) -> void:
-	var mat := gray_overlay.material as ShaderMaterial
-	if not mat: return
-	if animated:
-		_animate_shader(params)
-	else:
-		for param in params:
-			mat.set_shader_parameter(param, params[param])
+func _on_back_pressed() -> void:
+	close()
