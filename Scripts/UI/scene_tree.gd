@@ -228,7 +228,7 @@ func _toggle_dock() -> void:
 		_dock_tween.tween_property(self, "global_position:x", target_x, 0.3)
 	else:
 		_dock_tween.tween_property(self, "global_position:x", _initial_x, 0.3)
-
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_5.ogg"))
 # ────────────────────── Tabs ──────────────────────
 func clear_tabs() -> void:
 	if not is_node_ready() or not tab_container: return

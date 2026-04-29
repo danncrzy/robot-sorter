@@ -159,6 +159,7 @@ func set_data(data: Dictionary) -> void:
 
 func _on_script_pressed() -> void:
 	script_requested.emit(_script_data)
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/script_scene_tree.ogg"))
 
 # ── Visibility ─────────────────────────────────────────────────
 func _toggle_visibility() -> void:
@@ -168,15 +169,19 @@ func _toggle_visibility() -> void:
 	visible_btn.visible   =  is_now_visible
 	invisible_btn.visible = !is_now_visible
 	visibility_toggled.emit(is_now_visible)
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/visible.ogg"))
 
 # ── Outline on select ───────────────────────────────────
 func set_selected(selected: bool) -> void:
 	_is_selected = selected
 	if is_instance_valid(bg):
 		bg.modulate = Color(1, 1, 1, 0.7) if selected else Color(1, 1, 1, 1)
+		if selected:
+			AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_5.ogg"))
 	if _node_ref and _node_ref is CanvasItem:
 		(_node_ref as CanvasItem).material = OUTLINE_MATERIAL if selected else null
 	_set_outline(selected)
+
 
 
 func _set_outline(enable: bool) -> void:
