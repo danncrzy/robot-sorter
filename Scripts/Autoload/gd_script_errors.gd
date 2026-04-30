@@ -708,16 +708,48 @@ func parse_structural(content: String) -> Array:
 		var stripped := line.strip_edges()
 
 		# ── J) Per-line indentation consistency ──────────────────────────
-		# Checked on EVERY non-blank line, including comment lines,
-		# because the parser rejects mixed indent even inside comments.
+		# Two sub-checks, both run on every non-blank line:
+		#
+		# J-1) Wrong character at start — whole-line style mismatch.
+		#      File uses tabs but line starts with space → error.
+		#      File uses spaces but line starts with tab → error.
+		#
+		# J-2) Mixed characters inside the leading whitespace region.
+		#      Scans every character left-to-right until the first
+		#      non-whitespace (the "right side" that has the actual code).
+		#      If ANY character in that region differs from indent_style,
+		#      the left side is dirty → error.
+		#
+		#      Example (file uses tabs):
+		#        [tab][space][space]var hello
+		#         ↑ ok  ↑ DIRTY — space found in tab-indented region
 		if indent_style != "" and stripped != "" and line.length() > 0:
 			var fc := line[0]
+			# J-1: first-character style check
 			if indent_style == "tab" and fc == " ":
 				errors.append({ "line": i + 1,
 					"message": 'Indentasi baris ini menggunakan spasi, tapi file ini menggunakan tab — ganti spasi dengan tab (atau tekan Tab di editor).' })
 			elif indent_style == "space" and fc == "\t":
 				errors.append({ "line": i + 1,
 					"message": 'Indentasi baris ini menggunakan tab, tapi file ini menggunakan spasi — ganti tab dengan spasi.' })
+			else:
+				# J-2: scan every leading-whitespace character for mixed chars.
+				# Stop at the first non-whitespace (that is the safe "right side").
+				var bad_mix := false
+				for ci in line.length():
+					var ch := line[ci]
+					if ch != " " and ch != "\t":
+						break   # reached code — right side is safe, stop
+					if indent_style == "tab"   and ch == " ":
+						bad_mix = true; break
+					if indent_style == "space" and ch == "\t":
+						bad_mix = true; break
+				if bad_mix:
+					var wrong := "spasi" if indent_style == "tab" else "tab"
+					var right := "tab"   if indent_style == "tab" else "spasi"
+					errors.append({ "line": i + 1,
+						"message": 'Indentasi campuran di baris ini — ada %s di dalam area tab sebelum kode. Hapus semua %s di bagian kiri dan gunakan hanya %s.' \
+							% [wrong, wrong, right] })
 
 		var triple_count := line.count('"""')
 		if triple_count % 2 != 0:

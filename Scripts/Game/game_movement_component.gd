@@ -105,8 +105,8 @@ func _process_next() -> void:
 	_tween.tween_property(_parent, "global_position", target, dur) \
 		.set_trans(Tween.TRANS_LINEAR)
 	_tween.tween_callback(func() -> void:
+		_processing = false        # ← this line was missing
 		_move_queue.pop_front()
-		# Defer so tracker signals never interrupt movement chain
 		var tracker := _parent.get_tree().get_first_node_in_group("objective_tracker")
 		if tracker:
 			var pos := _parent.global_position / TILE_SIZE

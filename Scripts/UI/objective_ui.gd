@@ -103,17 +103,22 @@ func _fit_size() -> void:
 	_update_layout()
 
 func _on_minimize() -> void:
-	_minimized   = true
-	_normal_size = size
+	_minimized           = true
+	_normal_size         = size
 	minimize_btn.visible = false
 	maximize_btn.visible = true
 	mission_text.visible = false
 	hint_btn.visible     = false
 	hint_label.visible   = false
-	# Shrink to title only
-	size = Vector2(size.x, TITLE_H + PAD * 2)
-	_update_layout()
 
+	var target_h := TITLE_H + PAD * 2.0
+	# Set both size AND objective_bg directly — don't rely on NOTIFICATION_RESIZED
+	size                = Vector2(size.x, target_h)
+	objective_bg.size   = Vector2(size.x, target_h)
+
+	# Reposition ControlBtn within the shrunk height
+	control_btn.position = Vector2(size.x - PAD - 20.0, (target_h - 20.0) * 0.5)
+	
 func _on_maximize() -> void:
 	_minimized   = false
 	maximize_btn.visible = false

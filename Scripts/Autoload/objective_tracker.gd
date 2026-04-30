@@ -22,7 +22,8 @@ func init(mission: LevelMission, player: Node) -> void:
 	current_mission = mission
 	_player         = player
 
-	# Find tilemap once
+	
+	# Find tilemap
 	var world: Node = null
 	for path in ["GameNodes/Main", "GameNodes/GameMain"]:
 		world = player.get_tree().current_scene.get_node_or_null(path)
@@ -30,30 +31,45 @@ func init(mission: LevelMission, player: Node) -> void:
 	if world:
 		for path in ["FactoryFloor", "GameFactoryFloor", "TileMap", "TileMapLayer"]:
 			var tm := world.get_node_or_null(path)
-			if tm:
-				_tilemap = tm
-				break
+			if tm: _tilemap = tm; break
+
+	# Snap player to tile (0,0) of the tilemap
+	if _tilemap and _tilemap.has_method("map_to_local"):
+		var tile_zero = _tilemap.map_to_local(Vector2i(0, 0))
+		player.global_position = _tilemap.to_global(tile_zero)
+		# Update movement component start position
+		var mc := player.get_node_or_null("MovementCompon")
+		if mc:
+			mc._start_position = player.global_position
 
 	mission.reset()
 	_spawn_markers()
-	var first := mission.get_current_objective()
-	if first:
-		objective_changed.emit(first)
+	call_deferred("_init_hints", mission)
 
-func notify_moved_to(world_pos: Vector2) -> void:
+	# Sync HintContainer grid
+	var hint_container := player.get_tree().get_first_node_in_group("hint_container")
+	print("HINT CONTAINER: ", hint_container)
+	if hint_container:
+		hint_container.show_objective_hints(mission.objectives)
+	else:
+		print("HINT CONTAINER NOT FOUND — is it in the scene and added to group?")
+		
+func notify_moved_to(_world_pos: Vector2) -> void:
 	var obj := _current()
 	if not obj: return
 	if obj.type != LevelObjective.Type.MOVE_TO_POINT: return
 
-	# Convert world position to tile coords using TileMap
 	var tile_pos := Vector2.ZERO
 	if _tilemap and _tilemap.has_method("local_to_map"):
-		var local = _tilemap.to_local(_player.global_position)
-		tile_pos = Vector2(_tilemap.local_to_map(local))
+		var local    = _tilemap.to_local(_player.global_position)
+		var cell     = _tilemap.local_to_map(local)
+		# Convert to 1-based to match target_pos
+		tile_pos = Vector2(cell.x + 1, cell.y + 1)
 	else:
-		tile_pos = _player.global_position / 32.0
+		tile_pos = (_player.global_position / TILE_SIZE) + Vector2(1, 1)
 
-	if tile_pos.is_equal_approx(obj.target_pos):
+	print("PLAYER TILE (1-based): ", tile_pos, " TARGET: ", obj.target_pos)
+	if tile_pos == obj.target_pos:
 		_complete_current()
 
 func notify_grabbed(item_id: String) -> void:
@@ -114,57 +130,31 @@ func _complete_current() -> void:
 
 func _spawn_markers() -> void:
 	_clear_markers()
-	for obj in current_mission.objectives:
-		if not obj.is_complete():
-			_spawn_marker_for(obj)
+	# Delegate to HintContainer only
+	var hint_container := get_tree().get_first_node_in_group("hint_container")
+	if hint_container:
+		hint_container.show_objective_hints(current_mission.objectives)
 
-func _spawn_marker_for(obj: LevelObjective) -> void:
-	if not obj.show_marker: return
-	if obj.type != LevelObjective.Type.MOVE_TO_POINT: return
-
-	var marker := TILE_HINT_SCENE.instantiate()
-	marker.set_meta("objective", obj)
-
-	var world: Node = null
-	for path in ["GameNodes/Main", "GameNodes/GameMain", "GameNodes"]:
-		world = get_tree().current_scene.get_node_or_null(path)
-		if world: break
-	if not world: world = get_tree().current_scene
-
-	world.add_child(marker)
-
-	# Find tilemap for grid alignment
-	var tilemap: Node = null
-	for path in ["FactoryFloor", "GameFactoryFloor", "TileMap"]:
-		tilemap = world.get_node_or_null(path)
-		if tilemap: break
-
-	marker.setup(obj.target_pos, tilemap)
-
-	var mat := marker.material as ShaderMaterial
-	if mat:
-		mat.set_shader_parameter("glow_color",  Color(0.6, 1.0, 0.4, 1.0))
-		mat.set_shader_parameter("intensity",   0.511)
-		mat.set_shader_parameter("spread",      0.102)
-		mat.set_shader_parameter("pulse_speed", 2.428)
-	else:
-		marker.color = Color(1.0, 0.9, 0.1, 0.5)
-
-	_active_markers.append(marker)
+func _spawn_marker_for(_obj: LevelObjective) -> void:
+	pass  # HintContainer handles this now
 
 func _remove_marker_for(obj: LevelObjective) -> void:
-	for m in _active_markers:
-		if is_instance_valid(m) and m.get_meta("objective", null) == obj:
-			m.queue_free()
-			_active_markers.erase(m)
-			break
+	var hint_container := get_tree().get_first_node_in_group("hint_container")
+	if hint_container:
+		hint_container.deactivate_hint(
+			int(obj.target_pos.x),
+			int(obj.target_pos.y)
+		)
 
 func _clear_markers() -> void:
 	for m in _active_markers:
 		if is_instance_valid(m):
 			m.queue_free()
 	_active_markers.clear()
-
+	var hint_container := get_tree().get_first_node_in_group("hint_container")
+	if hint_container:
+		hint_container.deactivate_all()
+		
 func get_current_description() -> String:
 	var obj := _current()
 	if not obj: return ""
@@ -183,3 +173,9 @@ func reset_mission() -> void:
 	var first := current_mission.get_current_objective()
 	if first:
 		objective_changed.emit(first)
+
+func _init_hints(mission: LevelMission) -> void:
+	var hint_container := get_tree().get_first_node_in_group("hint_container")
+	print("DEFERRED HINT CONTAINER: ", hint_container)
+	if hint_container:
+		hint_container.show_objective_hints(mission.objectives)

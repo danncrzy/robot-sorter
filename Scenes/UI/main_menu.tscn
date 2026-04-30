@@ -1,17 +1,42 @@
 [gd_scene format=3 uid="uid://d20618lbjxefw"]
 
-[ext_resource type="Shader" uid="uid://bv6y7ynmt10g8" path="res://Shaders/space.gdshader" id="1_5wsvm"]
+[ext_resource type="Shader" uid="uid://ctmc5hfr3fo8v" path="res://Shaders/cloud.gdshader" id="1_5wsvm"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_i2xx2"]
+[sub_resource type="Gradient" id="Gradient_i2xx2"]
+offsets = PackedFloat32Array(0, 0.0074626864, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.24626866, 0.24626866, 0.24626866, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_o14dv"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u7lva"]
+noise = SubResource("FastNoiseLite_o14dv")
+color_ramp = SubResource("Gradient_i2xx2")
+
+[sub_resource type="Gradient" id="Gradient_5wsvm"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i2xx2"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mrfpk"]
+noise = SubResource("FastNoiseLite_i2xx2")
+color_ramp = SubResource("Gradient_5wsvm")
+
+[sub_resource type="Gradient" id="Gradient_4pqbp"]
+offsets = PackedFloat32Array(0, 0.5597015)
+colors = PackedColorArray(1.1551381e-06, 0.5343205, 0.69249195, 1, 0.9079417, 0.9079417, 0.90794164, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gih0s"]
+gradient = SubResource("Gradient_4pqbp")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k33u3"]
 shader = ExtResource("1_5wsvm")
-shader_parameter/bg_color = Color(0.011701066, 0.004128255, 0.00014858527, 1)
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/bigStarSlow = 2.0
-shader_parameter/mediumStarSlow = 6.0
-shader_parameter/smallStarSlow = 7.96
-shader_parameter/smallStarAmount = 0.002
-shader_parameter/mediumStarAmount = 0.01
-shader_parameter/bigStarAmount = 0.02
+shader_parameter/pixelation = Vector2(256, 256)
+shader_parameter/cloud_noise1 = SubResource("NoiseTexture2D_u7lva")
+shader_parameter/scroll_speed1 = Vector2(0.02, 0.007)
+shader_parameter/cloud_noise2 = SubResource("NoiseTexture2D_mrfpk")
+shader_parameter/scroll_speed2 = Vector2(-0.015, -0.004)
+shader_parameter/center_pos = Vector2(0.5, 0)
+shader_parameter/position_impact = 0.8999999798832
+shader_parameter/color_gardient = SubResource("GradientTexture1D_gih0s")
 
 [node name="MainMenu" type="Control" unique_id=851984471]
 layout_mode = 3
@@ -22,7 +47,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Bg" type="ColorRect" parent="." unique_id=1885293056]
-material = SubResource("ShaderMaterial_i2xx2")
+material = SubResource("ShaderMaterial_k33u3")
 custom_minimum_size = Vector2(700, 360)
 layout_mode = 0
 offset_right = 40.0
