@@ -34,6 +34,7 @@ var _transitioning  := false
 ##  READY
 ## ════════════════════════════════════════════════════════════
 func _ready() -> void:
+	AudioManager.play_music(preload("res://Assets/Sfx/start_menu.ogg"))
 	# Fade overlay starts invisible!
 	fade_overlay.visible = true
 	fade_overlay.modulate.a = 0.0
@@ -57,7 +58,7 @@ func _ready() -> void:
 	
 	# Hover sounds for all clickable things
 	for btn in [levels_btn, exit_btn, back_btn, level1_btn, level2_btn]:
-		(btn as TextureButton).mouse_entered.connect(_play_sound.bind(hover_sound))
+		(btn as TextureButton).mouse_entered.connect(AudioManager.play_sfx)
 
 ## ════════════════════════════════════════════════════════════
 ##  RANDOM ICON
@@ -65,8 +66,8 @@ func _ready() -> void:
 func _roll_random_icon() -> void:
 	if random_textures.is_empty():
 		return
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_7.ogg"))
 	
-	_play_sound(press_sound)
 	var picked_texture := random_textures[randi() % random_textures.size()]
 	
 	icon1.texture_normal = picked_texture
@@ -80,7 +81,7 @@ func _roll_random_icon() -> void:
 func _on_levels_btn() -> void:
 	if _transitioning or _in_levels_view: return
 	_transitioning = true
-	_play_sound(press_sound)
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_7.ogg"))
 
 	var tw := create_tween()
 	tw.tween_property(camera, "zoom", Vector2(1.3, 1.3), 0.35)\
@@ -104,7 +105,6 @@ func _on_levels_btn() -> void:
 func _on_back_btn() -> void:
 	if _transitioning or not _in_levels_view: return
 	_transitioning = true
-	_play_sound(press_sound)
 
 	var tw := create_tween()
 	tw.tween_property(camera, "zoom", Vector2(1.0, 1.0), 0.4)\
@@ -127,12 +127,11 @@ func _on_back_btn() -> void:
 ##  LEVEL PRESSED → Load by Index from Array! 🎯
 ## ════════════════════════════════════════════════════════════
 func _on_level_pressed(index: int) -> void:
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_7.ogg"))
 	if index < 0 or index >= level_resources.size():
 		push_error("Level index %d out of range (array size: %d)" % [index, level_resources.size()])
 		return
-	
-	_play_sound(press_sound)
-	
+		
 	var level_data: LevelData = level_resources[index]
 	print("Loading: ", level_data.level_id)
 	
@@ -157,8 +156,7 @@ func _on_level_pressed(index: int) -> void:
 ##  EXIT
 ## ════════════════════════════════════════════════════════════
 func _on_exit_btn() -> void:
-	_play_sound(press_sound)
-	
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_7.ogg"))
 	var tw := create_tween()
 	tw.tween_property(fade_overlay, "modulate:a", 1.0, 0.35)\
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
@@ -166,11 +164,7 @@ func _on_exit_btn() -> void:
 	await tw.finished
 	get_tree().quit()
 
-## ════════════════════════════════════════════════════════════
-##  SOUND
-## ════════════════════════════════════════════════════════════
-func _play_sound(stream: AudioStream) -> void:
-	AudioManager.play_music(preload("res://Assets/Sfx/start_menu.ogg"))
+
 
 ## ════════════════════════════════════════════════════════════
 ##  PUBLIC

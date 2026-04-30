@@ -8,6 +8,9 @@
 default_font = ExtResource("2_84np6")
 default_font_size = 9
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3b4l2"]
+size = Vector2(16, 16)
+
 [node name="TilleHint" type="ColorRect" unique_id=1916436049]
 z_index = 500
 material = ExtResource("1_3b4l2")
@@ -32,3 +35,9 @@ theme_override_font_sizes/font_size = 3
 text = "(10,10)"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TileArea" type="Area2D" parent="." unique_id=1098271181]
+
+[node name="TileCol" type="CollisionShape2D" parent="TileArea" unique_id=1699091657]
+position = Vector2(8, 8)
+shape = SubResource("RectangleShape2D_3b4l2")

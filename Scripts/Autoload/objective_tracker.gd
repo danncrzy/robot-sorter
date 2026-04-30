@@ -179,3 +179,38 @@ func _init_hints(mission: LevelMission) -> void:
 	print("DEFERRED HINT CONTAINER: ", hint_container)
 	if hint_container:
 		hint_container.show_objective_hints(mission.objectives)
+
+## ════════════════════════════════════════════════════════════
+##  TILE-BASED DETECTION (NEW!)
+## ════════════════════════════════════════════════════════════
+
+func _on_tile_stepped_on(tile_id: String) -> void:
+
+	print("🔴 Tracker received tile_id: ", tile_id)
+	
+	var obj := _current()
+	if not obj:
+		print("⚠️ No current objective!")
+		return
+	
+	# Only handle MOVE_TO_POINT objectives this way
+	if obj.type != LevelObjective.Type.MOVE_TO_POINT:
+		print("⚠️ Current objective is not MOVE_TO_POINT type!")
+		return
+	
+	# Parse tile_id back to Vector2
+	var parts := tile_id.split(".")
+	if parts.size() != 2:
+		push_error("Invalid tile_id format: " + tile_id)
+		return
+	
+	var tile_pos := Vector2(int(parts[0]), int(parts[1]))
+	
+	print("📍 Comparing: tile_pos=", tile_pos, " vs target_pos=", obj.target_pos)
+	
+	# Check if this is THE target tile!
+	if tile_pos == obj.target_pos:
+		print("✅ MATCH! Player stepped on objective tile!")
+		_complete_current()
+	else:
+		print("❌ Not the target tile (expected ", obj.target_pos, ")")

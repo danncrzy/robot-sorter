@@ -37,6 +37,7 @@ extends CharacterBody2D
 var _start_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	
 	_start_position = global_position
 
 func run() -> void:
