@@ -71,12 +71,16 @@
 [ext_resource type="Texture2D" uid="uid://c4ff232er7mb0" path="res://Assets/UI/PlayBtn_Pressed.png" id="54_7c8do"]
 [ext_resource type="Texture2D" uid="uid://tb52bpu7n75t" path="res://Assets/UI/ResetBtn.png" id="55_rmbpn"]
 [ext_resource type="Texture2D" uid="uid://cejjyht233jmc" path="res://Assets/UI/ResetBtn_Pressed.png" id="56_742jb"]
+[ext_resource type="Texture2D" uid="uid://nx8xhig87vwe" path="res://Assets/UI/GridBtn.png" id="60_231bg"]
+[ext_resource type="Texture2D" uid="uid://be7saq7ufi8m2" path="res://Assets/UI/GridBtn_Pressed.png" id="61_m16oa"]
 [ext_resource type="Shader" uid="uid://b8hokr7b4y51h" path="res://Shaders/gray_overlay.gdshader" id="61_w24h7"]
 [ext_resource type="Texture2D" uid="uid://oyw5qhgsgd0g" path="res://Assets/UI/SettingBtn.png" id="65_6sklo"]
 [ext_resource type="Texture2D" uid="uid://cfrybtkr68bb3" path="res://Assets/UI/SettingBtn_Pressed.png" id="66_w3gig"]
 [ext_resource type="Script" uid="uid://c0kq3em2rcas7" path="res://Scripts/UI/objective_ui.gd" id="75_w3gig"]
 [ext_resource type="Texture2D" uid="uid://deaxak7s2ro6q" path="res://Assets/UI/ObjectiveUI.png" id="76_o47rn"]
 [ext_resource type="Texture2D" uid="uid://dvy2jh4vf560b" path="res://Assets/UI/MinimizeBtn.png" id="77_4sxk8"]
+[ext_resource type="Texture2D" uid="uid://dphkqyed3s4ea" path="res://Assets/UI/HelpBtn.png" id="77_wan8y"]
+[ext_resource type="Texture2D" uid="uid://cwch6ayi1yqlp" path="res://Assets/UI/HelpBtn_Pressed.png" id="78_0427r"]
 [ext_resource type="Texture2D" uid="uid://b15q8n831csud" path="res://Assets/UI/MinimizeBtn_Pressed.png" id="78_m04l3"]
 [ext_resource type="Texture2D" uid="uid://derbb1pdtlw80" path="res://Assets/UI/MaximizeBtn.png" id="79_3x627"]
 [ext_resource type="Texture2D" uid="uid://bjrjf00a2xveo" path="res://Assets/UI/MaximizeBtn_Pressed.png" id="80_1775v"]
@@ -725,6 +729,14 @@ layout_mode = 2
 texture_normal = ExtResource("51_gt56o")
 texture_pressed = ExtResource("52_v8j2s")
 
+[node name="GridBtn" type="TextureButton" parent="." unique_id=1328431703]
+offset_left = 360.0
+offset_top = 1.0
+offset_right = 400.0
+offset_bottom = 41.0
+texture_normal = ExtResource("60_231bg")
+texture_pressed = ExtResource("61_m16oa")
+
 [node name="ScriptBtn" type="TextureButton" parent="." unique_id=1667431789]
 offset_left = 426.0
 offset_top = 321.0
@@ -799,10 +811,10 @@ z_index = 200
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 3
 anchors_preset = 0
-offset_left = 100.0
-offset_top = 10.0
-offset_right = 200.0
-offset_bottom = 110.0
+offset_left = 219.0
+offset_top = 104.0
+offset_right = 319.0
+offset_bottom = 204.0
 script = ExtResource("75_w3gig")
 
 [node name="ObjectiveBg" type="NinePatchRect" parent="ObjectiveUI" unique_id=1418690025]
@@ -835,17 +847,19 @@ mouse_filter = 2
 theme = ExtResource("6_eqykv")
 
 [node name="HintLabel" type="RichTextLabel" parent="ObjectiveUI" unique_id=2049670509]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 theme = ExtResource("6_eqykv")
 
 [node name="HintBtn" type="TextureButton" parent="ObjectiveUI" unique_id=1220414481]
-visible = false
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 30.0
+offset_top = 9.0
+offset_right = 70.0
+offset_bottom = 49.0
+texture_normal = ExtResource("77_wan8y")
+texture_pressed = ExtResource("78_0427r")
 
 [node name="ControlBtn" type="Control" parent="ObjectiveUI" unique_id=802812928]
 layout_mode = 1

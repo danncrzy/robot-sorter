@@ -181,12 +181,12 @@ offset_bottom = 191.0
 theme_override_constants/h_separation = 31
 columns = 8
 
-[node name="Level1Btn" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1621727742]
+[node name="Level1" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1621727742]
 layout_mode = 2
 texture_normal = ExtResource("11_3h8o7")
 texture_pressed = ExtResource("12_q6o50")
 
-[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level1Btn" unique_id=1597881545]
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level1" unique_id=1597881545]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 1.0
@@ -198,11 +198,11 @@ text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Level2Btn" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=561926328]
+[node name="Level2" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=561926328]
 layout_mode = 2
 texture_normal = ExtResource("11_3h8o7")
 
-[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level2Btn" unique_id=729172640]
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level2" unique_id=729172640]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 1.0

@@ -22,6 +22,7 @@ color = Color(0, 1.7776951, 0.048765574, 0.7647059)
 script = ExtResource("2_3b4l2")
 
 [node name="TileVector" type="Label" parent="." unique_id=1416542909]
+visible = false
 layout_mode = 0
 offset_right = 17.0
 offset_bottom = 16.0

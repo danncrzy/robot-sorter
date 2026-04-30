@@ -103,6 +103,7 @@ func _fit_size() -> void:
 	_update_layout()
 
 func _on_minimize() -> void:
+	var w := size.x
 	_minimized           = true
 	_normal_size         = size
 	minimize_btn.visible = false
@@ -117,7 +118,7 @@ func _on_minimize() -> void:
 	objective_bg.size   = Vector2(size.x, target_h)
 
 	# Reposition ControlBtn within the shrunk height
-	control_btn.position = Vector2(size.x - PAD - 20.0, (target_h - 20.0) * 0.5)
+	control_btn.position   = Vector2(w - PAD - 5, PAD + (TITLE_H - 20) * (-2))
 	
 func _on_maximize() -> void:
 	_minimized   = false
@@ -141,18 +142,20 @@ func _update_layout() -> void:
 	title_label.size       = Vector2(w - PAD * 3 - 20, TITLE_H)
 
 	# ControlBtn top-right of title
-	control_btn.position   = Vector2(w - PAD - 20, PAD + (TITLE_H - 20) * 0.5)
+	control_btn.position   = Vector2(w - PAD - 5, PAD + (TITLE_H - 20) * (-2))
 	control_btn.size       = Vector2(20, 20)
 	minimize_btn.size      = Vector2(20, 20)
 	maximize_btn.size      = Vector2(20, 20)
-
+	
+	
+	
 	if not _minimized:
 		mission_text.position = Vector2(PAD, PAD + TITLE_H + 4)
 		mission_text.size     = Vector2(w - PAD * 2,
 			h - TITLE_H - HINT_BTN_H - PAD * 3)
 		hint_btn.position     = Vector2(PAD, h - HINT_BTN_H - PAD)
 		hint_btn.size         = Vector2(w - PAD * 2, HINT_BTN_H)
-		hint_label.position   = Vector2(PAD, h - HINT_BTN_H - PAD)
+		hint_label.position   = Vector2(PAD, h - (HINT_BTN_H - PAD * (-5)))
 		hint_label.size       = Vector2(w - PAD * 2, 60)
 
 # ── Signals ────────────────────────────────────────────────────
