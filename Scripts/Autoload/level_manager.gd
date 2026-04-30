@@ -26,11 +26,10 @@ func _wait_for_ui() -> void:
 
 func load_level(level_res: LevelData) -> void:
 	current_level = level_res
-	# GameNodes/GameMain is where all "Game" nodes live
-	_game_root = get_tree().current_scene
 	_populate_scene_tree()
 	_register_level_scripts()
-
+	_load_mission()
+	
 func _populate_scene_tree() -> void:
 	if not current_level or not scene_tree_panel: return
 	scene_tree_panel.clear_tabs()
@@ -85,3 +84,11 @@ func _load_script_content(script_name: String) -> String:
 	var content := file.get_as_text()
 	file.close()
 	return content
+
+func _load_mission() -> void:
+	var mission_path := "res://Data/Missions/objective_%s.tres" % current_level.level_id
+	if not ResourceLoader.exists(mission_path): return
+	var mission: LevelMission = load(mission_path)
+	var player := get_tree().current_scene.get_node_or_null("GameNodes/Main/Player")
+	if mission and player:
+		ObjectiveTracker.init(mission, player)

@@ -22,6 +22,7 @@ ScriptManager="*uid://cdsc1xumgww0v"
 ErrorHandler="*uid://bj1nx3dplnysc"
 AudioManager="*uid://c2006b8452fky"
 GDScriptErrors="*uid://b7dyhubhy6fvq"
+ObjectiveTracker="*uid://cnxbwdw58rmqv"
 
 [display]
 

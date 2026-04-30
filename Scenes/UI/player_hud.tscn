@@ -72,6 +72,9 @@
 [ext_resource type="Texture2D" uid="uid://tb52bpu7n75t" path="res://Assets/UI/ResetBtn.png" id="55_rmbpn"]
 [ext_resource type="Texture2D" uid="uid://cejjyht233jmc" path="res://Assets/UI/ResetBtn_Pressed.png" id="56_742jb"]
 [ext_resource type="Shader" uid="uid://b8hokr7b4y51h" path="res://Shaders/gray_overlay.gdshader" id="61_w24h7"]
+[ext_resource type="Texture2D" uid="uid://oyw5qhgsgd0g" path="res://Assets/UI/SettingBtn.png" id="65_6sklo"]
+[ext_resource type="Texture2D" uid="uid://cfrybtkr68bb3" path="res://Assets/UI/SettingBtn_Pressed.png" id="66_w3gig"]
+[ext_resource type="Script" uid="uid://c0kq3em2rcas7" path="res://Scripts/UI/objective_ui.gd" id="75_w3gig"]
 
 [sub_resource type="Theme" id="Theme_rmbpn"]
 
@@ -735,8 +738,8 @@ offset_left = 7.0
 offset_top = 3.0
 offset_right = 39.0
 offset_bottom = 37.0
-texture_normal = ExtResource("53_flvkn")
-texture_pressed = ExtResource("54_7c8do")
+texture_normal = ExtResource("65_6sklo")
+texture_pressed = ExtResource("66_w3gig")
 
 [node name="Cursor" type="TextureRect" parent="." unique_id=1430354279]
 z_index = 1000
@@ -781,3 +784,35 @@ offset_bottom = 41.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="ObjectiveUI" type="Control" parent="." unique_id=1390570901]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("75_w3gig")
+
+[node name="ObjectiveBg" type="NinePatchRect" parent="ObjectiveUI" unique_id=1418690025]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MissionTitle" type="Label" parent="ObjectiveUI" unique_id=589973242]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MissionText" type="RichTextLabel" parent="ObjectiveUI" unique_id=452874989]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HintBtn" type="TextureButton" parent="ObjectiveUI" unique_id=1220414481]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HintLabel" type="Label" parent="ObjectiveUI" unique_id=794891846]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0

@@ -105,11 +105,16 @@ func _process_next() -> void:
 	_tween.tween_property(_parent, "global_position", target, dur) \
 		.set_trans(Tween.TRANS_LINEAR)
 	_tween.tween_callback(func() -> void:
-		_processing = false
 		_move_queue.pop_front()
+	# Notify tracker of new grid position
+		var tracker := Engine.get_singleton("ObjectiveTracker") if \
+			Engine.has_singleton("ObjectiveTracker") else \
+			_parent.get_tree().get_first_node_in_group("objective_tracker")
+		if tracker:
+			tracker.notify_moved_to(_parent.global_position / TILE_SIZE)
+			tracker.notify_step_taken()
 		_process_next()
 	)
-
 # ══════════════════════════════════════════════════════════════
 #  ANIMATION HELPER
 # ══════════════════════════════════════════════════════════════

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="LevelMission" format=3 uid="uid://x8ocyakq1n5g"]
+
+[ext_resource type="Script" uid="uid://b4jo5havffjul" path="res://Scenes/Resources/level_objective.gd" id="1_bvul5"]
+[ext_resource type="Script" uid="uid://ed6d8rf7nrwf" path="res://Scenes/Resources/level_mission.gd" id="2_6r8lv"]
+
+[sub_resource type="Resource" id="Resource_bvul5"]
+script = ExtResource("1_bvul5")
+description = "Jalan ke titik tersebut."
+hint = "Gunakan move_right, atau move(), atau sintaks lain."
+target_pos = Vector2(5, 4)
+target_id = "1"
+metadata/_custom_type_script = "uid://b4jo5havffjul"
+
+[resource]
+script = ExtResource("2_6r8lv")
+mission_title = "Mempelajari Basic Pergerakan"
+objectives = Array[ExtResource("1_bvul5")]([SubResource("Resource_bvul5")])
+metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

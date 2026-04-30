@@ -72,6 +72,7 @@ func _update_layout() -> void:
 	music_slider.custom_minimum_size.x  = min_slider_w
 
 func toggle() -> void:
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	if _open: close()
 	else:     open()
 
