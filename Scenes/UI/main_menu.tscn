@@ -1,6 +1,23 @@
 [gd_scene format=3 uid="uid://d20618lbjxefw"]
 
 [ext_resource type="Shader" uid="uid://ctmc5hfr3fo8v" path="res://Shaders/cloud.gdshader" id="1_5wsvm"]
+[ext_resource type="Script" uid="uid://tnux1oou05n3" path="res://Scripts/UI/main_menu.gd" id="1_u7lva"]
+[ext_resource type="Shader" uid="uid://bhc1lxy2fjohc" path="res://Shaders/tile_hint.gdshader" id="2_i2xx2"]
+[ext_resource type="Shader" uid="uid://bj3jbk8f5js54" path="res://Shaders/god_rays.gdshader" id="2_o14dv"]
+[ext_resource type="Texture2D" uid="uid://cihpveniv6xed" path="res://Assets/UI/LevelsBtn.png" id="5_4pqbp"]
+[ext_resource type="Texture2D" uid="uid://cij62q5sucxty" path="res://Assets/UI/Menu_Icon_1.png" id="5_lrjdf"]
+[ext_resource type="Texture2D" uid="uid://77jttu1o702x" path="res://Assets/UI/Menu_Icon_2.png" id="6_cejvf"]
+[ext_resource type="Texture2D" uid="uid://ch4gde4kx8q54" path="res://Assets/UI/LevelsBtn_Pressed.png" id="6_gih0s"]
+[ext_resource type="Script" uid="uid://c2l2nn08fabd4" path="res://Scripts/Resources/level_data.gd" id="6_q6o50"]
+[ext_resource type="Resource" uid="uid://dyn52ebm6bopa" path="res://Resources/Levels/level_01.tres" id="7_46hhv"]
+[ext_resource type="Texture2D" uid="uid://clwgfxsxd1kdp" path="res://Assets/UI/ExitBtn.png" id="7_k33u3"]
+[ext_resource type="Texture2D" uid="uid://dl06sl0y0y8s4" path="res://Assets/UI/Menu_Icon_3.png" id="7_ru8vt"]
+[ext_resource type="Texture2D" uid="uid://pp1dybc5gfys" path="res://Assets/UI/ExitBtn_Pressed.png" id="8_lrjdf"]
+[ext_resource type="Texture2D" uid="uid://ntpguta4lr8n" path="res://Assets/UI/Menu_Icon_4.png" id="8_ypsd1"]
+[ext_resource type="Texture2D" uid="uid://b10drm0kaoc5u" path="res://Assets/UI/StageBtn.png" id="11_3h8o7"]
+[ext_resource type="Theme" uid="uid://dnlaop0tx6go2" path="res://Resources/Shader/level_text.tres" id="12_3h8o7"]
+[ext_resource type="Texture2D" uid="uid://dttd3at3o0y2a" path="res://Assets/UI/StageBtn_Pressed.png" id="12_q6o50"]
+[ext_resource type="Texture2D" uid="uid://ceur3h3hra2c3" path="res://Assets/UI/RobotSorterTitle.png" id="13_ru8vt"]
 
 [sub_resource type="Gradient" id="Gradient_i2xx2"]
 offsets = PackedFloat32Array(0, 0.0074626864, 1)
@@ -38,6 +55,29 @@ shader_parameter/center_pos = Vector2(0.5, 0)
 shader_parameter/position_impact = 0.8999999798832
 shader_parameter/color_gardient = SubResource("GradientTexture1D_gih0s")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u7lva"]
+shader = ExtResource("2_o14dv")
+shader_parameter/ray_angle = -0.3
+shader_parameter/ray_position = -0.2
+shader_parameter/spread = 1.0
+shader_parameter/cutoff = -0.009999952975000004
+shader_parameter/falloff = 0.618000029355
+shader_parameter/edge_fade = 0.282000013395
+shader_parameter/speed = 1.0
+shader_parameter/ray1_density = 0.575
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.3
+shader_parameter/color = Vector4(1, 0.9, 0.65, 0.8)
+shader_parameter/hdr = false
+shader_parameter/seed = 5.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o14dv"]
+shader = ExtResource("2_i2xx2")
+shader_parameter/glow_color = Color(1, 0.9, 0.5, 1)
+shader_parameter/intensity = 0.85600004066
+shader_parameter/spread = 2.0
+shader_parameter/pulse_speed = 0.2000000095
+
 [node name="MainMenu" type="Control" unique_id=851984471]
 layout_mode = 3
 anchors_preset = 15
@@ -45,6 +85,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_u7lva")
+random_textures = Array[Texture2D]([ExtResource("5_lrjdf"), ExtResource("6_cejvf"), ExtResource("7_ru8vt"), ExtResource("8_ypsd1")])
+level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv")])
 
 [node name="Bg" type="ColorRect" parent="." unique_id=1885293056]
 material = SubResource("ShaderMaterial_k33u3")
@@ -53,7 +96,156 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="MenuOptions" type="VBoxContainer" parent="." unique_id=874768015]
+[node name="GodRay" type="ColorRect" parent="." unique_id=665650244]
+material = SubResource("ShaderMaterial_u7lva")
+layout_mode = 0
+offset_left = -63.0
+offset_top = -40.0
+offset_right = 743.0
+offset_bottom = 231.0
+
+[node name="Sun" type="ColorRect" parent="." unique_id=715987461]
+material = SubResource("ShaderMaterial_o14dv")
+layout_mode = 0
+offset_left = 170.0
+offset_top = -144.0
+offset_right = 464.0
+offset_bottom = 165.0
+
+[node name="Letter" type="TextureRect" parent="." unique_id=567830394]
+layout_mode = 0
+offset_left = 163.0
+offset_top = 130.0
+offset_right = 517.0
+offset_bottom = 170.0
+texture = ExtResource("13_ru8vt")
+
+[node name="Icons" type="Control" parent="." unique_id=82971010]
+anchors_preset = 0
+offset_left = 92.0
+offset_top = 126.0
+offset_right = 132.0
+offset_bottom = 166.0
+scale = Vector2(2, 2)
+
+[node name="Icon1" type="TextureButton" parent="Icons" unique_id=2072853212]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("5_lrjdf")
+
+[node name="Icon2" type="TextureButton" parent="Icons" unique_id=1055214915]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("6_cejvf")
+
+[node name="Icon3" type="TextureButton" parent="Icons" unique_id=2146118394]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("7_ru8vt")
+
+[node name="Icon4" type="TextureButton" parent="Icons" unique_id=161698435]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("8_ypsd1")
+
+[node name="LevelsContainer" type="Control" parent="." unique_id=76671852]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="GridContainer" type="GridContainer" parent="LevelsContainer" unique_id=1897640707]
+layout_mode = 0
+offset_left = 281.0
+offset_top = 151.0
+offset_right = 374.0
+offset_bottom = 191.0
+theme_override_constants/h_separation = 31
+columns = 8
+
+[node name="Level1Btn" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1621727742]
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+texture_pressed = ExtResource("12_q6o50")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level1Btn" unique_id=1597881545]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+theme_override_font_sizes/font_size = 22
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Level2Btn" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=561926328]
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level2Btn" unique_id=729172640]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackBtn" type="TextureButton" parent="LevelsContainer" unique_id=90996952]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="LevelsBtn" type="TextureButton" parent="." unique_id=1985131323]
+layout_mode = 0
+offset_left = 289.0
+offset_top = 242.0
+offset_right = 373.0
+offset_bottom = 282.0
+texture_normal = ExtResource("5_4pqbp")
+texture_pressed = ExtResource("6_gih0s")
+
+[node name="ExitBtn" type="TextureButton" parent="." unique_id=796519849]
+layout_mode = 0
+offset_left = 290.0
+offset_top = 289.0
+offset_right = 374.0
+offset_bottom = 329.0
+texture_normal = ExtResource("7_k33u3")
+texture_pressed = ExtResource("8_lrjdf")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=71466435]
+position = Vector2(326, 179)
+
+[node name="FadeOverlay" type="ColorRect" parent="." unique_id=1810703982]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 149.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

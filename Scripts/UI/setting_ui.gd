@@ -85,8 +85,15 @@ func close() -> void:
 	visible = false
 
 func _on_home_pressed() -> void:
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	close()
-	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
-
+	
+	# Fade out then switch scene
+	var tw := create_tween()
+	tw.tween_property(self, "modulate:a", 0.0, 0.3)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	
+	await tw.finished
+	get_tree().change_scene_to_file("res://Scenes/UI/main_menu.tscn")
 func _on_back_pressed() -> void:
 	close()

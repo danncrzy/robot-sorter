@@ -834,12 +834,15 @@ offset_bottom = 40.0
 mouse_filter = 2
 theme = ExtResource("6_eqykv")
 
-[node name="HintLabel" type="Label" parent="ObjectiveUI" unique_id=794891846]
+[node name="HintLabel" type="RichTextLabel" parent="ObjectiveUI" unique_id=2049670509]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
+theme = ExtResource("6_eqykv")
 
 [node name="HintBtn" type="TextureButton" parent="ObjectiveUI" unique_id=1220414481]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
