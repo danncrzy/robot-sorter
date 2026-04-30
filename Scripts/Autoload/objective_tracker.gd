@@ -119,14 +119,24 @@ func _complete_current() -> void:
 	if not obj: return
 	obj._completed = true
 	_remove_marker_for(obj)
+	
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/succes_2.ogg"))
+	
 	objective_completed.emit(obj)
+	
 	if current_mission.is_complete():
+		AudioManager.play_sfx(preload("res://Assets/Sfx/victory_level.ogg"))
+		
 		mission_completed.emit(current_mission)
+		
+		print("🎉 STAGE DONE!")
 	else:
 		var next := current_mission.get_current_objective()
 		if next:
 			objective_changed.emit(next)
 			_spawn_marker_for(next)
+
+
 
 func _spawn_markers() -> void:
 	_clear_markers()
@@ -186,16 +196,16 @@ func _init_hints(mission: LevelMission) -> void:
 
 func _on_tile_stepped_on(tile_id: String) -> void:
 
-	print("🔴 Tracker received tile_id: ", tile_id)
+	print("Tracker received tile_id: ", tile_id)
 	
 	var obj := _current()
 	if not obj:
-		print("⚠️ No current objective!")
+		print("No current objective!")
 		return
-	
+
 	# Only handle MOVE_TO_POINT objectives this way
 	if obj.type != LevelObjective.Type.MOVE_TO_POINT:
-		print("⚠️ Current objective is not MOVE_TO_POINT type!")
+		print("Current objective is not MOVE_TO_POINT type!")
 		return
 	
 	# Parse tile_id back to Vector2
