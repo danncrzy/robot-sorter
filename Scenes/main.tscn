@@ -145,7 +145,7 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 3.0,
+"duration": 2.0,
 "texture": SubResource("AtlasTexture_b3802")
 }, {
 "duration": 3.0,
@@ -252,7 +252,7 @@ script = ExtResource("7_344ge")
 [node name="PlayerAnimations" type="AnimatedSprite2D" parent="GameNodes/Main/Player" unique_id=306957809]
 position = Vector2(230, 105)
 sprite_frames = SubResource("SpriteFrames_344ge")
-animation = &"Idle_Angry"
+animation = &"Idle"
 
 [node name="PlayerCollision" type="CollisionShape2D" parent="GameNodes/Main/Player" unique_id=210655958]
 position = Vector2(230.5, 110)

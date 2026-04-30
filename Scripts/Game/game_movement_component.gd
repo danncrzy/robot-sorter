@@ -27,7 +27,7 @@ func _ready() -> void:
 	if rand < 0.05:
 		# 5% chance (0.00 - 0.049)
 		_play_anim("Idle_Angry")
-	elif rand < 0.15:
+	elif rand < 0.85:
 		# 10% chance (0.05 - 0.149)
 		_play_anim("Idle_Tired")
 	else:
@@ -106,15 +106,15 @@ func _process_next() -> void:
 		.set_trans(Tween.TRANS_LINEAR)
 	_tween.tween_callback(func() -> void:
 		_move_queue.pop_front()
-	# Notify tracker of new grid position
-		var tracker := Engine.get_singleton("ObjectiveTracker") if \
-			Engine.has_singleton("ObjectiveTracker") else \
-			_parent.get_tree().get_first_node_in_group("objective_tracker")
+		# Defer so tracker signals never interrupt movement chain
+		var tracker := _parent.get_tree().get_first_node_in_group("objective_tracker")
 		if tracker:
-			tracker.notify_moved_to(_parent.global_position / TILE_SIZE)
-			tracker.notify_step_taken()
+			var pos := _parent.global_position / TILE_SIZE
+			tracker.call_deferred("notify_moved_to", pos)
+			tracker.call_deferred("notify_step_taken")
 		_process_next()
 	)
+
 # ══════════════════════════════════════════════════════════════
 #  ANIMATION HELPER
 # ══════════════════════════════════════════════════════════════

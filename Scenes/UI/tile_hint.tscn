@@ -1,22 +1,16 @@
 [gd_scene format=3 uid="uid://cbgkk7xissse5"]
 
-[ext_resource type="Shader" uid="uid://bhc1lxy2fjohc" path="res://Shaders/tile_hint.gdshader" id="1_awrl2"]
+[ext_resource type="Material" uid="uid://bdj6vew7w48uc" path="res://Resources/Shader/tile_hint.tres" id="1_3b4l2"]
 [ext_resource type="Script" uid="uid://caameu3d7bjpr" path="res://Scripts/UI/tile_hint.gd" id="2_3b4l2"]
 [ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="2_84np6"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_84np6"]
-shader = ExtResource("1_awrl2")
-shader_parameter/glow_color = Color(0.40228525, 0.943906, 0.21420896, 1)
-shader_parameter/intensity = 0.5110000242725
-shader_parameter/spread = 0.10200000158512
-shader_parameter/pulse_speed = 2.42800011533
 
 [sub_resource type="Theme" id="Theme_3b4l2"]
 default_font = ExtResource("2_84np6")
 default_font_size = 9
 
 [node name="TilleHint" type="ColorRect" unique_id=1916436049]
-material = SubResource("ShaderMaterial_84np6")
+z_index = 500
+material = ExtResource("1_3b4l2")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,6 +26,7 @@ layout_mode = 0
 offset_right = 17.0
 offset_bottom = 16.0
 theme = SubResource("Theme_3b4l2")
+theme_override_colors/font_color = Color(0.050980393, 0.05490196, 0.14901961, 1)
 theme_override_font_sizes/font_size = 3
 text = "(10,10)"
 horizontal_alignment = 1

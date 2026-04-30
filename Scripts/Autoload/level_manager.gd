@@ -86,9 +86,18 @@ func _load_script_content(script_name: String) -> String:
 	return content
 
 func _load_mission() -> void:
+	print("LOAD MISSION | level_id: ", current_level.level_id)
 	var mission_path := "res://Data/Missions/objective_%s.tres" % current_level.level_id
-	if not ResourceLoader.exists(mission_path): return
+	print("MISSION PATH: ", mission_path)
+	print("PATH EXISTS: ", ResourceLoader.exists(mission_path))
+	if not ResourceLoader.exists(mission_path): 
+		print("MISSION FILE NOT FOUND — aborting")
+		return
 	var mission: LevelMission = load(mission_path)
+	print("MISSION LOADED: ", mission)
+	print("OBJECTIVES: ", mission.objectives.size())
 	var player := get_tree().current_scene.get_node_or_null("GameNodes/Main/Player")
+	print("PLAYER: ", player)
 	if mission and player:
 		ObjectiveTracker.init(mission, player)
+		print("TRACKER INIT DONE")

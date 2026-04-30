@@ -18,6 +18,7 @@ enum Type {
 @export var target_id:     String  = ""          # item name / rack id
 @export var show_marker:   bool    = true        # show hint marker in world
 
+
 var _current_count: int = 0
 var _completed:     bool = false
 

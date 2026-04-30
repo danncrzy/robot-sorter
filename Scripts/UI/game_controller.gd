@@ -103,15 +103,20 @@ func _on_play() -> void:
 		_player.run()
 
 func _on_reset() -> void:
-	if ErrorHandler._error_control and ErrorHandler._error_control.visible:
-		return
 	if not _player: return
-	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
-	# ── Lock reset, unlock play ──
+
 	reset_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	play_btn.mouse_filter  = Control.MOUSE_FILTER_STOP
 	play_btn.modulate.a    = 1.0
 	_play_running          = false
+
+	# Reset mission
+	ObjectiveTracker.reset_mission()
+
+	# Reset ObjectiveUI display
+	var obj_ui := get_tree().get_first_node_in_group("objective_ui")
+	if obj_ui and obj_ui.has_method("reset_display"):
+		obj_ui.reset_display()
 
 	if _original_script:
 		_player.set_script(_original_script)

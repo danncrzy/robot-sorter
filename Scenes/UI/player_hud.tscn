@@ -75,6 +75,11 @@
 [ext_resource type="Texture2D" uid="uid://oyw5qhgsgd0g" path="res://Assets/UI/SettingBtn.png" id="65_6sklo"]
 [ext_resource type="Texture2D" uid="uid://cfrybtkr68bb3" path="res://Assets/UI/SettingBtn_Pressed.png" id="66_w3gig"]
 [ext_resource type="Script" uid="uid://c0kq3em2rcas7" path="res://Scripts/UI/objective_ui.gd" id="75_w3gig"]
+[ext_resource type="Texture2D" uid="uid://deaxak7s2ro6q" path="res://Assets/UI/ObjectiveUI.png" id="76_o47rn"]
+[ext_resource type="Texture2D" uid="uid://dvy2jh4vf560b" path="res://Assets/UI/MinimizeBtn.png" id="77_4sxk8"]
+[ext_resource type="Texture2D" uid="uid://b15q8n831csud" path="res://Assets/UI/MinimizeBtn_Pressed.png" id="78_m04l3"]
+[ext_resource type="Texture2D" uid="uid://derbb1pdtlw80" path="res://Assets/UI/MaximizeBtn.png" id="79_3x627"]
+[ext_resource type="Texture2D" uid="uid://bjrjf00a2xveo" path="res://Assets/UI/MaximizeBtn_Pressed.png" id="80_1775v"]
 
 [sub_resource type="Theme" id="Theme_rmbpn"]
 
@@ -107,6 +112,10 @@ shader_parameter/noise_speed = 0.1
 shader_parameter/noise_direction = Vector2(1, 0.5)
 shader_parameter/vignette_strength = 0.0
 shader_parameter/vignette_size = 0.8
+
+[sub_resource type="Theme" id="Theme_o47rn"]
+default_font = ExtResource("16_2uf08")
+default_font_size = 9
 
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
@@ -786,33 +795,83 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="ObjectiveUI" type="Control" parent="." unique_id=1390570901]
+z_index = 200
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 100.0
+offset_top = 10.0
+offset_right = 200.0
+offset_bottom = 110.0
 script = ExtResource("75_w3gig")
 
 [node name="ObjectiveBg" type="NinePatchRect" parent="ObjectiveUI" unique_id=1418690025]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("76_o47rn")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
 
-[node name="MissionTitle" type="Label" parent="ObjectiveUI" unique_id=589973242]
+[node name="TitleLabel" type="Label" parent="ObjectiveUI" unique_id=589973242]
+texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
+theme = SubResource("Theme_o47rn")
+theme_override_font_sizes/font_size = 12
+text = "Misi"
 
 [node name="MissionText" type="RichTextLabel" parent="ObjectiveUI" unique_id=452874989]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
+theme = ExtResource("6_eqykv")
+
+[node name="HintLabel" type="Label" parent="ObjectiveUI" unique_id=794891846]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
 
 [node name="HintBtn" type="TextureButton" parent="ObjectiveUI" unique_id=1220414481]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="HintLabel" type="Label" parent="ObjectiveUI" unique_id=794891846]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="ControlBtn" type="Control" parent="ObjectiveUI" unique_id=802812928]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="MinimizeBtn" type="TextureButton" parent="ObjectiveUI/ControlBtn" unique_id=210196607]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -16.0
+offset_bottom = 17.0
+grow_horizontal = 0
+texture_normal = ExtResource("77_4sxk8")
+texture_pressed = ExtResource("78_m04l3")
+
+[node name="MaximizeBtn" type="TextureButton" parent="ObjectiveUI/ControlBtn" unique_id=1357530423]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -16.0
+offset_bottom = 17.0
+grow_horizontal = 0
+texture_normal = ExtResource("79_3x627")
+texture_pressed = ExtResource("80_1775v")

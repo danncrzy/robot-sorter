@@ -12,7 +12,8 @@ var _marker_scene: PackedScene = null
 var _active_markers: Array[Node] = []
 var _player: Node = null
 
-const TILE_SIZE := 32.0
+var _tilemap: Node = null
+const TILE_SIZE := 16.0
 
 func _ready() -> void:
 	add_to_group("objective_tracker")
@@ -20,20 +21,40 @@ func _ready() -> void:
 func init(mission: LevelMission, player: Node) -> void:
 	current_mission = mission
 	_player         = player
+
+	# Find tilemap once
+	var world: Node = null
+	for path in ["GameNodes/Main", "GameNodes/GameMain"]:
+		world = player.get_tree().current_scene.get_node_or_null(path)
+		if world: break
+	if world:
+		for path in ["FactoryFloor", "GameFactoryFloor", "TileMap", "TileMapLayer"]:
+			var tm := world.get_node_or_null(path)
+			if tm:
+				_tilemap = tm
+				break
+
 	mission.reset()
 	_spawn_markers()
 	var first := mission.get_current_objective()
 	if first:
 		objective_changed.emit(first)
 
-# ── Called by game systems ─────────────────────────────────────
-
-func notify_moved_to(grid_pos: Vector2) -> void:
+func notify_moved_to(world_pos: Vector2) -> void:
 	var obj := _current()
 	if not obj: return
-	if obj.type == LevelObjective.Type.MOVE_TO_POINT:
-		if grid_pos.is_equal_approx(obj.target_pos):
-			_complete_current()
+	if obj.type != LevelObjective.Type.MOVE_TO_POINT: return
+
+	# Convert world position to tile coords using TileMap
+	var tile_pos := Vector2.ZERO
+	if _tilemap and _tilemap.has_method("local_to_map"):
+		var local = _tilemap.to_local(_player.global_position)
+		tile_pos = Vector2(_tilemap.local_to_map(local))
+	else:
+		tile_pos = _player.global_position / 32.0
+
+	if tile_pos.is_equal_approx(obj.target_pos):
+		_complete_current()
 
 func notify_grabbed(item_id: String) -> void:
 	var obj := _current()
@@ -104,20 +125,32 @@ func _spawn_marker_for(obj: LevelObjective) -> void:
 	var marker := TILE_HINT_SCENE.instantiate()
 	marker.set_meta("objective", obj)
 
-	var world := get_tree().current_scene.get_node_or_null("GameNodes/Main")
-	if world:
-		world.add_child(marker)
-		marker.setup(obj.target_pos)
+	var world: Node = null
+	for path in ["GameNodes/Main", "GameNodes/GameMain", "GameNodes"]:
+		world = get_tree().current_scene.get_node_or_null(path)
+		if world: break
+	if not world: world = get_tree().current_scene
 
-		# Apply best shader params
-		var mat := marker.material as ShaderMaterial
-		if mat:
-			mat.set_shader_parameter("glow_color",  Color(0.6,  1.0,  0.4,  1.0))
-			mat.set_shader_parameter("intensity",   0.511)
-			mat.set_shader_parameter("spread",      0.102)
-			mat.set_shader_parameter("pulse_speed", 2.428)
+	world.add_child(marker)
 
-		_active_markers.append(marker)
+	# Find tilemap for grid alignment
+	var tilemap: Node = null
+	for path in ["FactoryFloor", "GameFactoryFloor", "TileMap"]:
+		tilemap = world.get_node_or_null(path)
+		if tilemap: break
+
+	marker.setup(obj.target_pos, tilemap)
+
+	var mat := marker.material as ShaderMaterial
+	if mat:
+		mat.set_shader_parameter("glow_color",  Color(0.6, 1.0, 0.4, 1.0))
+		mat.set_shader_parameter("intensity",   0.511)
+		mat.set_shader_parameter("spread",      0.102)
+		mat.set_shader_parameter("pulse_speed", 2.428)
+	else:
+		marker.color = Color(1.0, 0.9, 0.1, 0.5)
+
+	_active_markers.append(marker)
 
 func _remove_marker_for(obj: LevelObjective) -> void:
 	for m in _active_markers:
@@ -142,3 +175,11 @@ func get_current_hint() -> String:
 	var obj := _current()
 	if not obj: return ""
 	return obj.hint
+	
+func reset_mission() -> void:
+	if not current_mission: return
+	current_mission.reset()
+	_spawn_markers()
+	var first := current_mission.get_current_objective()
+	if first:
+		objective_changed.emit(first)
