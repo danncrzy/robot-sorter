@@ -22,7 +22,19 @@ func _ready() -> void:
 	_tilemap        = _parent.get_node_or_null("../../FactoryFloor")
 	_start_position = _parent.global_position
 	_start_facing   = _facing
-	_play_anim("Idle")
+	var rand := randf()  # Random float between 0.0 and 1.0
+	
+	if rand < 0.05:
+		# 5% chance (0.00 - 0.049)
+		_play_anim("Idle_Angry")
+	elif rand < 0.15:
+		# 10% chance (0.05 - 0.149)
+		_play_anim("Idle_Tired")
+	else:
+		# 85% chance (0.15 - 1.0) - Default
+		_play_anim("Idle")
+	
+	return
 
 # ══════════════════════════════════════════════════════════════
 #  QUEUE PROCESSOR
@@ -35,8 +47,20 @@ func _process_next() -> void:
 	if _move_queue.is_empty():
 		_is_moving  = false
 		_processing = false
-		_play_anim("Idle")
 		AudioManager.stop_footsteps()  
+	
+		var rand := randf()  # Random float between 0.0 and 1.0
+	
+		if rand < 0.05:
+		# 5% chance (0.00 - 0.049)
+			_play_anim("Idle_Angry")
+		elif rand < 0.15:
+		# 10% chance (0.05 - 0.149)
+			_play_anim("Idle_Tired")
+		else:
+		# 85% chance (0.15 - 1.0) - Default
+			_play_anim("Idle")
+	
 		return
 
 	_is_moving = true

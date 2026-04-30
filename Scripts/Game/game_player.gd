@@ -40,6 +40,7 @@ func _ready() -> void:
 	_start_position = global_position
 
 func run() -> void:
+	# Tulis kode buatan anda di sini ^^
 	pass
 
 func reset() -> void:

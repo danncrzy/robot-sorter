@@ -4,13 +4,14 @@
 #  Uses Levenshtein fuzzy matching + dirty token detection for special chars.
 #  error_handler.gd calls into this exclusively.
 #
-#  VERSION 6 — three more fixes:
-#    Check B FIX: "funcs run():" no longer skipped — lines ending ":" bypass
-#                 _looks_like_expression, so func typos are always caught.
-#    Check H FIX: token-based is_for_line → catches "for:" (colon, no variable).
-#    Check L EXT: empty-body look-ahead now covers ALL block-starters
-#                 (func, for, if, elif, else, while, match, class).
-#  Plus all v5/v4/v3 improvements.
+#  VERSION 7 — undeclared identifier detection (Pass-0.5):
+#    check_undeclared(): flags single bare tokens (pasera / tessor / nugg etc.)
+#    that are not declared anywhere in the file and not in any whitelist.
+#    BUILTIN_NAMES whitelist added — covers all GDScript built-ins, node
+#    methods, properties, singletons, and project game commands.
+#    Helpers: _is_bare_statement, _extract_decl_name, _collect_global_names,
+#             _extract_func_params, _is_declaration_line.
+#  Plus all v6/v5/v4/v3 improvements.
 # ─────────────────────────────────────────────────────────────────────────────
 extends Node
 
@@ -87,60 +88,80 @@ const BUILTIN_TYPES: Array[String] = [
 ]
 
 ## ═══════════════════════════════════════════════════════════════
-##  PASS-2  UNDECLARED IDENTIFIER CHECK
-##  Collects all declared names in scope, flags unknowns.
+##  BUILT-IN NAME WHITELIST
+##  All GDScript built-in functions, node methods, properties, and
+##  special constants. Used by check_undeclared to avoid flagging
+##  legitimate GDScript identifiers as "undeclared".
 ## ═══════════════════════════════════════════════════════════════
 
-# GDScript built-in functions always available globally
-const BUILTIN_FUNCTIONS: Array[String] = [
-	"print", "printerr", "printraw", "print_rich", "push_error", "push_warning",
-	"range", "len", "abs", "sign", "ceil", "floor", "round", "sqrt", "pow",
-	"min", "max", "clamp", "lerp", "remap", "smoothstep", "move_toward",
-	"deg_to_rad", "rad_to_deg", "sin", "cos", "tan", "atan", "atan2",
-	"snapped", "wrap", "fmod", "fposmod", "posmod",
-	"randf", "randi", "randf_range", "randi_range", "randomize", "seed",
-	"str", "int", "float", "bool",
-	"typeof", "type_string", "is_instance_of", "is_instance_valid",
-	"weakref", "inst_to_dict", "dict_to_inst",
-	"load", "preload", "ResourceLoader",
-	"get_node", "has_node", "add_child", "remove_child", "queue_free",
-	"create_tween", "get_tree", "get_parent", "get_children",
-	"emit_signal", "connect", "disconnect", "has_signal",
-	"set", "get", "call", "callv", "has_method",
-	"await", "yield",
-	"linear_to_db", "db_to_linear",
-	"bytes_to_var", "var_to_bytes", "var_to_str", "str_to_var",
-	"assert", "breakpoint",
-	"Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4",
-	"Rect2", "Rect2i", "Color", "Transform2D", "Transform3D",
-	"Basis", "Quaternion", "Plane", "AABB",
-	"Array", "Dictionary", "PackedStringArray", "PackedInt32Array",
-	"PackedFloat32Array", "PackedVector2Array", "PackedColorArray",
-	"OS", "Engine", "Input", "InputMap", "ProjectSettings",
-	"FileAccess", "DirAccess", "JSON",
-	"Time", "Performance",
-]
-
-# Always-valid bare names (not functions, not types)
-const ALWAYS_VALID: Array[String] = [
-	"self", "super", "null", "true", "false",
+const BUILTIN_NAMES: Array[String] = [
+	# Constants / literals
 	"PI", "TAU", "INF", "NAN",
-	"OK", "FAILED", "ERR_UNAVAILABLE",
-	"TYPE_NIL", "TYPE_BOOL", "TYPE_INT", "TYPE_FLOAT", "TYPE_STRING",
-	"CONNECT_ONE_SHOT", "CONNECT_DEFERRED",
-	"MOUSE_BUTTON_LEFT", "MOUSE_BUTTON_RIGHT", "MOUSE_BUTTON_MIDDLE",
-	"KEY_ESCAPE", "KEY_ENTER", "KEY_SPACE",
-	"NOTIFICATION_RESIZED", "NOTIFICATION_READY", "NOTIFICATION_PROCESS",
-	"SIZE_EXPAND_FILL", "SIZE_EXPAND", "SIZE_SHRINK_BEGIN", "SIZE_SHRINK_CENTER",
-	"MOUSE_FILTER_STOP", "MOUSE_FILTER_PASS", "MOUSE_FILTER_IGNORE",
-	"PRESET_FULL_RECT", "PRESET_TOP_LEFT", "PRESET_CENTER",
-	"HORIZONTAL_ALIGNMENT_LEFT", "HORIZONTAL_ALIGNMENT_CENTER", "HORIZONTAL_ALIGNMENT_RIGHT",
-	"VERTICAL_ALIGNMENT_TOP", "VERTICAL_ALIGNMENT_CENTER", "VERTICAL_ALIGNMENT_BOTTOM",
-	"CURSOR_ARROW", "CURSOR_HSIZE", "CURSOR_VSIZE", "CURSOR_FDIAGSIZE", "CURSOR_BDIAGSIZE",
-	"_delta", "_event", "_process", "_physics_process",
-	"global_position", "position", "rotation", "scale", "size",
-	"visible", "modulate", "z_index", "name", "owner",
-	"velocity", "speed", "direction",
+	"self", "super", "null", "true", "false", "owner",
+	# Built-in global functions
+	"print", "printerr", "printraw", "prints", "printt", "print_debug",
+	"push_error", "push_warning",
+	"len", "range", "abs", "sign", "min", "max", "clamp", "lerp",
+	"smoothstep", "move_toward", "floor", "ceil", "round", "sqrt",
+	"pow", "log", "exp", "sin", "cos", "tan", "asin", "acos", "atan", "atan2",
+	"deg_to_rad", "rad_to_deg", "fmod", "fposmod", "posmod", "snapped", "wrap",
+	"is_nan", "is_inf", "is_equal_approx", "is_zero_approx",
+	"randomize", "randi", "randf", "randi_range", "randf_range",
+	"rand_from_seed", "seed",
+	"str", "var_to_str", "str_to_var", "type_string", "typeof",
+	"is_instance_valid", "is_instance_of", "weakref",
+	"load", "preload", "assert",
+	# Node methods
+	"get_node", "has_node", "add_child", "remove_child", "queue_free", "free",
+	"get_parent", "get_children", "get_child", "get_child_count",
+	"find_child", "find_children", "find_parent",
+	"get_path", "get_tree", "get_viewport", "get_window",
+	"is_inside_tree", "is_node_ready",
+	"set_process", "set_physics_process",
+	"set", "get", "call", "callv", "has_method", "has_signal",
+	"emit_signal", "connect", "disconnect", "is_connected",
+	"notification", "to_local", "to_global",
+	"create_tween", "duplicate", "replace_by",
+	# Node2D properties / methods
+	"position", "global_position", "rotation", "global_rotation",
+	"rotation_degrees", "global_rotation_degrees",
+	"scale", "global_scale", "transform", "global_transform",
+	"z_index", "z_as_relative", "y_sort_enabled",
+	"get_angle_to", "look_at", "translate", "global_translate",
+	"rotate", "apply_scale",
+	# Node common
+	"name", "visible", "modulate", "self_modulate", "process_mode",
+	# CharacterBody2D
+	"velocity", "up_direction", "move_and_slide", "move_and_collide",
+	"test_move", "is_on_floor", "is_on_ceiling", "is_on_wall",
+	"is_on_floor_only", "is_on_ceiling_only", "is_on_wall_only",
+	"get_floor_normal", "get_floor_angle", "get_wall_normal",
+	"get_slide_collision_count", "get_slide_collision",
+	"get_last_motion", "get_position_delta", "get_real_velocity",
+	# AnimatedSprite2D / AnimationPlayer
+	"animation", "frame", "speed_scale", "playing", "flip_h", "flip_v",
+	"play", "pause", "stop", "is_playing",
+	# Input singleton
+	"Input",
+	"is_action_pressed", "is_action_just_pressed",
+	"is_action_just_released", "get_action_strength",
+	"get_axis", "get_vector",
+	# Timer
+	"wait_time", "one_shot", "autostart", "timeout",
+	"start", "get_time_left", "is_stopped",
+	# Tween
+	"tween_property", "tween_callback", "tween_interval",
+	"tween_method", "set_loops", "set_parallel", "set_ease", "set_trans",
+	# Godot singletons
+	"Engine", "OS", "Time", "ProjectSettings", "ResourceLoader",
+	"FileAccess", "DirAccess", "JSON", "Marshalls",
+	# Common game commands (from the player command palette in this project)
+	"move", "move_right", "move_left", "move_up", "move_down", "move_to",
+	"step_forward", "step_back",
+	"turn_left", "turn_right", "rotate_deg", "face",
+	"is_moving", "get_facing",
+	"grab", "drop", "interact", "is_holding",
+	"reset",
 ]
 
 ## ═══════════════════════════════════════════════════════════════
@@ -311,6 +332,17 @@ func check_keywords(content: String) -> Array:
 				errors.append({ "line": i + 1,
 					"message": 'Tanda "#" di tengah baris memulai komentar — semua setelah "#" diabaikan oleh GDScript.' })
 
+		# ── G0) Missing variable name after "var" / "const" ───────────────
+		# Catches:  var     → lone keyword, nothing follows it
+		# Safe:     var a   → name present
+		# Token-based: if tokens == ["var"] or ["const"] (size 1), name is absent.
+		if not reported.has("__var_noname__"):
+			var _vkw = tokens[0]
+			if (_vkw == "var" or _vkw == "const") and tokens.size() == 1:
+				reported["__var_noname__"] = true
+				errors.append({ "line": i + 1,
+					"message": 'Nama variabel tidak ada setelah "%s" — tulis nama variabelnya (contoh: %s nama_variabel).' % [_vkw, _vkw] })
+
 		# ── G) Missing type specifier after ":" in var/const declarations ───
 		# Catches:  var x:          → "Expected type specifier after ':'"
 		#           var x: = 5      → same (: followed by = with no type)
@@ -366,6 +398,224 @@ func check_keywords(content: String) -> Array:
 				ri = rp + 1
 
 	return errors
+
+
+## ═══════════════════════════════════════════════════════════════
+##  PASS-0.5  UNDECLARED IDENTIFIER CHECK  (Symbol-Table Edition)
+##
+##  How scope IDs work:
+##    100  = global — declared outside any function; usable everywhere.
+##    1    = func _ready   (first func found in the file)
+##    2    = func run      (second func)
+##    3    = func reset    (third func)
+##    …and so on.
+##
+##  Every declared name is stored in a Dictionary:
+##    symbol_table["_start_position"] = 100   ← global var
+##    symbol_table["animasi"]         = 100   ← @onready var
+##    symbol_table["_ready"]          = 100   ← func names are always global
+##    symbol_table["run"]             = 100
+##    symbol_table["local_x"]        = 2    ← var declared inside func run (id 2)
+##
+##  When checking a bare token inside func id N:
+##    • Not in table at all           → ERROR: undeclared
+##    • table[tok] == 100             → OK: global, usable everywhere
+##    • table[tok] == N               → OK: declared in this very function
+##    • table[tok] is some other id M → ERROR: wrong scope
+##       (e.g. using a _ready-local var inside func run)
+##
+##  Only "bare statement" lines are checked — lines with no . ( = [ : + - * /
+##  etc. — to avoid false positives on method calls and assignments.
+## ═══════════════════════════════════════════════════════════════
+
+## PASS-0.5 ENTRY POINT
+func check_undeclared(content: String) -> Array:
+	var errors: Array = []
+	var lines         := content.split("\n")
+
+	# ── Step 1: Build the symbol table ───────────────────────────────────
+	var symbol_table: Dictionary = _build_symbol_table(lines)
+
+	# ── Step 2: Scan lines with scope tracking ────────────────────────────
+	# We need to know which function id we're inside while checking.
+	# We replay the same counter logic as _build_symbol_table uses.
+	var func_counter  := 0   # increments each time a "func" line is seen
+	var func_id       := 0   # id of the currently-active function (0 = global)
+	var func_indent   := -1  # indent depth of that func's declaration line
+
+	for i in lines.size():
+		var raw      := lines[i]
+		var stripped := raw.strip_edges()
+		if stripped == "" or stripped.begins_with("#"): continue
+
+		var indent := _count_indent(raw)
+
+		# ── Track function entry / exit ───────────────────────────────
+		if stripped.begins_with("func "):
+			func_counter += 1
+			func_id     = func_counter
+			func_indent = indent
+		elif func_id > 0 and indent <= func_indent:
+			func_id     = 0
+			func_indent = -1
+
+		# ── Skip declaration lines ────────────────────────────────────
+		if _is_declaration_line(stripped): continue
+
+		# ── Only check bare single-token statement lines ──────────────
+		var code  := _remove_comment(stripped)
+		var clean := _strip_strings(code)
+		if not _is_bare_statement(clean): continue
+
+		var tokens := _tokenize(clean)
+		if tokens.size() != 1: continue
+
+		var tok = tokens[0]
+
+		# ── Built-in / keyword whitelist ──────────────────────────────
+		if tok in LINE_KEYWORDS:  continue
+		if tok in TYPE_NAMES:     continue
+		if tok in BUILTIN_TYPES:  continue
+		if tok in BUILTIN_NAMES:  continue
+		if tok.is_valid_int() or tok.is_valid_float(): continue
+
+		# ── Symbol-table lookup ───────────────────────────────────────
+		if not symbol_table.has(tok):
+			errors.append({ "line": i + 1,
+				"message": '"%s" tidak dikenal — kata ini belum dideklarasikan di mana pun. Gunakan "var %s = ..." untuk mendeklarasikannya, atau hapus baris ini.' \
+					% [tok, tok] })
+		else:
+			var tok_scope: int = symbol_table[tok]
+			if tok_scope != 100 and tok_scope != func_id:
+				# Declared, but in a different function — wrong scope.
+				errors.append({ "line": i + 1,
+					"message": '"%s" dideklarasikan di fungsi lain dan tidak bisa digunakan di sini. Deklarasikan ulang dengan "var %s = ..." di dalam fungsi ini, atau jadikan variabel global.' \
+						% [tok, tok] })
+
+	return errors
+
+## ════════════════════════════════════════════════════════════════
+##  SYMBOL TABLE BUILDER
+##
+##  Two-pass scan — first collect ALL declarations so forward references
+##  (e.g. calling reset() before it is defined) are handled correctly.
+##
+##  Scope ID rules:
+##    Global scope (outside any func) → 100
+##    First  func found               → 1
+##    Second func found               → 2
+##    … and so on.
+##
+##  Stored:
+##    • Global var / const / @onready var  → id 100
+##    • Signal names                       → id 100
+##    • Enum names                         → id 100
+##    • Func names (all of them)           → id 100  (callable from anywhere)
+##    • Func parameters                    → id N    (belong to func N)
+##    • Local var / const inside func      → id N
+## ════════════════════════════════════════════════════════════════
+
+func _build_symbol_table(lines: Array) -> Dictionary:
+	var table:        Dictionary = {}
+	var func_counter  := 0
+	var func_id       := 0   # 0 = global scope
+	var func_indent   := -1
+
+	for line in lines:
+		var s      := (line as String).strip_edges()
+		if s == "" or s.begins_with("#"): continue
+
+		var indent := _count_indent(line as String)
+
+		# ── Detect function exit ──────────────────────────────────────
+		if func_id > 0 and indent <= func_indent and s != "":
+			func_id     = 0
+			func_indent = -1
+
+		# ── Detect function entry ─────────────────────────────────────
+		if s.begins_with("func "):
+			func_counter += 1
+			func_id      = func_counter
+			func_indent  = indent
+			# Func name itself is global (callable from anywhere)
+			var fname := _extract_func_name(s)
+			if fname != "":
+				table[fname] = 100
+			# Parameters belong to this function's scope
+			for param in _extract_func_params(s):
+				if param != "": table[param] = func_id
+			continue
+
+		# ── Global scope declarations ─────────────────────────────────
+		if func_id == 0:
+			var n := _extract_decl_name(s)
+			if n != "": table[n] = 100; continue
+			if s.begins_with("signal "):
+				var sn := s.substr(7).split("(")[0].strip_edges()
+				if sn != "": table[sn] = 100
+			elif s.begins_with("enum "):
+				var en := s.substr(5).split("{")[0].strip_edges()
+				if en != "": table[en] = 100
+
+		# ── Local scope declarations (inside a function) ──────────────
+		else:
+			if s.begins_with("var ") or s.begins_with("const "):
+				var n := _extract_decl_name(s)
+				if n != "": table[n] = func_id
+
+	return table
+
+## Extract the function name from a func declaration line.
+## "func _ready() -> void:" → "_ready"
+## "func move(x, y):"       → "move"
+func _extract_func_name(stripped: String) -> String:
+	if not stripped.begins_with("func "): return ""
+	var after := stripped.substr(5).strip_edges()
+	return after.split("(")[0].strip_edges()
+
+## Returns true when a code-line (strings + comments already stripped) is a
+## "bare statement" — a single word with no connective syntax.
+## Lines with ANY of these chars are skipped (calls, assignments, chains, etc.)
+func _is_bare_statement(clean: String) -> bool:
+	for ch in [".", "(", "=", "[", ":", "+", "-", "*", "/", "%", "!", "<", ">", "&", "|", "~", ","]:
+		if ch in clean: return false
+	return true
+
+## Extract declared name from a var / const / @onready var line.
+## "var _start_position: Vector2 = Vector2.ZERO" → "_start_position"
+## "@onready var animasi : AnimatedSprite2D = …" → "animasi"
+func _extract_decl_name(stripped: String) -> String:
+	var s := stripped
+	if s.begins_with("@"):
+		var vp := s.find("var ")
+		if vp == -1: return ""
+		s = s.substr(vp)
+	if s.begins_with("var ") or s.begins_with("const "):
+		var rest := s.substr(s.find(" ") + 1).strip_edges()
+		var tok  := rest.split(":")[0].split("=")[0].strip_edges()
+		return tok
+	return ""
+
+## Extract parameter names from a func declaration line.
+## "func move(x: int, y: int) -> void:" → ["x", "y"]
+func _extract_func_params(stripped: String) -> Array:
+	var params: Array = []
+	var po := stripped.find("(")
+	var pc := stripped.find(")")
+	if po == -1 or pc == -1 or pc <= po + 1: return params
+	var inside := stripped.substr(po + 1, pc - po - 1)
+	for part in inside.split(","):
+		var pname := part.strip_edges().split(":")[0].strip_edges()
+		if pname != "": params.append(pname)
+	return params
+
+## Returns true when a stripped line is a declaration (should not be inspected
+## for undeclared identifiers — it IS the declaration).
+func _is_declaration_line(stripped: String) -> bool:
+	for prefix in ["var ", "const ", "func ", "@", "extends ",
+				   "class_name ", "signal ", "enum ", "class ", "static func "]:
+		if stripped.begins_with(prefix as String): return true
+	return false
 
 ## ═══════════════════════════════════════════════════════════════
 ##  DIRTY TOKEN FINDER
@@ -852,175 +1102,3 @@ func _extract_quoted(msg: String) -> String:
 	var sq_o := msg.find("'");  var sq_c := msg.find("'", sq_o + 1)
 	if sq_o != -1 and sq_c != -1: return msg.substr(sq_o + 1, sq_c - sq_o - 1)
 	return msg
-	
-	
-func check_undeclared(content: String) -> Array:
-	var errors: Array = []
-	var lines := content.split("\n")
-
-	# ── Step 1: collect global scope names ──────────────────────
-	var global_names: Dictionary = {}
-	for kw in LINE_KEYWORDS:       global_names[kw]  = true
-	for kw in ANNOTATIONS:         global_names[kw]  = true
-	for kw in TYPE_NAMES:          global_names[kw]  = true
-	for kw in BUILTIN_TYPES:       global_names[kw]  = true
-	for kw in BUILTIN_FUNCTIONS:   global_names[kw]  = true
-	for kw in ALWAYS_VALID:        global_names[kw]  = true
-
-	# Collect class-level var/const/func/signal names
-	var func_names: Dictionary = {}
-	for line in lines:
-		var s := line.strip_edges()
-		if s.begins_with("var ")    or s.begins_with("const ") \
-		or s.begins_with("@onready var ") or s.begins_with("@export var "):
-			var name := _extract_declared_name(s)
-			if name != "": global_names[name] = true
-		elif s.begins_with("func "):
-			var fname := _extract_func_name(s)
-			if fname != "":
-				global_names[fname] = true
-				func_names[fname]   = true
-		elif s.begins_with("signal "):
-			var sname := s.substr(7).split("(")[0].strip_edges()
-			if sname != "": global_names[sname] = true
-		elif s.begins_with("enum "):
-			var ename := s.substr(5).split("{")[0].strip_edges()
-			if ename != "": global_names[ename] = true
-		elif s.begins_with("class_name "):
-			var cname := s.substr(11).strip_edges()
-			if cname != "": global_names[cname] = true
-
-	# ── Step 2: per-function scope check ────────────────────────
-	var in_func       := false
-	var func_scope:   Dictionary = {}
-	var func_indent   := 0
-	var current_func  := ""
-
-	for i in lines.size():
-		var raw      := lines[i]
-		var stripped := raw.strip_edges()
-		if stripped == "" or stripped.begins_with("#"): continue
-
-		var indent := _count_indent(raw)
-
-		# Entering a new function
-		if stripped.begins_with("func "):
-			in_func      = true
-			current_func = _extract_func_name(stripped)
-			func_indent  = indent
-			func_scope   = global_names.duplicate()
-
-			# Add parameters to scope
-			var params := _extract_func_params(stripped)
-			for p in params:
-				func_scope[p] = true
-			continue
-
-		if not in_func: continue
-
-		# Left function scope
-		if indent <= func_indent and stripped != "" and not stripped.begins_with("#"):
-			if not stripped.begins_with("func "):
-				in_func = false
-				func_scope = {}
-				continue
-
-		# Collect local var declarations inside function
-		if stripped.begins_with("var ") or stripped.begins_with("const "):
-			var lname := _extract_declared_name(stripped)
-			if lname != "": func_scope[lname] = true
-			continue
-
-		# Collect for-loop variable
-		if stripped.begins_with("for "):
-			var fvar := _extract_for_var(stripped)
-			if fvar != "": func_scope[fvar] = true
-			continue
-
-		# Skip lines that are pure structure (else:, elif ...:, match ...:)
-		if stripped == "else:" or stripped.begins_with("elif ") \
-		or stripped.begins_with("match ") or stripped == "pass" \
-		or stripped.begins_with("return") or stripped.begins_with("break") \
-		or stripped.begins_with("continue"):
-			continue
-
-		# ── Check identifiers on this line ──────────────────────
-		var code    := _remove_comment(stripped)
-		var clean   := _strip_strings(code)
-		# Strip node paths ($Node) and annotations (@name)
-		clean = _strip_node_paths(clean)
-		var tokens  := _tokenize(clean)
-
-		for token in tokens:
-			# Skip pure numbers
-			if token.is_valid_int() or token.is_valid_float(): continue
-			# Skip single chars likely to be loop vars (i, j, k, x, y, z, n)
-			if token.length() == 1: continue
-			# Skip _ prefix (private/unused convention)
-			if token.begins_with("_"): continue
-			# Skip if declared
-			if func_scope.has(token): continue
-			# Skip ALL_CAPS constants (user-defined enums etc.)
-			if token == token.to_upper() and token.length() > 1: continue
-
-			errors.append({
-				"line":    i + 1,
-				"message": 'Identifier "%s" tidak dikenal di fungsi ini — apakah sudah dideklarasikan?' % token
-			})
-			# Only report first unknown per line to avoid spam
-			break
-
-	return errors
-
-# ── Helpers ────────────────────────────────────────────────────
-func _extract_declared_name(line: String) -> String:
-	# "var foo : int = 5"  →  "foo"
-	# "@onready var foo"   →  "foo"
-	var s := line
-	if s.begins_with("@"): s = s.split("var ", true, 1)[-1]
-	else: s = s.substr(s.find(" ") + 1)
-	s = s.split(":")[0].split("=")[0].split(" ")[0].strip_edges()
-	return s if s != "" else ""
-
-func _extract_func_name(line: String) -> String:
-	# "func my_func(a, b) -> void:"  →  "my_func"
-	var after := line.substr(5).strip_edges()
-	return after.split("(")[0].strip_edges()
-
-func _extract_func_params(line: String) -> Array:
-	# "func run(speed: int, name: String) -> void:"  →  ["speed", "name"]
-	var params: Array = []
-	var op := line.find("(")
-	var cp := line.find(")")
-	if op == -1 or cp == -1 or cp <= op + 1: return params
-	var inner := line.substr(op + 1, cp - op - 1)
-	for part in inner.split(","):
-		var pname := part.strip_edges().split(":")[0].strip_edges()
-		if pname != "" and not pname.begins_with("_"):
-			params.append(pname)
-	return params
-
-func _extract_for_var(line: String) -> String:
-	# "for i in range(5):"  →  "i"
-	var after := line.substr(4).strip_edges()
-	return after.split(" ")[0].split(":")[0].strip_edges()
-
-func _strip_node_paths(line: String) -> String:
-	# Replace $NodeName and %NodeName with spaces so tokens aren't flagged
-	var result := ""
-	var i := 0
-	while i < line.length():
-		var ch := line[i]
-		if ch == "$" or ch == "%":
-			result += " "
-			i += 1
-			while i < line.length():
-				var c := line[i].unicode_at(0)
-				if _is_word_char_code(c) or line[i] == "/":
-					result += " "
-					i += 1
-				else: break
-		else:
-			result += ch
-			i += 1
-	return result

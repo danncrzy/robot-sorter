@@ -36,6 +36,7 @@
 [ext_resource type="Texture2D" uid="uid://dl03d2queplnb" path="res://Assets/UI/TableOfContentsBtn_Pressed.png" id="23_dlma0"]
 [ext_resource type="Script" uid="uid://c1vk6ekqd5uo6" path="res://Scripts/UI/error_control.gd" id="23_tck48"]
 [ext_resource type="Texture2D" uid="uid://bbxamt8okmpkk" path="res://Assets/UI/TableOfContentsBtn_Visible.png" id="24_a3btw"]
+[ext_resource type="Texture2D" uid="uid://b4utc3btbiel0" path="res://Assets/UI/ErrorMessageUI.png" id="24_tjl1h"]
 [ext_resource type="Texture2D" uid="uid://dcwsanm73xlvx" path="res://Assets/UI/TableOfContentsBtn_Visible_Pressed.png" id="25_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://b751cl7lvvkop" path="res://Assets/UI/PinkStickyNotes_Visible.png" id="27_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://b2x8feyj134ha" path="res://Assets/UI/StickyNoteChoicesTexture.png" id="27_pj538"]
@@ -360,20 +361,33 @@ auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
 
 [node name="ErrorControl" type="Control" parent="TextEditorUI/TextEditorPanel" unique_id=937772478]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("23_tck48")
 
 [node name="ErrorBg" type="NinePatchRect" parent="TextEditorUI/TextEditorPanel/ErrorControl" unique_id=573271459]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("24_tjl1h")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
 
 [node name="ErrorMessage" type="RichTextLabel" parent="TextEditorUI/TextEditorPanel/ErrorControl" unique_id=544740464]
-layout_mode = 0
+layout_mode = 1
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 theme = ExtResource("6_eqykv")
 
 [node name="ResizeHandles" type="Control" parent="TextEditorUI" unique_id=930349480]
@@ -627,7 +641,7 @@ grow_vertical = 2
 script = ExtResource("49_8aao3")
 
 [node name="SettingUITexture" type="TextureRect" parent="SettingUI" unique_id=1164067373]
-layout_mode = 0
+layout_mode = 1
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("50_yt6eb")

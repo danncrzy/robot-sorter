@@ -87,6 +87,22 @@ region = Rect2(119, 0, 17, 32)
 atlas = ExtResource("5_kry3j")
 region = Rect2(136, 0, 17, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_b3802"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(187, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1bgf"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(204, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ee4r6"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(153, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdsj5"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(170, 0, 17, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_hptm8"]
 atlas = ExtResource("5_kry3j")
 region = Rect2(0, 0, 17, 32)
@@ -126,6 +142,28 @@ animations = [{
 }],
 "loop": true,
 "name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_b3802")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_h1bgf")
+}],
+"loop": true,
+"name": &"Idle_Angry",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_ee4r6")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_pdsj5")
+}],
+"loop": true,
+"name": &"Idle_Tired",
 "speed": 5.0
 }, {
 "frames": [{
@@ -214,7 +252,7 @@ script = ExtResource("7_344ge")
 [node name="PlayerAnimations" type="AnimatedSprite2D" parent="GameNodes/Main/Player" unique_id=306957809]
 position = Vector2(230, 105)
 sprite_frames = SubResource("SpriteFrames_344ge")
-animation = &"Walk"
+animation = &"Idle_Angry"
 
 [node name="PlayerCollision" type="CollisionShape2D" parent="GameNodes/Main/Player" unique_id=210655958]
 position = Vector2(230.5, 110)
