@@ -3,46 +3,56 @@ class_name TileHint
 
 signal tile_entered(tile_id: String)
 
-## Grid position (0-based internally, but we'll make it match target_pos)
 var grid_col: int = 0
 var grid_row: int = 0
-const HINT_SIZE := 16.0
-## Computed tile ID (format: "col.row" matching objective target_pos)
-var tile_id: String:
-	get:
-		# Convert to 1-based to match your target_pos format!
-		return "%d.%d" % [grid_col + 1, grid_row + 1]
 
-@onready var tile_vector_label: Label = $TileVector
-@onready var tile_area: Area2D = $TileArea
-@onready var tile_collision: CollisionShape2D = $TileArea/TileCol
+var tile_id: String:
+	get: return "%d.%d" % [grid_col, grid_row]
+
+@onready var tile_vector_label: Label           = $TileVector
+@onready var tile_area:         Area2D          = $TileArea
+@onready var tile_collision:    CollisionShape2D = $TileArea/TileCol
 
 func _ready() -> void:
-	# Setup Area2D for detection
+	add_to_group("tile_hint")
 	if tile_area:
 		tile_area.monitoring = true
 		tile_area.body_entered.connect(_on_body_entered)
-		
-		# Setup collision shape to match tile size
-		if tile_collision:
-			var shape := RectangleShape2D.new()
-			shape.size = size  # Should be 16x16 from HintContainer
-			tile_collision.shape = shape
-	
-	# Set label text to our coordinates
-	if tile_vector_label:
-		tile_vector_label.text = "(%d,%d)" % [grid_col + 1, grid_row + 1]
+	# Wait for Container layout so size and global_position are real values.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_setup_collision()
 
-func _on_body_entered(body: Node) -> void:
-	# Only care about player (check group or name)
-	if not body.is_in_group("player"):
+func _setup_collision() -> void:
+	var tile_size := size
+	if tile_size.x <= 0.0 or tile_size.y <= 0.0:
+		tile_size = custom_minimum_size
+	if tile_size.x <= 0.0 or tile_size.y <= 0.0:
+		push_warning("TileHint (%d,%d): size zero after layout." % [grid_col, grid_row])
 		return
-	
-	print("📍 Tile %s entered by player!" % tile_id)
-	tile_entered.emit(tile_id)
+
+	if tile_vector_label:
+		tile_vector_label.text = "(%d,%d)" % [grid_col, grid_row]
+
+	# Move the Area2D to the tile's world position so body_entered fires correctly.
+	# global_position on a Control is screen/UI position — assign it to the Node2D
+	# so both live in the same coordinate space.
+	if tile_area:
+		tile_area.global_position = global_position
+
+	if tile_collision:
+		var shape       := RectangleShape2D.new()
+		shape.size       = tile_size
+		tile_collision.shape    = shape
+		# Shape is centered on the Area2D origin; offset by half to cover full tile.
+		tile_collision.position = tile_size * 0.5
 
 func set_grid_position(col: int, row: int) -> void:
 	grid_col = col
 	grid_row = row
 	if tile_vector_label:
-		tile_vector_label.text = "(%d,%d)" % [grid_col + 1, grid_row + 1]
+		tile_vector_label.text = "(%d,%d)" % [grid_col, grid_row]
+
+func _on_body_entered(body: Node) -> void:
+	if not body.is_in_group("player"): return
+	tile_entered.emit(tile_id)

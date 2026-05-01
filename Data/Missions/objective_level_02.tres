@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="LevelMission" format=3 uid="uid://sytixu4hs2kf"]
+
+[ext_resource type="Script" uid="uid://b4jo5havffjul" path="res://Scenes/Resources/level_objective.gd" id="1_esa3p"]
+[ext_resource type="Script" uid="uid://ed6d8rf7nrwf" path="res://Scenes/Resources/level_mission.gd" id="2_ikcsk"]
+
+[sub_resource type="Resource" id="Resource_esa3p"]
+script = ExtResource("1_esa3p")
+description = "Pergi ke titik (1,9)"
+target_pos = Vector2(1, 9)
+metadata/_custom_type_script = "uid://b4jo5havffjul"
+
+[sub_resource type="Resource" id="Resource_ikcsk"]
+script = ExtResource("1_esa3p")
+description = "Pergi ke titik (12,7)"
+target_pos = Vector2(12, 7)
+metadata/_custom_type_script = "uid://b4jo5havffjul"
+
+[sub_resource type="Resource" id="Resource_fnwvo"]
+script = ExtResource("1_esa3p")
+description = "Pergi ke titik (18,8)"
+target_pos = Vector2(18, 8)
+metadata/_custom_type_script = "uid://b4jo5havffjul"
+
+[resource]
+script = ExtResource("2_ikcsk")
+objectives = Array[ExtResource("1_esa3p")]([SubResource("Resource_esa3p"), SubResource("Resource_ikcsk"), SubResource("Resource_fnwvo")])
+metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

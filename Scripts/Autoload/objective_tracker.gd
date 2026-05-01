@@ -36,7 +36,6 @@ func init(mission: LevelMission, player: Node) -> void:
 	# Snap player to tile (0,0) of the tilemap
 	if _tilemap and _tilemap.has_method("map_to_local"):
 		var tile_zero = _tilemap.map_to_local(Vector2i(0, 0))
-		player.global_position = _tilemap.to_global(tile_zero)
 		# Update movement component start position
 		var mc := player.get_node_or_null("MovementCompon")
 		if mc:
@@ -191,36 +190,35 @@ func _init_hints(mission: LevelMission) -> void:
 		hint_container.show_objective_hints(mission.objectives)
 
 ## ════════════════════════════════════════════════════════════
-##  TILE-BASED DETECTION (NEW!)
+##  TILE-BASED DETECTION 
 ## ════════════════════════════════════════════════════════════
 
 func _on_tile_stepped_on(tile_id: String) -> void:
-
 	print("Tracker received tile_id: ", tile_id)
 	
 	var obj := _current()
 	if not obj:
 		print("No current objective!")
 		return
-
+	
 	# Only handle MOVE_TO_POINT objectives this way
 	if obj.type != LevelObjective.Type.MOVE_TO_POINT:
-		print("Current objective is not MOVE_TO_POINT type!")
+		print("⚠ Current objective is not MOVE_TO_POINT type!")
 		return
 	
-	# Parse tile_id back to Vector2
+	# Parse tile_id back to Vector2 (0-BASED!)
 	var parts := tile_id.split(".")
 	if parts.size() != 2:
 		push_error("Invalid tile_id format: " + tile_id)
 		return
 	
-	var tile_pos := Vector2(int(parts[0]), int(parts[1]))
+	var tile_pos := Vector2(int(parts[0]), int(parts[1]))  # 0-based!
 	
 	print("📍 Comparing: tile_pos=", tile_pos, " vs target_pos=", obj.target_pos)
 	
 	# Check if this is THE target tile!
 	if tile_pos == obj.target_pos:
-		print("✅ MATCH! Player stepped on objective tile!")
+		print(" MATCH! Player stepped on objective tile!")
 		_complete_current()
 	else:
-		print("❌ Not the target tile (expected ", obj.target_pos, ")")
+		print("Not the target tile (expected ", obj.target_pos, ")")

@@ -8,7 +8,6 @@
 [ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="4_0itdu"]
 [ext_resource type="Texture2D" uid="uid://tsfmw0mkjbkt" path="res://Assets/UI/VisibleBtn.png" id="4_rd2o1"]
 [ext_resource type="Texture2D" uid="uid://d0uoj8aeqmwmh" path="res://Assets/UI/ScriptBtnTab.png" id="5_lwqe1"]
-[ext_resource type="Texture2D" uid="uid://ca1n4a8g23gs1" path="res://Assets/UI/ChildIcon.png" id="8_vf3p7"]
 
 [node name="SceneTab" type="Control" unique_id=392746341]
 custom_minimum_size = Vector2(50, 16)
@@ -45,21 +44,6 @@ offset_right = 3.0
 offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ChildIcon" type="TextureRect" parent="Layout" unique_id=57582419]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 10.0
-offset_top = -8.0
-offset_right = 18.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("8_vf3p7")
 
 [node name="NodeIcon" type="TextureRect" parent="Layout" unique_id=1131409015]
 custom_minimum_size = Vector2(8, 8)

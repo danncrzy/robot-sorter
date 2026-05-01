@@ -129,27 +129,23 @@ func _on_back_btn() -> void:
 func _on_level_pressed(index: int) -> void:
 	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_7.ogg"))
 	if index < 0 or index >= level_resources.size():
-		push_error("Level index %d out of range (array size: %d)" % [index, level_resources.size()])
+		push_error("Level index %d out of range" % index)
 		return
-		
+
 	var level_data: LevelData = level_resources[index]
-	print("Loading: ", level_data.level_id)
-	
-	# Load data into LevelManager
-	LevelManager.load_level(level_data)
-	
-	# 🎬 Zoom + Fade transition!
+	print("Queuing level: ", level_data.level_id)
+
+	# Store only — do NOT call load_level here
+	LevelManager.current_level = level_data
+
 	var tw := create_tween()
 	tw.set_parallel(true)
-	
-	tw.tween_property(camera, "zoom", Vector2(3.0, 3.0), 0.6)\
+	tw.tween_property(camera, "zoom", Vector2(3.0, 3.0), 0.6) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	
-	tw.tween_property(fade_overlay, "modulate:a", 1.0, 0.6)\
+	tw.tween_property(fade_overlay, "modulate:a", 1.0, 0.6) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	
 	await tw.finished
-	
+
 	get_tree().change_scene_to_file("res://Scenes/main.tscn")
 
 ## ════════════════════════════════════════════════════════════

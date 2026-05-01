@@ -372,6 +372,7 @@ highlight_current_line = true
 draw_tabs = true
 gutters_draw_line_numbers = true
 code_completion_enabled = true
+indent_use_spaces = true
 indent_automatic = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
@@ -892,3 +893,54 @@ offset_bottom = 17.0
 grow_horizontal = 0
 texture_normal = ExtResource("79_3x627")
 texture_pressed = ExtResource("80_1775v")
+
+[node name="FinishUI" type="Control" parent="." unique_id=2054754105]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FinishBg" type="TextureRect" parent="FinishUI" unique_id=457935299]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FinishTttle" type="Label" parent="FinishUI" unique_id=1527388382]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="StarsContainer" type="HBoxContainer" parent="FinishUI" unique_id=1597198229]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Star" type="TextureRect" parent="FinishUI/StarsContainer" unique_id=438651443]
+layout_mode = 2
+
+[node name="Star2" type="TextureRect" parent="FinishUI/StarsContainer" unique_id=1319101966]
+layout_mode = 2
+
+[node name="Star3" type="TextureRect" parent="FinishUI/StarsContainer" unique_id=1910331601]
+layout_mode = 2
+
+[node name="StatisticContainer" type="VBoxContainer" parent="FinishUI" unique_id=659702720]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PersonalBest" type="Label" parent="FinishUI/StatisticContainer" unique_id=767285923]
+layout_mode = 2
+
+[node name="CommentsLabel" type="Label" parent="FinishUI/StatisticContainer" unique_id=482118680]
+layout_mode = 2
+
+[node name="NextBtn" type="TextureButton" parent="FinishUI" unique_id=1796571444]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HomeBtn" type="TextureButton" parent="FinishUI" unique_id=964050338]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

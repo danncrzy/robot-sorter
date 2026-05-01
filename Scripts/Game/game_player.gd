@@ -38,7 +38,7 @@ var _start_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	
-	_start_position = global_position
+	_start_position = get_node("MovementComponent")._start_position
 
 func run() -> void:
 	# Tulis kode buatan anda di sini ^^

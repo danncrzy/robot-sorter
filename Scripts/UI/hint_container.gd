@@ -29,18 +29,18 @@ func _ready() -> void:
 			hint.size                = Vector2(CELL_SIZE, CELL_SIZE)
 			hint.mouse_filter        = MOUSE_FILTER_IGNORE
 			
-			# 👇 SET GRID POSITION ON EACH TILE!
-			hint.set_grid_position(col, row)
+			# 👇 SET GRID POSITION (0-BASED!)
+			hint.set_grid_position(col, row)  # col=0..19, row=0..9
 			
 			# Duplicate material so each tile has its own instance
 			var original_mat = hint.material
 			if original_mat:
 				hint.material = original_mat.duplicate()
 			
-			# Setup label
+			# Setup label (shows 0-based coords)
 			var lbl: Label = hint.get_node_or_null("TileVector")
 			if lbl:
-				lbl.text = "(%d,%d)" % [col + 1, row + 1]
+				lbl.text = "(%d,%d)" % [col, row]  # 0-BASED!
 				lbl.add_theme_font_size_override("font_size", 4)
 				lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
@@ -54,7 +54,7 @@ func _ready() -> void:
 	size      = Vector2(COLS * CELL_SIZE, ROWS * CELL_SIZE)
 	grid.size = size
 	
-	# Connect ALL tile signals to ObjectiveTracker!
+	# Connect ALL tiles to ObjectiveTracker!
 	_connect_all_tiles_to_tracker()
 
 ## ════════════════════════════════════════════════════════════
@@ -68,13 +68,12 @@ func _connect_all_tiles_to_tracker() -> void:
 	
 	for row_arr in _hints:
 		for hint in row_arr:
-			# Connect tile's signal to tracker's handler
 			if not hint.tile_entered.is_connected(tracker._on_tile_stepped_on):
 				hint.tile_entered.connect(tracker._on_tile_stepped_on)
 	
 	print("✅ Connected %d tiles to ObjectiveTracker!" % [COLS * ROWS])
 
-# ── Public API ─────────────────────────────────────────────────
+# ── Public API (ALL 0-BASED NOW!) ─────────────────────────────────
 
 func show_objective_hints(objectives: Array) -> void:
 	deactivate_all()
@@ -82,27 +81,23 @@ func show_objective_hints(objectives: Array) -> void:
 		if not obj.show_marker: continue
 		if obj.type != LevelObjective.Type.MOVE_TO_POINT: continue
 		
-		# obj.target_pos is 1-based (e.g., Vector2(10,4))
-		# Our hints array is 0-based, so subtract 1
-		var col := int(obj.target_pos.x) - 1
-		var row := int(obj.target_pos.y) - 1
-		activate_hint(col + 1, row + 1)  # Keep 1-based for API consistency
+		# obj.target_pos is NOW 0-BASED! Use directly!
+		var col := int(obj.target_pos.x)  # Already 0-based, no -1 needed
+		var row := int(obj.target_pos.y)  # Already 0-based, no -1 needed
+		activate_hint(col, row)
 
 func activate_hint(col: int, row: int) -> void:
-	# Convert 1-based to 0-based for array access
-	var r := row - 1
-	var c := col - 1
-	if r < 0 or r >= ROWS or c < 0 or c >= COLS:
+	# Now 0-based! No conversion needed!
+	if row < 0 or row >= ROWS or col < 0 or col >= COLS:
 		push_warning("activate_hint out of bounds: col=%d row=%d" % [col, row])
 		return
-	_set_intensity(_hints[r][c], 0.5)
-	print("✨ HINT ACTIVATED — row=%d col=%d (tile_id: %s)" % [row, col, _hints[r][c].tile_id])
+	_set_intensity(_hints[row][col], 0.5)
+	print("✨ HINT ACTIVATED — row=%d col=%d (tile_id: %s)" % [row, col, _hints[row][col].tile_id])
 
 func deactivate_hint(col: int, row: int) -> void:
-	var r := row - 1
-	var c := col - 1
-	if r < 0 or r >= ROWS or c < 0 or c >= COLS: return
-	_set_intensity(_hints[r][c], 0.0)
+	# 0-based!
+	if row < 0 or row >= ROWS or col < 0 or col >= COLS: return
+	_set_intensity(_hints[row][col], 0.0)
 
 func deactivate_all() -> void:
 	for row_arr in _hints:
@@ -110,7 +105,7 @@ func deactivate_all() -> void:
 			_set_intensity(hint, 0.0)
 
 ## ════════════════════════════════════════════════════════════
-##  GRID BTN INTEGRATION (Toggle Labels)
+##  GRID BTN INTEGRATION
 ## ════════════════════════════════════════════════════════════
 func set_all_labels_visible(visible: bool) -> void:
 	for row_arr in _hints:
@@ -124,3 +119,4 @@ func _set_intensity(hint: Node, value: float) -> void:
 	var mat := (hint as ColorRect).material as ShaderMaterial
 	if mat:
 		mat.set_shader_parameter("intensity", value)
+		

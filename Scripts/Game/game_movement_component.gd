@@ -5,220 +5,183 @@ const MOVE_SPEED: float = 120.0
 
 enum Direction { RIGHT, LEFT, UP, DOWN }
 
-var _parent:         CharacterBody2D = null
+var _parent:         CharacterBody2D  = null
 var _animations:     AnimatedSprite2D = null
-var _tilemap:        TileMapLayer = null
-var _facing:         Direction = Direction.RIGHT
-var _is_moving:      bool = false
-var _move_queue:     Array[Vector2] = []
-var _start_position: Vector2 = Vector2.ZERO
-var _start_facing:   Direction = Direction.RIGHT
-var _tween:          Tween = null
-var _processing:     bool = false
+var _tilemap:        Node             = null
+var _facing:         Direction        = Direction.RIGHT
+var _is_moving:      bool             = false
+var _move_queue:     Array[Vector2]   = []
+var _start_position: Vector2          = Vector2.ZERO
+var _start_facing:   Direction        = Direction.RIGHT
+var _processing:     bool             = false
+var _current_target: Vector2          = Vector2.ZERO
 
-# ══════════════════════════════════════════════════════════════
-# 👇 NEW: Celebration State!
-# ══════════════════════════════════════════════════════════════
-var _celebrating:    bool = false
+var _celebrating:       bool  = false
 var _celebration_timer: float = 0.0
-const CELEBRATION_DURATION := 3.0  # How long to celebrate (seconds)
+const CELEBRATION_DURATION := 3.0
 
 func _ready() -> void:
-	_parent         = get_parent() as CharacterBody2D
-	_animations     = _parent.get_node_or_null("PlayerAnimations")
-	_tilemap        = _parent.get_node_or_null("../../FactoryFloor")
-	_start_position = _parent.global_position
+	_parent     = get_parent() as CharacterBody2D
+	_animations = _parent.get_node_or_null("PlayerAnimations")
+	_tilemap    = _parent.get_node_or_null("../../FactoryFloor")
+	if not _tilemap:
+		_tilemap = _parent.get_node_or_null("../FactoryFloor")
+
+	# Captures the exact position you placed the player at in the editor
+	_start_position = Vector2(0.3,0.5)
 	_start_facing   = _facing
-	
-	# ════════════════════════════════════
-	# 👇 CONNECT TO MISSION COMPLETE SIGNAL!
-	# ════════════════════════════════════
+
 	var tracker = get_tree().get_first_node_in_group("objective_tracker")
 	if tracker:
 		tracker.mission_completed.connect(_on_mission_complete)
-		print("✅ MovementComponent connected to mission_completed signal!")
-	else:
-		push_warning("MovementComponent: ObjectiveTracker not found!")
-	
-	# Play random idle on start
+
 	var rand := randf()
-	if rand < 0.05:
-		_play_anim("Idle_Angry")
-	elif rand < 0.15:
-		_play_anim("Idle_Tired")
-	else:
-		_play_anim("Idle")
-
+	if rand < 0.05:   _play_anim("Idle_Angry")
+	elif rand < 0.15: _play_anim("Idle_Tired")
+	else:             _play_anim("Idle")
 
 ## ══════════════════════════════════════════════════════════════
-##  🎊 CELEBRATION HANDLER
+##  QUEUE PROCESSOR  —  kicks off movement toward next target
 ## ══════════════════════════════════════════════════════════════
-func _on_mission_complete(_mission) -> void:
-
-	print("MovementComponent received mission_complete signal!")
-	
-	# Stop all movement
-	stop()
-	
-	# Enter celebration mode
-	_celebrating = true
-	_celebration_timer = CELEBRATION_DURATION
-	AudioManager.stop_footsteps()	
-
-	_play_anim("Celebration")
-	
-	print(" Celebrating for %d seconds!" % CELEBRATION_DURATION)
-
-
-func _process(delta: float) -> void:
-	# ════════════════════════════════════
-	# 👇 Count down celebration timer
-	# ════════════════════════════════════
-	if _celebrating:
-		_celebration_timer -= delta
-		if _celebration_timer <= 0.0:
-			# Celebration over, return to idle
-			_celebrating = false
-			_play_anim("Idle")
-			print("✨ Celebration finished, back to idle")
-		return  # Don't process movement while celebrating!
-
-
-# ══════════════════════════════════════════════════════════════
-#  QUEUE PROCESSOR (Modified!)
-# ══════════════════════════════════════════════════════════════
 func _process_next() -> void:
-	# ════════════════════════════════════
-	# 👇 BLOCK IF CELEBRATING!
-	# ════════════════════════════════════
-	if _celebrating:
+	if _celebrating or _processing or _move_queue.is_empty():
+		if _move_queue.is_empty() and _is_moving:
+			_arrive()
 		return
-	
-	if _processing:
-		return
+
+	var target: Vector2 = _move_queue[0]
+
 	_processing = true
+	_is_moving  = true
+	_current_target = target
 
-	if _move_queue.is_empty():
-		_is_moving  = false
-		_processing = false
-		AudioManager.stop_footsteps()  
-		
-		# Don't change anim if celebrating (let timer handle it)
-		if not _celebrating:
-			var rand := randf()
-			if rand < 0.05:
-				_play_anim("Idle_Angry")
-			elif rand < 0.15:
-				_play_anim("Idle_Tired")
-			else:
-				_play_anim("Idle")
-		return
-
-	_is_moving = true
-	
+	var direction := (target - _parent.global_position).normalized()
 	AudioManager.start_footsteps(
 		preload("res://Assets/Sfx/walk.ogg"),
-		0.85, 1.15,
-		0.30,
-		0.8
+		0.85, 1.15, 0.30, 0.8
 	)
-	var target:    Vector2 = _move_queue[0]
-	var direction: Vector2 = (target - _parent.global_position).normalized()
-
-	# ── Raycast ──────
-	var space_state := _parent.get_world_2d().direct_space_state
-	var ray_end     := _parent.global_position + direction * (TILE_SIZE - 2.0)
-	var query       := PhysicsRayQueryParameters2D.create(
-		_parent.global_position,
-		ray_end,
-		0xFFFFFFFF,
-		[_parent.get_rid()]
-	)
-	var hit := space_state.intersect_ray(query)
-
-	if not hit.is_empty():
-		_move_queue.pop_front()
-		_processing = false
-		_process_next()
-		return
-
-	# Only play directional anim if not celebrating
 	if not _celebrating:
 		_play_directional_anim(direction)
 
-	var dist: float = _parent.global_position.distance_to(target)
-	var dur:  float = dist / MOVE_SPEED
+## ══════════════════════════════════════════════════════════════
+##  PHYSICS PROCESS  —  velocity toward target + move_and_slide
+## ══════════════════════════════════════════════════════════════
+func _physics_process(delta: float) -> void:
+	# ── Celebration timer ────────────────────────────────────
+	if _celebrating:
+		_celebration_timer -= delta
+		if _celebration_timer <= 0.0:
+			_celebrating = false
+			_play_anim("Idle")
+		return
 
-	if is_instance_valid(_tween):
-		_tween.kill()
+	if not _is_moving or not _processing: return
+	if not is_instance_valid(_parent):    return
 
-	_tween = _parent.create_tween()
-	_tween.tween_property(_parent, "global_position", target, dur) \
-		.set_trans(Tween.TRANS_LINEAR)
-	_tween.tween_callback(func() -> void:
-		_processing = false        
+	var to_target := _current_target - _parent.global_position
+	var dist      := to_target.length()
+
+	# ── Arrived? ─────────────────────────────────────────────
+	if dist <= MOVE_SPEED * delta + 0.5:
+		_parent.global_position = _current_target
+		_parent.velocity        = Vector2.ZERO
+		_parent.move_and_slide()
 		_move_queue.pop_front()
+
 		var tracker := _parent.get_tree().get_first_node_in_group("objective_tracker")
 		if tracker:
 			var pos := _parent.global_position / TILE_SIZE
 			tracker.call_deferred("notify_moved_to", pos)
 			tracker.call_deferred("notify_step_taken")
-		_process_next()
-	)
 
+		_processing = false
 
-# ══════════════════════════════════════════════════════════════
-#  ANIMATION HELPER
-# ══════════════════════════════════════════════════════════════
-func _play_directional_anim(direction: Vector2) -> void:
-	if not _animations or _celebrating:
-		return  # Don't override celebration!
-		
-	if abs(direction.y) > abs(direction.x):
-		if direction.y > 0:
-			_play_anim("Walk_Down")
+		if _move_queue.is_empty():
+			_arrive()
 		else:
-			_play_anim("Walk_Up")
+			_process_next()
+		return
+
+	# ── Simulate directional input → set velocity ─────────────
+	var dir := to_target.normalized()
+	if abs(dir.x) >= abs(dir.y):
+		dir = Vector2(sign(dir.x), 0.0)
+	else:
+		dir = Vector2(0.0, sign(dir.y))
+
+	_parent.velocity = dir * MOVE_SPEED
+	_parent.move_and_slide()
+
+	# ── Wall hit? ────────────────────────────────────────────
+	if _parent.get_slide_collision_count() > 0:
+		var remaining := _current_target - _parent.global_position
+		if remaining.dot(dir) <= 0.0:
+			_move_queue.clear()
+			_parent.velocity = Vector2.ZERO
+			_arrive()
+
+
+func _arrive() -> void:
+	_is_moving  = false
+	_processing = false
+	_parent.velocity = Vector2.ZERO
+	AudioManager.stop_footsteps()
+	if not _celebrating:
+		var rand := randf()
+		if rand < 0.05:   _play_anim("Idle_Angry")
+		elif rand < 0.15: _play_anim("Idle_Tired")
+		else:             _play_anim("Idle")
+
+## ══════════════════════════════════════════════════════════════
+##  CELEBRATION
+## ══════════════════════════════════════════════════════════════
+func _on_mission_complete(_mission) -> void:
+	stop()
+	_celebrating       = true
+	_celebration_timer = CELEBRATION_DURATION
+	AudioManager.stop_footsteps()
+	_play_anim("Celebration")
+
+## ══════════════════════════════════════════════════════════════
+##  ANIMATION
+## ══════════════════════════════════════════════════════════════
+func _play_directional_anim(direction: Vector2) -> void:
+	if not _animations or _celebrating: return
+	if abs(direction.y) > abs(direction.x):
+		if direction.y > 0: _play_anim("Walk_Down")
+		else:               _play_anim("Walk_Up")
 	else:
 		_animations.flip_h = direction.x < 0
 		_play_anim("Walk")
 
-
 func _play_anim(anim: String) -> void:
 	if not _animations: return
 	if not _animations.sprite_frames: return
-	if not _animations.sprite_frames.has_animation(anim): 
+	if not _animations.sprite_frames.has_animation(anim):
 		push_warning("Animation '%s' not found!" % anim)
 		return
 	if _animations.animation != anim:
 		_animations.play(anim)
 
-
-# ══════════════════════════════════════════════════════════════
-#  PUBLIC COMMANDS 
-# ══════════════════════════════════════════════════════════════
+## ══════════════════════════════════════════════════════════════
+##  PUBLIC COMMANDS
+## ══════════════════════════════════════════════════════════════
 func move(x: int, y: int) -> void:
-	if _celebrating:
-		return  
-		
+	if _celebrating: return
 	if x != 0 and y != 0:
 		var after_h := _last_queued_pos() + Vector2(x, 0) * TILE_SIZE
 		_move_queue.append(after_h)
-		var after_v := after_h + Vector2(0, y) * TILE_SIZE
-		_move_queue.append(after_v)
+		_move_queue.append(after_h + Vector2(0, y) * TILE_SIZE)
 	else:
 		_move_queue.append(_last_queued_pos() + Vector2(x, y) * TILE_SIZE)
-
 	if not _is_moving:
 		call_deferred("_process_next")
 
 func move_to(x: int, y: int) -> void:
-	if _celebrating:
-		return
-		
-	if _tilemap:
+	if _celebrating: return
+	if _tilemap and _tilemap.has_method("map_to_local"):
 		var cell   := Vector2i(x - 1, y - 1)
-		var target := _tilemap.to_global(_tilemap.map_to_local(cell))
+		var target  = _tilemap.to_global(_tilemap.map_to_local(cell))
 		_move_queue.append(target)
 	else:
 		_move_queue.append(Vector2(x - 1, y - 1) * TILE_SIZE)
@@ -227,22 +190,18 @@ func move_to(x: int, y: int) -> void:
 
 func step_forward() -> void:
 	if _celebrating: return
-	var v := _facing_vector()
-	move(v.x, v.y)
+	var v := _facing_vector(); move(v.x, v.y)
 
 func step_back() -> void:
 	if _celebrating: return
-	var v := _facing_vector()
-	move(-v.x, -v.y)
+	var v := _facing_vector(); move(-v.x, -v.y)
 
-func stop() -> void:
+func stop(play_idle: bool = true) -> void:
 	_move_queue.clear()
-	if is_instance_valid(_tween):
-		_tween.kill()
+	_parent.velocity = Vector2.ZERO
 	_is_moving  = false
 	_processing = false
-	if not _celebrating:
-		_play_anim("Idle")
+	if play_idle and not _celebrating: _play_anim("Idle")
 
 func turn_left() -> void:
 	if _celebrating: return
@@ -278,11 +237,11 @@ func face(direction: String) -> void:
 	_sync_sprite_flip()
 
 func move_right(steps: int = 1) -> void: move(steps,  0)
-func move_left(steps: int  = 1) -> void: move(-steps, 0)
-func move_up(steps: int    = 1) -> void: move(0, -steps)
-func move_down(steps: int  = 1) -> void: move(0,  steps)
+func move_left(steps:  int = 1) -> void: move(-steps, 0)
+func move_up(steps:    int = 1) -> void: move(0, -steps)
+func move_down(steps:  int = 1) -> void: move(0,  steps)
 
-func is_moving() -> bool:   
+func is_moving() -> bool:
 	if _celebrating: return false
 	return _is_moving
 
@@ -295,35 +254,38 @@ func get_facing() -> String:
 	return "right"
 
 func get_grid_position() -> Vector2:
-	if _tilemap:
-		var cell := _tilemap.local_to_map(_tilemap.to_local(_parent.global_position))
+	if _tilemap and _tilemap.has_method("local_to_map"):
+		var cell = _tilemap.local_to_map(_tilemap.to_local(_parent.global_position))
 		return Vector2(cell.x + 1, cell.y + 1)
 	return _parent.global_position / TILE_SIZE
 
 func reset() -> void:
-	stop()
-	_celebrating = false  # Reset celebration state!
-	_parent.global_position = _start_position
+	stop(false)
+	_celebrating = false
+	# Always resets to the exact position placed in the editor
+	_parent.global_position =  Vector2(0.3,0.5)
 	_facing = _start_facing
 	_sync_sprite_flip()
-	_play_anim("Idle") 
+	_play_anim("Idle")
 
-# ══════════════════════════════════════════════════════════════
-#  HELPERS (unchanged)
-# ══════════════════════════════════════════════════════════════
+## ══════════════════════════════════════════════════════════════
+##  HELPERS
+## ══════════════════════════════════════════════════════════════
 func _last_queued_pos() -> Vector2:
-	if _move_queue.is_empty():
-		return _parent.global_position
+	if _move_queue.is_empty(): return _parent.global_position
 	return _move_queue.back()
 
 func _facing_vector() -> Vector2i:
 	match _facing:
-		Direction.RIGHT: return Vector2i(1,  0)
-		Direction.LEFT:  return Vector2i(-1, 0)
-		Direction.UP:    return Vector2i(0,  -1)
-		Direction.DOWN:  return Vector2i(0,   1)
+		Direction.RIGHT: return Vector2i( 1,  0)
+		Direction.LEFT:  return Vector2i(-1,  0)
+		Direction.UP:    return Vector2i( 0, -1)
+		Direction.DOWN:  return Vector2i( 0,  1)
 	return Vector2i(1, 0)
 
 func _sync_sprite_flip() -> void:
 	if not _animations: return
 	_animations.flip_h = (_facing == Direction.LEFT)
+
+func _set_start(pos: Vector2) -> void:
+	_start_position =  Vector2(0.3,0.5)

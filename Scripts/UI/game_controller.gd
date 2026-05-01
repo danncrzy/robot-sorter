@@ -104,6 +104,7 @@ func _on_play() -> void:
 
 func _on_reset() -> void:
 	if not _player: return
+	AudioManager.stop_footsteps()
 
 	reset_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	play_btn.mouse_filter  = Control.MOUSE_FILTER_STOP

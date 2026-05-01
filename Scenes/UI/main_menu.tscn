@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://clwgfxsxd1kdp" path="res://Assets/UI/ExitBtn.png" id="7_k33u3"]
 [ext_resource type="Texture2D" uid="uid://dl06sl0y0y8s4" path="res://Assets/UI/Menu_Icon_3.png" id="7_ru8vt"]
 [ext_resource type="Texture2D" uid="uid://pp1dybc5gfys" path="res://Assets/UI/ExitBtn_Pressed.png" id="8_lrjdf"]
+[ext_resource type="Resource" uid="uid://bfu3tpee8tyby" path="res://Resources/Levels/level_02.tres" id="8_oslnl"]
 [ext_resource type="Texture2D" uid="uid://ntpguta4lr8n" path="res://Assets/UI/Menu_Icon_4.png" id="8_ypsd1"]
 [ext_resource type="Texture2D" uid="uid://b10drm0kaoc5u" path="res://Assets/UI/StageBtn.png" id="11_3h8o7"]
 [ext_resource type="Theme" uid="uid://dnlaop0tx6go2" path="res://Resources/Shader/level_text.tres" id="12_3h8o7"]
@@ -61,7 +62,7 @@ shader = ExtResource("2_o14dv")
 shader_parameter/ray_angle = -0.3
 shader_parameter/ray_position = -0.2
 shader_parameter/spread = 1.0
-shader_parameter/cutoff = -0.009999952975000004
+shader_parameter/cutoff = -0.009999952975
 shader_parameter/falloff = 0.618000029355
 shader_parameter/edge_fade = 0.282000013395
 shader_parameter/speed = 1.0
@@ -124,7 +125,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u7lva")
 random_textures = Array[Texture2D]([ExtResource("5_lrjdf"), ExtResource("6_cejvf"), ExtResource("7_ru8vt"), ExtResource("8_ypsd1")])
-level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv")])
+level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv"), ExtResource("8_oslnl")])
 
 [node name="Bg" type="ColorRect" parent="." unique_id=1885293056]
 material = SubResource("ShaderMaterial_k33u3")
