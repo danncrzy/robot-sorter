@@ -8,25 +8,25 @@ var _original_script: GDScript = null
 var _play_running:    bool = false
 
 const PROXY_HEADER := """
-func move(x: int, y: int) -> void:         get_node("MovementComponent").move(x, y)
-func step_forward() -> void:               get_node("MovementComponent").step_forward()
-func step_back() -> void:                  get_node("MovementComponent").step_back()
+func move(x: int, y: int) -> void:         ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").move(x, y)
+func step_forward() -> void:               ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").step_forward()
+func step_back() -> void:                  ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").step_back()
 func stop() -> void:                       get_node("MovementComponent").stop()
-func turn_left() -> void:                  get_node("MovementComponent").turn_left()
-func turn_right() -> void:                 get_node("MovementComponent").turn_right()
-func rotate_deg(deg: float) -> void:       get_node("MovementComponent").rotate_deg(deg)
+func turn_left() -> void:                  ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").turn_left()
+func turn_right() -> void:                 ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").turn_right()
+func rotate_deg(deg: float) -> void:       ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").rotate_deg(deg)
 func face(direction: String) -> void:      get_node("MovementComponent").face(direction)
-func move_right(steps: int = 1) -> void:   get_node("MovementComponent").move_right(steps)
-func move_left(steps: int = 1) -> void:    get_node("MovementComponent").move_left(steps)
-func move_up(steps: int = 1) -> void:      get_node("MovementComponent").move_up(steps)
-func move_down(steps: int = 1) -> void:    get_node("MovementComponent").move_down(steps)
-func move_to(x: int, y: int) -> void:      get_node("MovementComponent").move_to(x, y)
+func move_right(steps: int = 1) -> void:   ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").move_right(steps)
+func move_left(steps: int = 1) -> void:    ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").move_left(steps)
+func move_up(steps: int = 1) -> void:      ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").move_up(steps)
+func move_down(steps: int = 1) -> void:    ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").move_down(steps)
+func move_to(x: int, y: int) -> void:      ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").move_to(x, y)
 func is_moving() -> bool:                  return get_node("MovementComponent").is_moving()
 func get_facing() -> String:               return get_node("MovementComponent").get_facing()
 func get_grid_position() -> Vector2:       return get_node("MovementComponent").get_grid_position()
-func grab() -> void:                       get_node("InteractionComponent").grab()
-func drop() -> void:                       get_node("InteractionComponent").drop()
-func interact() -> void:                   get_node("InteractionComponent").interact()
+func grab() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("InteractionComponent").grab()
+func drop() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("InteractionComponent").drop()
+func interact() -> void:                   ObjectiveTracker.notify_command_executed(); get_node("InteractionComponent").interact()
 func is_holding() -> bool:                 return get_node("InteractionComponent").is_holding()
 """
 
@@ -44,12 +44,16 @@ func _on_play() -> void:
 		return
 	if _play_running:
 		return
+		
+	# 🌟 INCREMENT TRIES AND RESET COMMAND COUNT FOR THIS ATTEMPT
+	ObjectiveTracker.start_new_try()
+	
 	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	_play_running = true
 
 	# ── Lock play, unlock reset ──
 	play_btn.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-	play_btn.modulate.a    = 0.5          # visual feedback: greyed out
+	play_btn.modulate.a    = 0.5
 	reset_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	if not _player:

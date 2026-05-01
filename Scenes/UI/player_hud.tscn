@@ -84,6 +84,13 @@
 [ext_resource type="Texture2D" uid="uid://b15q8n831csud" path="res://Assets/UI/MinimizeBtn_Pressed.png" id="78_m04l3"]
 [ext_resource type="Texture2D" uid="uid://derbb1pdtlw80" path="res://Assets/UI/MaximizeBtn.png" id="79_3x627"]
 [ext_resource type="Texture2D" uid="uid://bjrjf00a2xveo" path="res://Assets/UI/MaximizeBtn_Pressed.png" id="80_1775v"]
+[ext_resource type="Script" uid="uid://d12bu4mqmeifs" path="res://Scripts/UI/finish_ui.gd" id="85_m16oa"]
+[ext_resource type="Texture2D" uid="uid://dk8vtf5aqvn4t" path="res://Assets/UI/Stars_Invisible.png" id="86_elakf"]
+[ext_resource type="AudioStream" uid="uid://bl8arwgqxaxhp" path="res://Assets/Sfx/stars.ogg" id="87_e87tu"]
+[ext_resource type="AudioStream" uid="uid://dwxag6tset0v1" path="res://Assets/Sfx/click_1.ogg" id="88_te5h3"]
+[ext_resource type="AudioStream" uid="uid://ddxu88mri1uo2" path="res://Assets/Sfx/succes_2.ogg" id="89_te5h3"]
+[ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="90_elakf"]
+[ext_resource type="Script" uid="uid://h4lvlj8lwqq6" path="res://Scripts/Utillity/finish_btn.gd" id="91_e87tu"]
 
 [sub_resource type="Theme" id="Theme_rmbpn"]
 
@@ -118,6 +125,10 @@ shader_parameter/vignette_strength = 0.0
 shader_parameter/vignette_size = 0.8
 
 [sub_resource type="Theme" id="Theme_o47rn"]
+default_font = ExtResource("16_2uf08")
+default_font_size = 9
+
+[sub_resource type="Theme" id="Theme_elakf"]
 default_font = ExtResource("16_2uf08")
 default_font_size = 9
 
@@ -212,7 +223,7 @@ value = 20.0
 
 [node name="TextEditorUI" type="Control" parent="." unique_id=925118085 groups=["text_editor_ui"]]
 visible = false
-z_index = 5
+z_index = 3000
 layout_mode = 3
 anchors_preset = 0
 offset_left = 229.0
@@ -372,7 +383,6 @@ highlight_current_line = true
 draw_tabs = true
 gutters_draw_line_numbers = true
 code_completion_enabled = true
-indent_use_spaces = true
 indent_automatic = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
@@ -812,10 +822,10 @@ z_index = 200
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 3
 anchors_preset = 0
-offset_left = 219.0
-offset_top = 104.0
-offset_right = 319.0
-offset_bottom = 204.0
+offset_left = 43.0
+offset_top = 10.0
+offset_right = 143.0
+offset_bottom = 110.0
 script = ExtResource("75_w3gig")
 
 [node name="ObjectiveBg" type="NinePatchRect" parent="ObjectiveUI" unique_id=1418690025]
@@ -895,52 +905,115 @@ texture_normal = ExtResource("79_3x627")
 texture_pressed = ExtResource("80_1775v")
 
 [node name="FinishUI" type="Control" parent="." unique_id=2054754105]
+z_index = 4000
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 226.0
+offset_top = 42.0
+offset_right = 226.0
+offset_bottom = 42.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("85_m16oa")
+empty_star_texture = ExtResource("86_elakf")
+filled_star_texture = ExtResource("29_hpp2c")
+star_sound = ExtResource("87_e87tu")
+slide_sound = ExtResource("88_te5h3")
+click_sound = ExtResource("89_te5h3")
 
 [node name="FinishBg" type="TextureRect" parent="FinishUI" unique_id=457935299]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -44.0
+offset_top = 8.0
+offset_right = 106.0
+offset_bottom = 108.0
+texture = ExtResource("90_elakf")
 
 [node name="FinishTttle" type="Label" parent="FinishUI" unique_id=1527388382]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 11.0
+offset_top = 21.0
+offset_right = 87.0
+offset_bottom = 44.0
+theme = SubResource("Theme_elakf")
+theme_override_font_sizes/font_size = 18
+text = "SELESAI"
 
 [node name="StarsContainer" type="HBoxContainer" parent="FinishUI" unique_id=1597198229]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -13.0
+offset_top = 89.0
+offset_right = 115.0
+offset_bottom = 129.0
 
 [node name="Star" type="TextureRect" parent="FinishUI/StarsContainer" unique_id=438651443]
 layout_mode = 2
+texture = ExtResource("29_hpp2c")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="FinishUI/StarsContainer" unique_id=1319101966]
 layout_mode = 2
+texture = ExtResource("29_hpp2c")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="FinishUI/StarsContainer" unique_id=1910331601]
 layout_mode = 2
+texture = ExtResource("29_hpp2c")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="StatisticContainer" type="VBoxContainer" parent="FinishUI" unique_id=659702720]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -41.0
+offset_top = 48.0
+offset_right = 137.0
+offset_bottom = 98.0
 
-[node name="PersonalBest" type="Label" parent="FinishUI/StatisticContainer" unique_id=767285923]
+[node name="PersonalBest" type="RichTextLabel" parent="FinishUI/StatisticContainer" unique_id=15615930]
 layout_mode = 2
+theme = ExtResource("6_eqykv")
+bbcode_enabled = true
+fit_content = true
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="CommentsLabel" type="Label" parent="FinishUI/StatisticContainer" unique_id=482118680]
+[node name="CommentsLabel" type="RichTextLabel" parent="FinishUI/StatisticContainer" unique_id=196132972]
 layout_mode = 2
+theme = ExtResource("6_eqykv")
+bbcode_enabled = true
+fit_content = true
 
 [node name="NextBtn" type="TextureButton" parent="FinishUI" unique_id=1796571444]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 90.0
+offset_top = 146.0
+offset_right = 130.0
+offset_bottom = 186.0
+texture_normal = ExtResource("51_gt56o")
+texture_pressed = ExtResource("52_v8j2s")
 
 [node name="HomeBtn" type="TextureButton" parent="FinishUI" unique_id=964050338]
 layout_mode = 0
+offset_left = -27.0
+offset_top = 145.0
+offset_right = 13.0
+offset_bottom = 185.0
+texture_normal = ExtResource("51_04ph4")
+texture_pressed = ExtResource("52_b1ecp")
+
+[node name="RetryBtn" type="TextureButton" parent="FinishUI" unique_id=1577961248]
+visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="FinishBtn" type="Button" parent="." unique_id=1069024105]
+offset_left = 225.0
+offset_right = 293.0
+offset_bottom = 31.0
+text = "SELESAI"
+script = ExtResource("91_e87tu")

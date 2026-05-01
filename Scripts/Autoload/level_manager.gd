@@ -5,13 +5,40 @@ var current_level: LevelData = null
 var scene_tree_panel: SceneTreePanel = null
 var text_editor_ui: TextEditorUI = null
 var _game_root: Node = null
+var current_level_index: int  = 0
+var level_resources: Array    = []   # Populated by main_menu before scene change
 
 var _instanced_scenes: Array[Node] = []
 
 const SCRIPTS_DIR: String = "res://Scripts/Game/"
 
 func _ready() -> void:
+	# Re-run _wait_for_ui every time ANY node is added to the tree.
+	# When main.tscn loads, scene_tree_panel and text_editor_ui
+	# add themselves — this catches that moment reliably.
+	get_tree().node_added.connect(_on_node_added)
 	_wait_for_ui()
+ 
+# ── ADD this function ─────────────────────────────────────────
+func _on_node_added(node: Node) -> void:
+	# Only care about the two UI nodes we need.
+	if not (node.is_in_group("scene_tree_panel") or node.is_in_group("text_editor_ui")):
+		return
+	# Null out stale references from the previous scene so
+	# _wait_for_ui re-discovers the fresh instances.
+	scene_tree_panel = null
+	text_editor_ui   = null
+	# Deferred so the node finishes its own _ready() first.
+	call_deferred("_wait_for_ui")
+ 
+# ── ADD this helper (called by finish_ui NextBtn) ─────────────
+func get_next_scene_path() -> String:
+	var next_index := current_level_index + 1
+	if next_index < level_resources.size():
+		current_level       = level_resources[next_index]
+		current_level_index = next_index
+		return "res://Scenes/main.tscn"
+	return ""
 	
 func _wait_for_ui() -> void:
 	while not scene_tree_panel or not text_editor_ui \
@@ -135,3 +162,4 @@ func _load_mission() -> void:
 	if mission and player:
 		ObjectiveTracker.init(mission, player)
 		print("TRACKER INIT DONE")
+		

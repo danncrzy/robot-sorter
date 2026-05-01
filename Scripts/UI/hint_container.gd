@@ -26,7 +26,6 @@ func _ready() -> void:
 			var hint := TILE_HINT_SCENE.instantiate()
 			grid.add_child(hint)
 			hint.custom_minimum_size = Vector2(CELL_SIZE, CELL_SIZE)
-			hint.size                = Vector2(CELL_SIZE, CELL_SIZE)
 			hint.mouse_filter        = MOUSE_FILTER_IGNORE
 			
 			# 👇 SET GRID POSITION (0-BASED!)

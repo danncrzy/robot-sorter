@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://bhc1lxy2fjohc" path="res://Shaders/tile_hint.gdshader" id="2_i2xx2"]
 [ext_resource type="Shader" uid="uid://bj3jbk8f5js54" path="res://Shaders/god_rays.gdshader" id="2_o14dv"]
 [ext_resource type="Texture2D" uid="uid://cihpveniv6xed" path="res://Assets/UI/LevelsBtn.png" id="5_4pqbp"]
+[ext_resource type="Texture2D" uid="uid://dk8vtf5aqvn4t" path="res://Assets/UI/Stars_Invisible.png" id="5_hbsmt"]
 [ext_resource type="Texture2D" uid="uid://cij62q5sucxty" path="res://Assets/UI/Menu_Icon_1.png" id="5_lrjdf"]
 [ext_resource type="Texture2D" uid="uid://77jttu1o702x" path="res://Assets/UI/Menu_Icon_2.png" id="6_cejvf"]
 [ext_resource type="Texture2D" uid="uid://ch4gde4kx8q54" path="res://Assets/UI/LevelsBtn_Pressed.png" id="6_gih0s"]
@@ -20,6 +21,7 @@
 [ext_resource type="Shader" uid="uid://7fkopuiyk71w" path="res://Shaders/highlight.gdshader" id="12_46hhv"]
 [ext_resource type="Texture2D" uid="uid://dttd3at3o0y2a" path="res://Assets/UI/StageBtn_Pressed.png" id="12_q6o50"]
 [ext_resource type="Texture2D" uid="uid://ceur3h3hra2c3" path="res://Assets/UI/RobotSorterTitle.png" id="13_ru8vt"]
+[ext_resource type="Texture2D" uid="uid://vlqo7nkm76x3" path="res://Assets/UI/YellowStickyNotes_Visible.png" id="17_tr32r"]
 
 [sub_resource type="Gradient" id="Gradient_i2xx2"]
 offsets = PackedFloat32Array(0, 0.0074626864, 1)
@@ -124,8 +126,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u7lva")
-random_textures = Array[Texture2D]([ExtResource("5_lrjdf"), ExtResource("6_cejvf"), ExtResource("7_ru8vt"), ExtResource("8_ypsd1")])
 level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv"), ExtResource("8_oslnl")])
+empty_star_texture = ExtResource("5_hbsmt")
+filled_star_texture = ExtResource("17_tr32r")
 
 [node name="Bg" type="ColorRect" parent="." unique_id=1885293056]
 material = SubResource("ShaderMaterial_k33u3")
@@ -207,17 +210,19 @@ texture_normal = ExtResource("8_ypsd1")
 
 [node name="LevelsContainer" type="Control" parent="." unique_id=76671852]
 anchors_preset = 0
-offset_right = 40.0
+offset_left = -30.0
+offset_right = 10.0
 offset_bottom = 40.0
 
 [node name="GridContainer" type="GridContainer" parent="LevelsContainer" unique_id=1897640707]
 layout_mode = 0
-offset_left = 281.0
-offset_top = 151.0
-offset_right = 374.0
-offset_bottom = 191.0
+offset_left = 219.0
+offset_top = 107.0
+offset_right = 498.0
+offset_bottom = 177.0
 theme_override_constants/h_separation = 31
-columns = 8
+theme_override_constants/v_separation = 20
+columns = 5
 
 [node name="Level1" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1621727742]
 material = SubResource("ShaderMaterial_oslnl")
@@ -237,6 +242,29 @@ text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level1" unique_id=565119696]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level1/StarsContainer" unique_id=596710796]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level1/StarsContainer" unique_id=668783743]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level1/StarsContainer" unique_id=1944887456]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
 [node name="Level2" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=561926328]
 material = SubResource("ShaderMaterial_tr32r")
 layout_mode = 2
@@ -252,6 +280,228 @@ theme = ExtResource("12_3h8o7")
 text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level2" unique_id=385317887]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level2/StarsContainer" unique_id=1629616348]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level2/StarsContainer" unique_id=1737957864]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level2/StarsContainer" unique_id=235221096]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Level3" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1735929394]
+material = SubResource("ShaderMaterial_tr32r")
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level3" unique_id=582157088]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+text = "3
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level3" unique_id=1646637093]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level3/StarsContainer" unique_id=2091510816]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level3/StarsContainer" unique_id=1430544764]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level3/StarsContainer" unique_id=106089470]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Level4" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=68391627]
+material = SubResource("ShaderMaterial_tr32r")
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level4" unique_id=602397284]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+text = "4
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level4" unique_id=1071413022]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level4/StarsContainer" unique_id=606889053]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level4/StarsContainer" unique_id=1825830051]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level4/StarsContainer" unique_id=1129705382]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Level5" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1850388381]
+material = SubResource("ShaderMaterial_tr32r")
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level5" unique_id=243939703]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+text = "5
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level5" unique_id=1829457128]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level5/StarsContainer" unique_id=241353816]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level5/StarsContainer" unique_id=1973949320]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level5/StarsContainer" unique_id=1939526714]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Level6" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1518025336]
+material = SubResource("ShaderMaterial_tr32r")
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level6" unique_id=2079524687]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+text = "6"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level6" unique_id=1304964567]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level6/StarsContainer" unique_id=911092121]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level6/StarsContainer" unique_id=297864923]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level6/StarsContainer" unique_id=805606854]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Level7" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1408789111]
+material = SubResource("ShaderMaterial_tr32r")
+layout_mode = 2
+texture_normal = ExtResource("11_3h8o7")
+
+[node name="Label" type="Label" parent="LevelsContainer/GridContainer/Level7" unique_id=485875052]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+theme = ExtResource("12_3h8o7")
+text = "7
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StarsContainer" type="HBoxContainer" parent="LevelsContainer/GridContainer/Level7" unique_id=1736496941]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 14.999999
+offset_right = 105.99997
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
+
+[node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level7/StarsContainer" unique_id=834452983]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level7/StarsContainer" unique_id=582907095]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level7/StarsContainer" unique_id=1828262080]
+layout_mode = 2
+texture = ExtResource("17_tr32r")
+stretch_mode = 5
 
 [node name="BackBtn" type="TextureButton" parent="LevelsContainer" unique_id=90996952]
 layout_mode = 0

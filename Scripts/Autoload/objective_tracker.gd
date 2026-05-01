@@ -4,6 +4,7 @@ signal objective_completed(objective: LevelObjective)
 signal mission_completed(mission: LevelMission)
 signal objective_changed(new_objective: LevelObjective)
 signal progress_updated(objective: LevelObjective)
+signal level_completed(stars: int, comment: String, moves: int, tries: int) # 🌟 NEW SIGNAL
 
 var current_mission: LevelMission = null
 const TILE_HINT_SCENE := preload("res://Scenes/UI/tile_hint.tscn")
@@ -15,13 +16,21 @@ var _player: Node = null
 var _tilemap: Node = null
 const TILE_SIZE := 16.0
 
+# 🌟 STAR TRACKING VARIABLES
+var _steps_taken: int = 0
+var _commands_executed: int = 0 # Counts code commands (move, grab, etc.)
+var _current_tries: int = 0 
+
 func _ready() -> void:
 	add_to_group("objective_tracker")
 
 func init(mission: LevelMission, player: Node) -> void:
 	current_mission = mission
 	_player         = player
-
+	
+	# 🌟 RESET TRACKERS ON FRESH LEVEL LOAD
+	_steps_taken = 0
+	_current_tries = 1 
 	
 	# Find tilemap
 	var world: Node = null
@@ -36,7 +45,6 @@ func init(mission: LevelMission, player: Node) -> void:
 	# Snap player to tile (0,0) of the tilemap
 	if _tilemap and _tilemap.has_method("map_to_local"):
 		var tile_zero = _tilemap.map_to_local(Vector2i(0, 0))
-		# Update movement component start position
 		var mc := player.get_node_or_null("MovementCompon")
 		if mc:
 			mc._start_position = player.global_position
@@ -47,12 +55,15 @@ func init(mission: LevelMission, player: Node) -> void:
 
 	# Sync HintContainer grid
 	var hint_container := player.get_tree().get_first_node_in_group("hint_container")
-	print("HINT CONTAINER: ", hint_container)
 	if hint_container:
 		hint_container.show_objective_hints(mission.objectives)
-	else:
-		print("HINT CONTAINER NOT FOUND — is it in the scene and added to group?")
 		
+		
+func notify_command_executed() -> void:
+	_commands_executed += 1
+	
+
+	
 func notify_moved_to(_world_pos: Vector2) -> void:
 	var obj := _current()
 	if not obj: return
@@ -62,12 +73,10 @@ func notify_moved_to(_world_pos: Vector2) -> void:
 	if _tilemap and _tilemap.has_method("local_to_map"):
 		var local    = _tilemap.to_local(_player.global_position)
 		var cell     = _tilemap.local_to_map(local)
-		# Convert to 1-based to match target_pos
 		tile_pos = Vector2(cell.x + 1, cell.y + 1)
 	else:
 		tile_pos = (_player.global_position / TILE_SIZE) + Vector2(1, 1)
 
-	print("PLAYER TILE (1-based): ", tile_pos, " TARGET: ", obj.target_pos)
 	if tile_pos == obj.target_pos:
 		_complete_current()
 
@@ -107,6 +116,12 @@ func notify_step_taken() -> void:
 		if obj._current_count >= obj.target_count:
 			_complete_current()
 
+
+func start_new_try() -> void:
+	_current_tries += 1
+	_commands_executed = 0 
+	reset_mission()
+
 # ── Internal ───────────────────────────────────────────────────
 
 func _current() -> LevelObjective:
@@ -126,34 +141,59 @@ func _complete_current() -> void:
 	if current_mission.is_complete():
 		AudioManager.play_sfx(preload("res://Assets/Sfx/victory_level.ogg"))
 		
-		mission_completed.emit(current_mission)
+		# 🌟 CALCULATE STARS AND EMIT FINISH UI SIGNAL
+		var stars := _calculate_stars()
+		var comment := _get_comment(stars)
+		level_completed.emit(stars, comment, _steps_taken, _current_tries)
 		
-		print("🎉 STAGE DONE!")
+		mission_completed.emit(current_mission)
+		print("🎉 STAGE DONE! Stars: ", stars, " Moves: ", _steps_taken, " Tries: ", _current_tries)
 	else:
 		var next := current_mission.get_current_objective()
 		if next:
 			objective_changed.emit(next)
 			_spawn_marker_for(next)
 
+# ── Star Calculation Logic ─────────────────────────────────────
+func _calculate_stars() -> int:
+	var level_data: LevelData = LevelManager.current_level
+	if not level_data: return 1 
+	
+	# 🌟 Now reads three_star_commands / two_star_commands!
+	if _commands_executed <= level_data.three_star_commands:
+		return 3
+	elif _commands_executed <= level_data.two_star_commands:
+		return 2
+	else:
+		return 1
 
+func _get_comment(stars: int) -> String:
+	var is_flawless := (_current_tries <= 1)
+	
+	if is_flawless:
+		if stars == 3: return "FLAWLESS! Sekali Percobaan"
+		elif stars == 2: return "Hebat Sekali! Tapi bisa lebih cepat ;)"
+		else: return "Selesai! Tapi terlalu banyak perintah..."
+	else:
+		if stars == 3: return "Rute Sempurna! Butuh latihan ya :)"
+		elif stars == 2: return "Hebat Sekali! :)"
+		else: return "Ayo Coba Lagi!"
+
+# ── Markers & Hints ───────────────────────────────────────────
 
 func _spawn_markers() -> void:
 	_clear_markers()
-	# Delegate to HintContainer only
 	var hint_container := get_tree().get_first_node_in_group("hint_container")
 	if hint_container:
 		hint_container.show_objective_hints(current_mission.objectives)
 
 func _spawn_marker_for(_obj: LevelObjective) -> void:
-	pass  # HintContainer handles this now
+	pass 
 
 func _remove_marker_for(obj: LevelObjective) -> void:
 	var hint_container := get_tree().get_first_node_in_group("hint_container")
 	if hint_container:
-		hint_container.deactivate_hint(
-			int(obj.target_pos.x),
-			int(obj.target_pos.y)
-		)
+		hint_container.deactivate_hint(int(obj.target_pos.x), int(obj.target_pos.y))
 
 func _clear_markers() -> void:
 	for m in _active_markers:
@@ -185,40 +225,18 @@ func reset_mission() -> void:
 
 func _init_hints(mission: LevelMission) -> void:
 	var hint_container := get_tree().get_first_node_in_group("hint_container")
-	print("DEFERRED HINT CONTAINER: ", hint_container)
 	if hint_container:
 		hint_container.show_objective_hints(mission.objectives)
 
-## ════════════════════════════════════════════════════════════
-##  TILE-BASED DETECTION 
-## ════════════════════════════════════════════════════════════
-
 func _on_tile_stepped_on(tile_id: String) -> void:
-	print("Tracker received tile_id: ", tile_id)
-	
 	var obj := _current()
-	if not obj:
-		print("No current objective!")
-		return
+	if not obj: return
 	
-	# Only handle MOVE_TO_POINT objectives this way
-	if obj.type != LevelObjective.Type.MOVE_TO_POINT:
-		print("⚠ Current objective is not MOVE_TO_POINT type!")
-		return
+	if obj.type != LevelObjective.Type.MOVE_TO_POINT: return
 	
-	# Parse tile_id back to Vector2 (0-BASED!)
 	var parts := tile_id.split(".")
-	if parts.size() != 2:
-		push_error("Invalid tile_id format: " + tile_id)
-		return
+	if parts.size() != 2: return
 	
-	var tile_pos := Vector2(int(parts[0]), int(parts[1]))  # 0-based!
-	
-	print("📍 Comparing: tile_pos=", tile_pos, " vs target_pos=", obj.target_pos)
-	
-	# Check if this is THE target tile!
+	var tile_pos := Vector2(int(parts[0]), int(parts[1]))
 	if tile_pos == obj.target_pos:
-		print(" MATCH! Player stepped on objective tile!")
 		_complete_current()
-	else:
-		print("Not the target tile (expected ", obj.target_pos, ")")
