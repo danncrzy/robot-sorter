@@ -3,6 +3,20 @@
 [ext_resource type="Script" uid="uid://b4jo5havffjul" path="res://Scenes/Resources/level_objective.gd" id="1_rydy7"]
 [ext_resource type="Script" uid="uid://ed6d8rf7nrwf" path="res://Scenes/Resources/level_mission.gd" id="2_dkel6"]
 
+[sub_resource type="Resource" id="Resource_6sypn"]
+script = ExtResource("1_rydy7")
+type = 1
+description = "Ambil kotak hijau di titik (9,4) ("
+target_pos = Vector2(9, 4)
+metadata/_custom_type_script = "uid://b4jo5havffjul"
+
+[sub_resource type="Resource" id="Resource_vnpkq"]
+script = ExtResource("1_rydy7")
+type = 3
+description = "Taruh kotak hijau ke dalam rak"
+target_pos = Vector2(2, 1)
+metadata/_custom_type_script = "uid://b4jo5havffjul"
+
 [sub_resource type="Resource" id="Resource_rydy7"]
 script = ExtResource("1_rydy7")
 type = 1
@@ -11,23 +25,16 @@ hint = "Gunakan perintah grab() untuk mengambil kotak"
 target_pos = Vector2(19, 0)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
 
-[sub_resource type="Resource" id="Resource_6sypn"]
-script = ExtResource("1_rydy7")
-type = 1
-description = "Ambil kotak hijau di titik (9,4) ("
-target_pos = Vector2(9, 4)
-metadata/_custom_type_script = "uid://b4jo5havffjul"
-
 [sub_resource type="Resource" id="Resource_dkel6"]
 script = ExtResource("1_rydy7")
 type = 3
-description = "Taruh kotak ke dalam rak"
+description = "Taruh kotak kuning ke dalam rak"
 hint = "Gunakan perintah drop() ketika dekat dengan rak"
 target_pos = Vector2(2, 1)
-target_count = 2
 metadata/_custom_type_script = "uid://b4jo5havffjul"
 
 [resource]
 script = ExtResource("2_dkel6")
-objectives = Array[ExtResource("1_rydy7")]([SubResource("Resource_rydy7"), SubResource("Resource_6sypn"), SubResource("Resource_dkel6")])
+objectives = Array[ExtResource("1_rydy7")]([SubResource("Resource_6sypn"), SubResource("Resource_vnpkq"), SubResource("Resource_rydy7"), SubResource("Resource_dkel6")])
+level_id = "level_3"
 metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

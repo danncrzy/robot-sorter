@@ -27,34 +27,42 @@ func _on_body_exited(body: Node) -> void:
 			ic.unregister_nearby_box(self)
 
 func on_grabbed(player: Node) -> void:
-	print("[BOX] on_grabbed() — color: ", box_color)
+	print("[BOX] on_grabbed() - color: ", box_color)
 	_is_held = true
 	_holder  = player
 	var mc := player.get_node_or_null("MovementComponent")
 	if mc:
 		mc.set_carrying(true, box_color)
-		print("[BOX] Carry animation started")
 	else:
-		print("[BOX] ERROR — MovementComponent not found!")
-		for c in player.get_children():
-			print("[BOX]   child: ", c.name)
+		print("[BOX] ERROR - MovementComponent not found on player!")
+		
 	visible = false
-	set_deferred("monitoring", false)
+	monitoring = false  # Turn off completely so it doesn't trigger anything while held
 	box_grabbed.emit(self)
 
-func on_dropped(shelf: Node = null) -> void:
-	print("[BOX] on_dropped()")
+# Added drop_position parameter so it doesn't just spawn inside the player if dropped on floor
+func on_dropped(shelf: Node = null, drop_position: Vector2 = Vector2.ZERO) -> void:
+	print("[BOX] on_dropped() - Shelf: ", shelf.name if shelf else "None")
 	_is_held = false
+	
 	if _holder:
 		var mc := _holder.get_node_or_null("MovementComponent")
 		if mc:
 			mc.set_carrying(false, "")
 	_holder = null
-	monitoring = true
+
 	if shelf:
 		visible = false
+		monitoring = false # FIX: Keep monitoring off so invisible shelf boxes don't trigger grabs
+		print("[BOX] Dropped on shelf. Hiding and keeping monitoring off.")
 	else:
+		# Dropped on floor
+		if drop_position != Vector2.ZERO:
+			global_position = drop_position
 		visible = true
+		monitoring = true # Turn back on so it can be picked up again
+		print("[BOX] Dropped on floor at: ", global_position)
+		
 	box_dropped.emit(self)
 
 func get_color() -> String:

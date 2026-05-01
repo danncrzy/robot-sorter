@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ce4bhtobt5ceu" path="res://Assets/Tile/FloorTileset.png" id="4_a51r3"]
 [ext_resource type="PackedScene" uid="uid://b3p7xn1crret2" path="res://Scenes/GameNodes/shelf.tscn" id="5_a51r3"]
 [ext_resource type="Texture2D" uid="uid://drg1i70xeh357" path="res://Assets/UI/SmallBox.png" id="5_u31pu"]
+[ext_resource type="Texture2D" uid="uid://burtyo3he4amp" path="res://Assets/UI/GreenBox.png" id="7_5diot"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5diot"]
 texture = ExtResource("4_a51r3")
@@ -44,9 +45,8 @@ texture = ExtResource("2_ohwmr")
 shape = SubResource("RectangleShape2D_ohwmr")
 debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)
 
-[node name="BoxArea" type="Area2D" parent="GrabAbleBox2" unique_id=1703645623]
-
 [node name="Box1" type="StaticBody2D" parent="." unique_id=1050633338]
+y_sort_enabled = true
 position = Vector2(318, 98)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box1" unique_id=1306954937]
@@ -57,6 +57,8 @@ position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_u31pu")
 
 [node name="Box2" type="StaticBody2D" parent="." unique_id=569335354]
+z_index = 1
+y_sort_enabled = true
 position = Vector2(318, 146)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box2" unique_id=1383374484]
@@ -80,6 +82,8 @@ z_index = -10
 position = Vector2(243, 93)
 
 [node name="Box3" type="StaticBody2D" parent="." unique_id=1213380291]
+z_index = 1
+y_sort_enabled = true
 position = Vector2(446, 130)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box3" unique_id=35759403]
@@ -108,6 +112,8 @@ texture = ExtResource("5_u31pu")
 shape = SubResource("RectangleShape2D_5diot")
 
 [node name="Box4" type="StaticBody2D" parent="." unique_id=1168003481]
+z_index = 1
+y_sort_enabled = true
 position = Vector2(510, 146)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box4" unique_id=1347238697]
@@ -118,6 +124,8 @@ position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_u31pu")
 
 [node name="Box5" type="StaticBody2D" parent="." unique_id=1124318740]
+z_index = 1
+y_sort_enabled = true
 position = Vector2(398, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box5" unique_id=1770177332]
@@ -173,6 +181,7 @@ texture = ExtResource("5_u31pu")
 shape = SubResource("RectangleShape2D_5diot")
 
 [node name="Box6" type="StaticBody2D" parent="." unique_id=1463984279]
+y_sort_enabled = true
 position = Vector2(222, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box6" unique_id=1714925805]
@@ -183,6 +192,7 @@ position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_u31pu")
 
 [node name="Box7" type="StaticBody2D" parent="." unique_id=1990912679]
+y_sort_enabled = true
 position = Vector2(254, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box7" unique_id=571292787]
@@ -193,6 +203,8 @@ position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_u31pu")
 
 [node name="Box8" type="StaticBody2D" parent="." unique_id=750974516]
+z_index = 1
+y_sort_enabled = true
 position = Vector2(302, 226)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box8" unique_id=743183816]
@@ -238,14 +250,14 @@ texture = ExtResource("5_u31pu")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox12" unique_id=1695613619]
 shape = SubResource("RectangleShape2D_5diot")
 
-[node name="GrabAbleBox" type="Area2D" parent="." unique_id=658783430]
+[node name="GrabAbleBox3" type="Area2D" parent="." unique_id=881274894]
 position = Vector2(278, 242)
 script = ExtResource("1_ekd1c")
 box_color = "Green"
 
-[node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox" unique_id=990486397]
-texture = ExtResource("2_ohwmr")
+[node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox3" unique_id=881342233]
+texture = ExtResource("7_5diot")
 
-[node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox" unique_id=2132788616]
+[node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox3" unique_id=709607147]
 shape = SubResource("RectangleShape2D_ohwmr")
 debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)

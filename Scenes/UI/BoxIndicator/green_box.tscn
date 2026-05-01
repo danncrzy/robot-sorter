@@ -3,6 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://burtyo3he4amp" path="res://Assets/UI/GreenBox.png" id="1_6vsr5"]
 
 [node name="GreenBox" type="TextureRect" unique_id=1733876759]
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_6vsr5")

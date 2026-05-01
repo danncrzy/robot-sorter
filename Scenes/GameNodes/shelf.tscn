@@ -23,14 +23,15 @@ z_index = 10
 position = Vector2(3, -3)
 texture = ExtResource("1_yxiew")
 
+[node name="BoxDisplay" type="HBoxContainer" parent="." unique_id=1578968894]
+z_index = 10
+offset_left = -18.0
+offset_top = -6.0
+offset_right = 24.0
+offset_bottom = 6.0
+
 [node name="DetectArea" type="Area2D" parent="." unique_id=1141075651]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectArea" unique_id=659422082]
 position = Vector2(3, 13)
 shape = SubResource("RectangleShape2D_qckhh")
-
-[node name="BoxDisplay" type="HBoxContainer" parent="." unique_id=1578968894]
-offset_left = -18.0
-offset_top = -6.0
-offset_right = 24.0
-offset_bottom = 6.0

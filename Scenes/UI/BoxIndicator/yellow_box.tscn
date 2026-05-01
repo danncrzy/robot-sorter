@@ -3,6 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://12iiqgdgsu7g" path="res://Assets/UI/YellowBox.png" id="1_gx8qu"]
 
 [node name="YellowBox" type="TextureRect" unique_id=1288859519]
-offset_right = 10.0
-offset_bottom = 10.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_gx8qu")
