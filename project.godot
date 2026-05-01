@@ -40,6 +40,8 @@ window/stretch/scale_mode="integer"
 scene_tree_panel=""
 text_editor_ui=""
 player=""
+red_wall=""
+blue_wall=""
 
 [input]
 

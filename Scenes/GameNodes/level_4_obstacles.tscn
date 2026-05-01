@@ -1,14 +1,15 @@
-[gd_scene format=4 uid="uid://dj84fdx1wuoo"]
+[gd_scene format=4 uid="uid://dslwrapj27mrx"]
 
-[ext_resource type="Script" uid="uid://3t3tvhmbxcsh" path="res://Scripts/Mechanic/box.gd" id="1_ekd1c"]
-[ext_resource type="Texture2D" uid="uid://12iiqgdgsu7g" path="res://Assets/UI/YellowBox.png" id="2_ohwmr"]
-[ext_resource type="Texture2D" uid="uid://2m5n75q6w6f0" path="res://Assets/UI/BigBox.png" id="3_ow8ek"]
-[ext_resource type="Texture2D" uid="uid://ce4bhtobt5ceu" path="res://Assets/Tile/FloorTileset.png" id="4_a51r3"]
-[ext_resource type="PackedScene" uid="uid://b3p7xn1crret2" path="res://Scenes/GameNodes/shelf.tscn" id="5_a51r3"]
-[ext_resource type="Texture2D" uid="uid://drg1i70xeh357" path="res://Assets/UI/SmallBox.png" id="5_u31pu"]
+[ext_resource type="Texture2D" uid="uid://ce4bhtobt5ceu" path="res://Assets/Tile/FloorTileset.png" id="1_mvsxn"]
+[ext_resource type="Script" uid="uid://3t3tvhmbxcsh" path="res://Scripts/Mechanic/box.gd" id="2_fvvrr"]
+[ext_resource type="Texture2D" uid="uid://12iiqgdgsu7g" path="res://Assets/UI/YellowBox.png" id="3_8tkcn"]
+[ext_resource type="Texture2D" uid="uid://2m5n75q6w6f0" path="res://Assets/UI/BigBox.png" id="4_yw0fl"]
+[ext_resource type="Texture2D" uid="uid://drg1i70xeh357" path="res://Assets/UI/SmallBox.png" id="5_1hno0"]
+[ext_resource type="PackedScene" uid="uid://b3p7xn1crret2" path="res://Scenes/GameNodes/shelf.tscn" id="6_jg8wc"]
+[ext_resource type="Texture2D" uid="uid://burtyo3he4amp" path="res://Assets/UI/GreenBox.png" id="7_p5kx2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5diot"]
-texture = ExtResource("4_a51r3")
+texture = ExtResource("1_mvsxn")
 0:0/0 = 0
 1:0/0 = 0
 0:1/0 = 0
@@ -20,11 +21,11 @@ sources/0 = SubResource("TileSetAtlasSource_5diot")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ohwmr"]
 size = Vector2(16, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5diot"]
-size = Vector2(16, 16)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u31pu"]
 size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5diot"]
+size = Vector2(16, 16)
 
 [node name="Node2D" type="Node2D" unique_id=1464010384]
 
@@ -35,27 +36,57 @@ tile_set = SubResource("TileSet_jkb5h")
 
 [node name="GrabAbleBox2" type="Area2D" parent="." unique_id=1419701061]
 position = Vector2(518, 98)
-script = ExtResource("1_ekd1c")
+script = ExtResource("2_fvvrr")
 
 [node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox2" unique_id=1950371932]
-texture = ExtResource("2_ohwmr")
+texture = ExtResource("3_8tkcn")
 
 [node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox2" unique_id=787556345]
 shape = SubResource("RectangleShape2D_ohwmr")
 debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)
 
+[node name="Box2" type="StaticBody2D" parent="." unique_id=569335354]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(318, 146)
+
+[node name="Sprite2D" type="Sprite2D" parent="Box2" unique_id=1383374484]
+texture = ExtResource("4_yw0fl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Box2" unique_id=1327199084]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_u31pu")
+
 [node name="SmallBox1" type="StaticBody2D" parent="." unique_id=1844137953]
 position = Vector2(422, 114)
 
 [node name="Sprite2D" type="Sprite2D" parent="SmallBox1" unique_id=1199844537]
-texture = ExtResource("5_u31pu")
+texture = ExtResource("5_1hno0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox1" unique_id=2080443745]
 shape = SubResource("RectangleShape2D_5diot")
 
-[node name="Shelf" parent="." unique_id=1355337050 instance=ExtResource("5_a51r3")]
+[node name="Shelf" parent="." unique_id=1355337050 instance=ExtResource("6_jg8wc")]
 z_index = -10
 position = Vector2(243, 93)
+
+[node name="SmallBox2" type="StaticBody2D" parent="." unique_id=985161594]
+position = Vector2(406, 114)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox2" unique_id=1534531887]
+texture = ExtResource("5_1hno0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox2" unique_id=2027957273]
+shape = SubResource("RectangleShape2D_5diot")
+
+[node name="SmallBox3" type="StaticBody2D" parent="." unique_id=495677251]
+position = Vector2(486, 98)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox3" unique_id=1429664616]
+texture = ExtResource("5_1hno0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox3" unique_id=1757862362]
+shape = SubResource("RectangleShape2D_5diot")
 
 [node name="Box4" type="StaticBody2D" parent="." unique_id=1168003481]
 z_index = 1
@@ -63,7 +94,7 @@ y_sort_enabled = true
 position = Vector2(510, 146)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box4" unique_id=1347238697]
-texture = ExtResource("3_ow8ek")
+texture = ExtResource("4_yw0fl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box4" unique_id=1295748631]
 position = Vector2(0, 8)
@@ -75,7 +106,7 @@ y_sort_enabled = true
 position = Vector2(398, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box5" unique_id=1770177332]
-texture = ExtResource("3_ow8ek")
+texture = ExtResource("4_yw0fl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box5" unique_id=418523325]
 position = Vector2(0, 8)
@@ -85,7 +116,7 @@ shape = SubResource("RectangleShape2D_u31pu")
 position = Vector2(326, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="SmallBox4" unique_id=1446288546]
-texture = ExtResource("5_u31pu")
+texture = ExtResource("5_1hno0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox4" unique_id=199217603]
 shape = SubResource("RectangleShape2D_5diot")
@@ -94,34 +125,16 @@ shape = SubResource("RectangleShape2D_5diot")
 position = Vector2(358, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="SmallBox5" unique_id=1885411600]
-texture = ExtResource("5_u31pu")
+texture = ExtResource("5_1hno0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox5" unique_id=2016393598]
-shape = SubResource("RectangleShape2D_5diot")
-
-[node name="SmallBox6" type="StaticBody2D" parent="." unique_id=1575414197]
-position = Vector2(374, 114)
-
-[node name="Sprite2D" type="Sprite2D" parent="SmallBox6" unique_id=930038140]
-texture = ExtResource("5_u31pu")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox6" unique_id=1547710951]
-shape = SubResource("RectangleShape2D_5diot")
-
-[node name="SmallBox7" type="StaticBody2D" parent="." unique_id=480069548]
-position = Vector2(358, 98)
-
-[node name="Sprite2D" type="Sprite2D" parent="SmallBox7" unique_id=1235061392]
-texture = ExtResource("5_u31pu")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox7" unique_id=1671924292]
 shape = SubResource("RectangleShape2D_5diot")
 
 [node name="SmallBox8" type="StaticBody2D" parent="." unique_id=365662309]
 position = Vector2(470, 98)
 
 [node name="Sprite2D" type="Sprite2D" parent="SmallBox8" unique_id=121329335]
-texture = ExtResource("5_u31pu")
+texture = ExtResource("5_1hno0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox8" unique_id=134644370]
 shape = SubResource("RectangleShape2D_5diot")
@@ -131,8 +144,68 @@ y_sort_enabled = true
 position = Vector2(254, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box7" unique_id=571292787]
-texture = ExtResource("3_ow8ek")
+texture = ExtResource("4_yw0fl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box7" unique_id=1064203984]
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_u31pu")
+
+[node name="Box8" type="StaticBody2D" parent="." unique_id=750974516]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(302, 226)
+
+[node name="Sprite2D" type="Sprite2D" parent="Box8" unique_id=743183816]
+texture = ExtResource("4_yw0fl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Box8" unique_id=1056465123]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_u31pu")
+
+[node name="SmallBox9" type="StaticBody2D" parent="." unique_id=1309043355]
+position = Vector2(278, 226)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox9" unique_id=1063736375]
+texture = ExtResource("5_1hno0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox9" unique_id=507465448]
+shape = SubResource("RectangleShape2D_5diot")
+
+[node name="SmallBox10" type="StaticBody2D" parent="." unique_id=1828403727]
+position = Vector2(262, 226)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox10" unique_id=1408830644]
+texture = ExtResource("5_1hno0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox10" unique_id=2014831414]
+shape = SubResource("RectangleShape2D_5diot")
+
+[node name="SmallBox11" type="StaticBody2D" parent="." unique_id=363007109]
+position = Vector2(246, 226)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox11" unique_id=910028436]
+texture = ExtResource("5_1hno0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox11" unique_id=356144770]
+shape = SubResource("RectangleShape2D_5diot")
+
+[node name="SmallBox12" type="StaticBody2D" parent="." unique_id=973677119]
+position = Vector2(230, 226)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox12" unique_id=1937605076]
+texture = ExtResource("5_1hno0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox12" unique_id=1695613619]
+shape = SubResource("RectangleShape2D_5diot")
+
+[node name="GrabAbleBox3" type="Area2D" parent="." unique_id=881274894]
+position = Vector2(278, 242)
+script = ExtResource("2_fvvrr")
+box_color = "Green"
+
+[node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox3" unique_id=881342233]
+texture = ExtResource("7_p5kx2")
+
+[node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox3" unique_id=709607147]
+shape = SubResource("RectangleShape2D_ohwmr")
+debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://tnux1oou05n3" path="res://Scripts/UI/main_menu.gd" id="1_u7lva"]
 [ext_resource type="Shader" uid="uid://bhc1lxy2fjohc" path="res://Shaders/tile_hint.gdshader" id="2_i2xx2"]
 [ext_resource type="Shader" uid="uid://bj3jbk8f5js54" path="res://Shaders/god_rays.gdshader" id="2_o14dv"]
-[ext_resource type="Resource" uid="uid://b3tvny3w6yq5e" path="res://Resources/Levels/level_03.tres" id="5_0gipi"]
+[ext_resource type="Resource" uid="uid://b3tvny3w6yq5e" path="res://Resources/Levels/level_05.tres" id="5_0gipi"]
 [ext_resource type="Texture2D" uid="uid://cihpveniv6xed" path="res://Assets/UI/LevelsBtn.png" id="5_4pqbp"]
 [ext_resource type="Texture2D" uid="uid://dk8vtf5aqvn4t" path="res://Assets/UI/Stars_Invisible.png" id="5_hbsmt"]
 [ext_resource type="Texture2D" uid="uid://cij62q5sucxty" path="res://Assets/UI/Menu_Icon_1.png" id="5_lrjdf"]

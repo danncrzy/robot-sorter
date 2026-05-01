@@ -89,3 +89,10 @@ func _spawn_box_indicator(color: String) -> void:
 
 func get_stored_count() -> int:
 	return _stored_boxes.size()
+	
+func reset_shelf() -> void:
+	_stored_boxes.clear()
+	# Delete all instanced indicator children in the HBoxContainer
+	for indicator in box_display.get_children():
+		if is_instance_valid(indicator):
+			indicator.queue_free()

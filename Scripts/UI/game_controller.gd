@@ -123,6 +123,25 @@ func _on_reset() -> void:
 	if obj_ui and obj_ui.has_method("reset_display"):
 		obj_ui.reset_display()
 
+	# ── RESET BOXES ──────────────────────────────────────────
+	# Make sure your Box Area2D is in the group "box" for this to work!
+	for box in get_tree().get_nodes_in_group("box"):
+		if is_instance_valid(box):
+			box.visible = true
+			box.monitoring = true
+			if box.has_method("is_held") and box.is_held():
+				box._is_held = false # Force release state
+
+	# ── RESET SHELVES ────────────────────────────────────────
+	for shelf in get_tree().get_nodes_in_group("shelf"):
+		if is_instance_valid(shelf) and shelf.has_method("reset_shelf"):
+			shelf.reset_shelf()
+
+	# Reset player interaction (drop anything currently held)
+	var ic := _player.get_node_or_null("InteractionComponent")
+	if ic:
+		ic.reset()
+
 	if _original_script:
 		_player.set_script(_original_script)
 	await get_tree().process_frame

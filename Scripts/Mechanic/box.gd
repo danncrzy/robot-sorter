@@ -9,9 +9,9 @@ var _is_held: bool = false
 var _holder:  Node = null
 
 func _ready() -> void:
+	add_to_group("box")
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
-
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("player"):
 		print("[BOX] Player entered box area: ", name)
