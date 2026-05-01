@@ -10,7 +10,7 @@ var _animations:     AnimatedSprite2D = null
 var _tilemap:        Node             = null
 var _facing:         Direction        = Direction.RIGHT
 var _is_moving:      bool             = false
-var _move_queue:     Array[Vector2]   = []
+var _move_queue:     Array            = []  
 var _start_position: Vector2          = Vector2.ZERO
 var _start_facing:   Direction        = Direction.RIGHT
 var _processing:     bool             = false
@@ -22,6 +22,8 @@ const CELEBRATION_DURATION := 3.0
 
 var _is_carrying:    bool   = false
 var _carry_color:    String = ""
+
+
 
 signal carry_state_changed(carrying: bool, color: String)
 
@@ -54,12 +56,21 @@ func _process_next() -> void:
 			_is_moving  = false
 			_processing = false
 			AudioManager.stop_footsteps()
-			_play_idle_anim()  
+			_play_idle_anim()
 			return
 		return
 
-	var target: Vector2 = _move_queue[0]
+	var next = _move_queue[0]
 
+	# ── If it's an action (Callable), run it instantly and move on ──
+	if next is Callable:
+		_move_queue.pop_front()
+		next.call()
+		_process_next()  # immediately check if there's more
+		return
+
+	# ── Otherwise it's a Vector2 move target (existing logic) ──
+	var target: Vector2 = next
 	_processing = true
 	_is_moving  = true
 	_current_target = target
@@ -310,7 +321,12 @@ func reset() -> void:
 ## ══════════════════════════════════════════════════════════════
 func _last_queued_pos() -> Vector2:
 	if _move_queue.is_empty(): return _parent.global_position
-	return _move_queue.back()
+	# Walk backwards to find the last queued movement position
+	for i in range(_move_queue.size() - 1, -1, -1):
+		if _move_queue[i] is Vector2:
+			return _move_queue[i]
+	# No movement in the queue, current position is the last known
+	return _parent.global_position
 
 func _facing_vector() -> Vector2i:
 	match _facing:
@@ -335,3 +351,8 @@ func set_carrying(carrying: bool, color: String) -> void:
 	# Update idle animation immediately
 	if not _is_moving:
 		_play_idle_anim()
+		
+func queue_action(action: Callable) -> void:
+	_move_queue.append(action)
+	if not _processing:
+		_process_next()

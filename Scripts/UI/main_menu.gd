@@ -20,6 +20,7 @@ extends Control
 
 @onready var level1_btn   := $LevelsContainer/GridContainer/Level1
 @onready var level2_btn   := $LevelsContainer/GridContainer/Level2
+@onready var level3_btn   := $LevelsContainer/GridContainer/Level3
 
 @export var hover_sound:  AudioStream = null
 @export var press_sound:  AudioStream = null
@@ -30,7 +31,7 @@ extends Control
 @export var filled_star_texture: Texture2D = null
 
 # level_ids must match LevelData.level_id for each button, in order.
-const LEVEL_IDS := ["level_01", "level_02"]
+const LEVEL_IDS := ["level_01", "level_02", "level_03"]
 
 var _in_levels_view := false
 var _transitioning  := false
@@ -55,6 +56,7 @@ func _ready() -> void:
 
 	level1_btn.pressed.connect(_on_level_pressed.bind(0))
 	level2_btn.pressed.connect(_on_level_pressed.bind(1))
+	level3_btn.pressed.connect(_on_level_pressed.bind(2))
 
 	_refresh_level_stars()
 

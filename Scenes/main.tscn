@@ -394,6 +394,7 @@ animations = [{
 [node name="Main" type="Node2D" unique_id=1417042214]
 
 [node name="Background" type="ColorRect" parent="." unique_id=1049126244]
+z_index = -2
 material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
@@ -405,6 +406,7 @@ grow_vertical = 2
 color = Color(0.8784314, 0.76862746, 0.70980394, 1)
 
 [node name="Vignette" type="ColorRect" parent="." unique_id=799111294]
+z_index = -2
 material = SubResource("ShaderMaterial_ynf5e")
 offset_right = 682.0
 offset_bottom = 366.0
@@ -441,6 +443,7 @@ offset_bottom = 40.0
 columns = 11
 
 [node name="FactoryWalls" type="TextureRect" parent="GameNodes/Main" unique_id=1653868898]
+z_index = -1
 offset_left = 199.0
 offset_top = 37.0
 offset_right = 531.0

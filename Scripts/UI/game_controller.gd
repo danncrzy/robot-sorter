@@ -24,9 +24,9 @@ func move_to(x: int, y: int) -> void:      ObjectiveTracker.notify_command_execu
 func is_moving() -> bool:                  return get_node("MovementComponent").is_moving()
 func get_facing() -> String:               return get_node("MovementComponent").get_facing()
 func get_grid_position() -> Vector2:       return get_node("MovementComponent").get_grid_position()
-func grab() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("InteractionComponent").grab()
-func drop() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("InteractionComponent").drop()
-func interact() -> void:                   ObjectiveTracker.notify_command_executed(); get_node("InteractionComponent").interact()
+func grab() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").queue_action(func(): get_node("InteractionComponent").grab())
+func drop() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").queue_action(func(): get_node("InteractionComponent").drop())
+func interact() -> void:                   ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").queue_action(func(): get_node("InteractionComponent").interact())
 func is_holding() -> bool:                 return get_node("InteractionComponent").is_holding()
 """
 
