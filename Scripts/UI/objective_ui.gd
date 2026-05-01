@@ -176,7 +176,7 @@ func _on_progress_updated(_obj: LevelObjective) -> void:
 	_rebuild_all()
 
 func _on_mission_completed(_m) -> void:
-	mission_text.text = "[color=#ffdd44][b]🎉 Semua misi selesai![/b][/color]"
+	mission_text.text = "[color=#ffdd44][b] Semua misi selesai![/b][/color]"
 	_fit_size()
 
 func _toggle_hint() -> void:

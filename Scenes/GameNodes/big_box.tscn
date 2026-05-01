@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ce4bhtobt5ceu" path="res://Assets/Tile/FloorTileset.png" id="1_0mvdg"]
 [ext_resource type="Texture2D" uid="uid://2m5n75q6w6f0" path="res://Assets/UI/BigBox.png" id="1_mpfge"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pphm5"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0mvdg"]
 texture = ExtResource("1_0mvdg")
 0:0/0 = 0
 1:0/0 = 0
@@ -11,9 +11,15 @@ texture = ExtResource("1_0mvdg")
 1:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_m8h4e"]
-sources/0 = SubResource("TileSetAtlasSource_pphm5")
+sources/0 = SubResource("TileSetAtlasSource_0mvdg")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mpfge"]
+size = Vector2(32, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0mvdg"]
+size = Vector2(32, 47.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pphm5"]
 size = Vector2(32, 48)
 
 [node name="BigBox" type="Node2D" unique_id=721410000]
@@ -27,61 +33,81 @@ tile_set = SubResource("TileSet_m8h4e")
 position = Vector2(462, 177)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box5" unique_id=1992152802]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box5" unique_id=1938262443]
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_mpfge")
 
 [node name="Box1" type="StaticBody2D" parent="." unique_id=62514918]
 position = Vector2(334, 113)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box1" unique_id=1005668391]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box1" unique_id=2111888647]
+position = Vector2(0, 8.5)
 shape = SubResource("RectangleShape2D_mpfge")
 
 [node name="Box2" type="StaticBody2D" parent="." unique_id=45037176]
 position = Vector2(318, 178)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box2" unique_id=1600596482]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box2" unique_id=304917952]
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_mpfge")
 
 [node name="Box3" type="StaticBody2D" parent="." unique_id=1546249483]
 position = Vector2(462, 202)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box3" unique_id=1306633610]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box3" unique_id=50843154]
-shape = SubResource("RectangleShape2D_mpfge")
+position = Vector2(0, -0.75)
+shape = SubResource("RectangleShape2D_0mvdg")
 
 [node name="Box4" type="StaticBody2D" parent="." unique_id=1589561302]
 position = Vector2(462, 226)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box4" unique_id=1227467210]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box4" unique_id=1405953273]
-shape = SubResource("RectangleShape2D_mpfge")
+shape = SubResource("RectangleShape2D_pphm5")
 
 [node name="Box6" type="StaticBody2D" parent="." unique_id=1409124753]
 position = Vector2(414, 114)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box6" unique_id=345908585]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box6" unique_id=863629870]
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_mpfge")
 
 [node name="Box7" type="StaticBody2D" parent="." unique_id=1815674086]
 position = Vector2(222, 194)
 
 [node name="Sprite2D" type="Sprite2D" parent="Box7" unique_id=413090754]
+z_index = 5
+y_sort_enabled = true
 texture = ExtResource("1_mpfge")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box7" unique_id=1465246864]
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_mpfge")

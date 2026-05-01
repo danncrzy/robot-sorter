@@ -20,6 +20,11 @@ var _celebrating:       bool  = false
 var _celebration_timer: float = 0.0
 const CELEBRATION_DURATION := 3.0
 
+var _is_carrying:    bool   = false
+var _carry_color:    String = ""
+
+signal carry_state_changed(carrying: bool, color: String)
+
 func _ready() -> void:
 	_parent     = get_parent() as CharacterBody2D
 	_animations = _parent.get_node_or_null("PlayerAnimations")
@@ -45,8 +50,12 @@ func _ready() -> void:
 ## ══════════════════════════════════════════════════════════════
 func _process_next() -> void:
 	if _celebrating or _processing or _move_queue.is_empty():
-		if _move_queue.is_empty() and _is_moving:
-			_arrive()
+		if _move_queue.is_empty():
+			_is_moving  = false
+			_processing = false
+			AudioManager.stop_footsteps()
+			_play_idle_anim()  
+			return
 		return
 
 	var target: Vector2 = _move_queue[0]
@@ -146,13 +155,41 @@ func _on_mission_complete(_mission) -> void:
 ##  ANIMATION
 ## ══════════════════════════════════════════════════════════════
 func _play_directional_anim(direction: Vector2) -> void:
-	if not _animations or _celebrating: return
+	if not _animations: return
+
+	if _is_carrying and _carry_color != "":
+		# Vertical carry
+		if abs(direction.y) > abs(direction.x):
+			if direction.y > 0:
+				# Only Yellow and Green have Down variant
+				if _carry_color in ["Yellow", "Green"]:
+					_play_anim("Carry_%s_Down" % _carry_color)
+				else:
+					_play_anim("Carry_Up")  # universal fallback
+			else:
+				_play_anim("Carry_Up")
+		else:
+			# Horizontal — flip for left
+			_animations.flip_h = direction.x < 0
+			_play_anim("Carry_%s" % _carry_color)
+		return
+
+	# Normal walk animations
 	if abs(direction.y) > abs(direction.x):
 		if direction.y > 0: _play_anim("Walk_Down")
 		else:               _play_anim("Walk_Up")
 	else:
 		_animations.flip_h = direction.x < 0
 		_play_anim("Walk")
+
+func _play_idle_anim() -> void:
+	if _is_carrying and _carry_color != "":
+		_play_anim("Carry_%s" % _carry_color)
+	else:
+		var rand := randf()
+		if rand < 0.05:   _play_anim("Idle_Angry")
+		elif rand < 0.15: _play_anim("Idle_Tired")
+		else:             _play_anim("Idle")
 
 func _play_anim(anim: String) -> void:
 	if not _animations: return
@@ -289,3 +326,12 @@ func _sync_sprite_flip() -> void:
 
 func _set_start(pos: Vector2) -> void:
 	_start_position =  Vector2(0.3,0.5)
+	
+	
+func set_carrying(carrying: bool, color: String) -> void:
+	_is_carrying  = carrying
+	_carry_color  = color
+	carry_state_changed.emit(carrying, color)
+	# Update idle animation immediately
+	if not _is_moving:
+		_play_idle_anim()
