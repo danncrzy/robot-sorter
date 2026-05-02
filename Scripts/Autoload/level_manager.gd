@@ -53,8 +53,6 @@ func _wait_for_ui() -> void:
 
 	if current_level:
 		load_level(current_level)
-	else:
-		push_warning("LevelManager: no level queued — did you set current_level before changing scene?")
 	
 func load_level(level_res: LevelData) -> void:
 	current_level = level_res
@@ -75,7 +73,6 @@ func _instance_scenes() -> void:
 		if container: break
 
 	if not container:
-		push_warning("LevelManager: InstancedScenes node not found")
 		return
 
 	# Clear previous instances
@@ -90,7 +87,6 @@ func _instance_scenes() -> void:
 		var instance := packed.instantiate()
 		container.add_child(instance)
 		_instanced_scenes.append(instance)
-		print("INSTANCED: ", instance.name, " into ", container.name)
 func _populate_scene_tree() -> void:
 	if not current_level or not scene_tree_panel: return
 	scene_tree_panel.clear_tabs()
@@ -147,19 +143,15 @@ func _load_script_content(script_name: String) -> String:
 	return content
 
 func _load_mission() -> void:
-	print("LOAD MISSION | level_id: ", current_level.level_id)
 	var mission_path := "res://Data/Missions/objective_%s.tres" % current_level.level_id
-	print("MISSION PATH: ", mission_path)
-	print("PATH EXISTS: ", ResourceLoader.exists(mission_path))
+
 	if not ResourceLoader.exists(mission_path): 
-		print("MISSION FILE NOT FOUND — aborting")
+
 		return
 	var mission: LevelMission = load(mission_path)
-	print("MISSION LOADED: ", mission)
-	print("OBJECTIVES: ", mission.objectives.size())
 	var player := get_tree().current_scene.get_node_or_null("GameNodes/Main/Player")
-	print("PLAYER: ", player)
+
 	if mission and player:
 		ObjectiveTracker.init(mission, player)
-		print("TRACKER INIT DONE")
+
 		

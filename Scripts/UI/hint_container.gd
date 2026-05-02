@@ -28,7 +28,7 @@ func _ready() -> void:
 			hint.custom_minimum_size = Vector2(CELL_SIZE, CELL_SIZE)
 			hint.mouse_filter        = MOUSE_FILTER_IGNORE
 			
-			# 👇 SET GRID POSITION (0-BASED!)
+
 			hint.set_grid_position(col, row)  # col=0..19, row=0..9
 			
 			# Duplicate material so each tile has its own instance
@@ -62,7 +62,6 @@ func _ready() -> void:
 func _connect_all_tiles_to_tracker() -> void:
 	var tracker = get_tree().get_first_node_in_group("objective_tracker")
 	if not tracker:
-		push_warning("HintContainer: ObjectiveTracker not found!")
 		return
 	
 	for row_arr in _hints:
@@ -70,7 +69,6 @@ func _connect_all_tiles_to_tracker() -> void:
 			if not hint.tile_entered.is_connected(tracker._on_tile_stepped_on):
 				hint.tile_entered.connect(tracker._on_tile_stepped_on)
 	
-	print("✅ Connected %d tiles to ObjectiveTracker!" % [COLS * ROWS])
 
 # ── Public API (ALL 0-BASED NOW!) ─────────────────────────────────
 
@@ -88,10 +86,8 @@ func show_objective_hints(objectives: Array) -> void:
 func activate_hint(col: int, row: int) -> void:
 	# Now 0-based! No conversion needed!
 	if row < 0 or row >= ROWS or col < 0 or col >= COLS:
-		push_warning("activate_hint out of bounds: col=%d row=%d" % [col, row])
 		return
 	_set_intensity(_hints[row][col], 0.5)
-	print("✨ HINT ACTIVATED — row=%d col=%d (tile_id: %s)" % [row, col, _hints[row][col].tile_id])
 
 func deactivate_hint(col: int, row: int) -> void:
 	# 0-based!

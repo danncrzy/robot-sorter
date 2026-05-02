@@ -28,7 +28,6 @@ func _setup_collision() -> void:
 	if tile_size.x <= 0.0 or tile_size.y <= 0.0:
 		tile_size = custom_minimum_size
 	if tile_size.x <= 0.0 or tile_size.y <= 0.0:
-		push_warning("TileHint (%d,%d): size zero after layout." % [grid_col, grid_row])
 		return
 
 	if tile_vector_label:

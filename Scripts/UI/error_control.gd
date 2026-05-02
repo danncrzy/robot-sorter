@@ -7,9 +7,6 @@ const ERROR_COLOR   := Color(0.9,  0.2,  0.2,  0.9)
 const WARNING_COLOR := Color(0.95, 0.7,  0.1,  0.9)
 const LINE_HL_COLOR := Color(0.8,  0.0,  0.0,  0.18)
 
-# ════════════════════════════════════════════
-# 👇 SIMPLE LAYOUT CONSTANTS
-# ════════════════════════════════════════════
 const PADDING := Vector2(10.0, 8.0)
 const LINE_HEIGHT := 10.0       # Height per line of text
 const MIN_LINES := 2        # Minimum lines to show
@@ -59,9 +56,6 @@ func show_errors(errors: Array) -> void:
 	error_message.text = bb.strip_edges()
 	show()
 	
-	# ══════════════════════════════════════
-	# 👇 CALCULATE HEIGHT WITH SIMPLE MATH!
-	# ══════════════════════════════════════
 	_calculate_and_set_height()
 
 func hide_error() -> void:
@@ -87,9 +81,6 @@ func _calculate_and_set_height() -> void:
 	# Clamp between min/max lines
 	line_count = clamp(line_count, MIN_LINES, MAX_LINES)
 	
-	# ══════════════════════════════════════
-	# 👇 THE MAGIC FORMULA! 👇
-	# ══════════════════════════════════════
 	var total_height := (line_count * LINE_HEIGHT) + (PADDING.y * 2.0)
 	
 	# Apply height

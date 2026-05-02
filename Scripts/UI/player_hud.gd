@@ -42,14 +42,12 @@ func _on_grid_btn_pressed() -> void:
 	_set_tile_labels_visible(_tile_labels_visible)
 	
 	# Optional: Visual feedback on button
-	print("Tile labels: ", "SHOWING" if _tile_labels_visible else "HIDDEN")
 
 func _set_tile_labels_visible(visible: bool) -> void:
 	# Find the HintContainer (it's in group "hint_container")
 	var hint_container = get_tree().get_first_node_in_group("hint_container")
 	
 	if not hint_container:
-		push_warning("GridBtn: HintContainer not found!")
 		return
 	
 	# Get the Grid container inside it

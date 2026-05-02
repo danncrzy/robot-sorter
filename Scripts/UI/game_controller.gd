@@ -45,7 +45,6 @@ func _on_play() -> void:
 	if _play_running:
 		return
 		
-	# 🌟 INCREMENT TRIES AND RESET COMMAND COUNT FOR THIS ATTEMPT
 	ObjectiveTracker.start_new_try()
 	
 	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))

@@ -215,7 +215,7 @@ func _connect_signals() -> void:
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  LAYOUT & MATH
-## ┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘
+## ┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘
 func _update_layout() -> void:
 	if not is_node_ready(): return
 	
@@ -323,7 +323,7 @@ func _apply_resize(mouse_pos: Vector2) -> void:
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  PAGINATION & LOGIC
-## ┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘
+## ┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘
 func _update_pages() -> void:
 	if not is_instance_valid(game_docs) or not game_docs.has_method("get_page"): 
 		left_content.text = "Error: GameDocs Autoload missing!"
@@ -338,7 +338,9 @@ func _update_pages() -> void:
 		if p_data.get("is_toc", false):
 			left_content.text = _build_toc_bbcode(left_idx)
 		else:
-			left_content.text = "[b]" + p_data["title"] + "[/b]\n\n" + p_data["content"]
+			left_content.text = "[b]" + p_data["title"] + "[/b]
+
+" + p_data["content"]
 	else:
 		left_content.text = ""
 
@@ -347,7 +349,9 @@ func _update_pages() -> void:
 		if p_data.get("is_toc", false):
 			right_content.text = _build_toc_bbcode(right_idx)
 		else:
-			right_content.text = "[b]" + p_data["title"] + "[/b]\n\n" + p_data["content"]
+			right_content.text = "[b]" + p_data["title"] + "[/b]
+
+" + p_data["content"]
 	else:
 		right_content.text = ""
 		
@@ -368,13 +372,16 @@ func _update_pages() -> void:
 			note.update_phase(current_spread)
 
 func _build_toc_bbcode(exclude_index: int) -> String:
-	var toc_string := "[b]Table of Contents[/b]\n\n"
+	var toc_string := "[b]Table of Contents[/b]
+
+"
 	for i in range(game_docs.pages.size()):
 		if i == exclude_index: continue
 		var p = game_docs.pages[i]
 		if p.get("toc_visible", false):
 			var indent_str = "    " if p.get("toc_indent", 0) == 1 else ""
-			toc_string += indent_str + "• [url=" + str(i) + "]" + p["title"] + "[/url]\n"
+			toc_string += indent_str + "• [url=" + str(i) + "]" + p["title"] + "[/url]
+"
 	return toc_string
 
 func _on_meta_clicked(meta: Variant) -> void:
@@ -407,7 +414,7 @@ func _on_back_page() -> void:
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  STICKY NOTES SPAWNING & DELETE MODE
-## ┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘
+## ┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘┘
 # ────────────────────── Sticky Note Spawning ──────────────────────
 func spawn_sticky_note(color: StickyNote.NoteColor, drop_global_pos: Vector2, target_container: HBoxContainer) -> void:
 	var note_instance := STICKY_NOTE_SCENE.instantiate()

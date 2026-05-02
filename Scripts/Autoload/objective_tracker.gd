@@ -91,25 +91,14 @@ func notify_grabbed(item_id: String) -> void:
 				_complete_current()
 
 func notify_returned_to_rack(rack_id: String) -> void:
-	print("[TRACKER] notify_returned_to_rack called with rack_id: ", rack_id)
 	var obj := _current()
-	if not obj:
-		print("[TRACKER] FAIL - No current objective!")
-		return
-		
-	print("[TRACKER] Current objective type: ", obj.type, " | target_id: ", obj.target_id, " | current_count: ", obj._current_count, " | target_count: ", obj.target_count)
-	
+	if not obj: return
 	if obj.type == LevelObjective.Type.RETURN_TO_RACK:
 		if obj.target_id == "" or obj.target_id == rack_id:
 			obj._current_count += 1
-			print("[TRACKER] SUCCESS - Incremented count to: ", obj._current_count)
 			progress_updated.emit(obj)
 			if obj._current_count >= obj.target_count:
 				_complete_current()
-		else:
-			print("[TRACKER] FAIL - rack_id does not match target_id! (Expected: ", obj.target_id, " Got: ", rack_id, ")")
-	else:
-		print("[TRACKER] FAIL - Current objective is not RETURN_TO_RACK!")
 
 func notify_command_used(command_name: String) -> void:
 	var obj := _current()

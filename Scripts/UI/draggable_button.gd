@@ -71,5 +71,3 @@ func _check_drop():
 	if target_container:
 		if target_container.get_child_count() < documents_ui.MAX_STICKY_NOTES:
 			documents_ui.spawn_sticky_note(note_color, mouse_pos, target_container)
-		else:
-			print("Max sticky notes reached on this page!")

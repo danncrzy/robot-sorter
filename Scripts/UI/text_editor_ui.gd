@@ -411,7 +411,6 @@ func _apply_resize(mouse_pos: Vector2) -> void:
 ##  SCRIPT MANAGEMENT
 ## ═══════════════════════════════════════════════════════════════
 func add_script(script_name: String, content: String = "") -> void:
-	print("ADD SCRIPT: ", script_name, " content_len=", content.length())
 	_scripts[script_name] = content
 	for child in script_tab_list.get_children():
 		if _get_tab_name(child) == script_name:
