@@ -4,19 +4,16 @@ extends Area2D
 @export var plate_color: String = "red"
 
 func _ready() -> void:
-	# Connect the detection signals
+	# We ONLY care when the player steps ON the plate, not when they leave
 	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
 
-# ── Player stepped on the plate ───────────────────────────────
+# ── Player stepped on the button ──────────────────────────────
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		_toggle_walls()
-
-# ── Player stepped off the plate (Comment out if you want it to stay open!) ──
-func _on_body_exited(body: Node2D) -> void:
-	if body.is_in_group("player"):
-		_toggle_walls()
+		
+		# Optional: Add a visual click to the plate here!
+		# e.g., $PlateSprite.frame = 1 
 
 # ── Toggle Logic ──────────────────────────────────────────────
 func _toggle_walls() -> void:
@@ -29,12 +26,11 @@ func _toggle_walls() -> void:
 	for wall in walls:
 		if not is_instance_valid(wall): continue
 		
-		# 1. Toggle Visibility (if visible = not visible)
+		# 1. Toggle Visibility (if visible, make invisible; if invisible, make visible)
 		wall.visible = !wall.visible
 		
-		# 2. Toggle Collisions so the player can walk through!
-		# (If we don't do this, the wall becomes an invisible blocker)
+		# 2. Toggle Collisions to match the visibility
 		for child in wall.get_children():
 			if child is CollisionShape2D or child is CollisionPolygon2D:
-				# If the wall just turned invisible, disable collision. If visible, enable it.
+				# Disable collision if it just turned invisible, enable if it turned visible
 				child.set_deferred("disabled", not wall.visible)

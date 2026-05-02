@@ -21,6 +21,7 @@ metadata/_custom_type_script = "uid://b4jo5havffjul"
 
 [resource]
 script = ExtResource("2_dkel6")
+mission_title = "Menata Gudang"
 objectives = Array[ExtResource("1_rydy7")]([SubResource("Resource_rydy7"), SubResource("Resource_dkel6")])
 level_id = "level_3"
 metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

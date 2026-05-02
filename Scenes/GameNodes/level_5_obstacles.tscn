@@ -253,7 +253,6 @@ shape = SubResource("RectangleShape2D_5diot")
 [node name="GrabAbleBox3" type="Area2D" parent="." unique_id=881274894]
 position = Vector2(278, 242)
 script = ExtResource("2_fa0o8")
-box_color = "Green"
 
 [node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox3" unique_id=881342233]
 texture = ExtResource("7_mv0wr")

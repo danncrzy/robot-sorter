@@ -6,6 +6,12 @@
 [ext_resource type="Texture2D" uid="uid://ba3r2s3o6x6a5" path="res://Assets/Obstacles/PressurePlate_Red.png" id="3_gxodk"]
 [ext_resource type="Texture2D" uid="uid://bx46omdltgt58" path="res://Assets/Obstacles/RedWall_06.png" id="3_yiy2u"]
 [ext_resource type="Texture2D" uid="uid://b7v2a8w2qsfnl" path="res://Assets/Obstacles/BlueWall_06.png" id="4_7ucgk"]
+[ext_resource type="Texture2D" uid="uid://drg1i70xeh357" path="res://Assets/UI/SmallBox.png" id="7_33g8w"]
+[ext_resource type="PackedScene" uid="uid://b3p7xn1crret2" path="res://Scenes/GameNodes/shelf.tscn" id="8_vuuy4"]
+[ext_resource type="Texture2D" uid="uid://2m5n75q6w6f0" path="res://Assets/UI/BigBox.png" id="9_gsg0i"]
+[ext_resource type="Script" uid="uid://3t3tvhmbxcsh" path="res://Scripts/Mechanic/box.gd" id="10_m1fhw"]
+[ext_resource type="Texture2D" uid="uid://12iiqgdgsu7g" path="res://Assets/UI/YellowBox.png" id="11_yg8cl"]
+[ext_resource type="Texture2D" uid="uid://burtyo3he4amp" path="res://Assets/UI/GreenBox.png" id="12_yg8cl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_16vrq"]
 texture = ExtResource("1_c1cmo")
@@ -17,11 +23,29 @@ texture = ExtResource("1_c1cmo")
 [sub_resource type="TileSet" id="TileSet_7kcrw"]
 sources/0 = SubResource("TileSetAtlasSource_16vrq")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dvj3l"]
+size = Vector2(15, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_33g8w"]
+size = Vector2(15, 15)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7ucgk"]
 size = Vector2(17, 96)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gsg0i"]
+size = Vector2(16, 16)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gxodk"]
 size = Vector2(48, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vuuy4"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_82tbg"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7j51j"]
+size = Vector2(16, 16)
 
 [node name="Node2D" type="Node2D" unique_id=1295236103]
 
@@ -31,23 +55,28 @@ tile_map_data = PackedByteArray("AAAMAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAOAAYAAAABAAA
 tile_set = SubResource("TileSet_7kcrw")
 
 [node name="PressurePlate2" type="Area2D" parent="." unique_id=1825186244]
-position = Vector2(270, 130)
+position = Vector2(372, 241)
 script = ExtResource("2_lhw7b")
 plate_color = "blue"
 
 [node name="PlateSprite" type="Sprite2D" parent="PressurePlate2" unique_id=1873089726]
+position = Vector2(2, 1)
 texture = ExtResource("3_dvj3l")
 
 [node name="PlateCollision" type="CollisionShape2D" parent="PressurePlate2" unique_id=1426818493]
+position = Vector2(1.5, 0.5)
+shape = SubResource("RectangleShape2D_dvj3l")
 
 [node name="PressurePlate" type="Area2D" parent="." unique_id=1701248268]
-position = Vector2(270, 130)
+position = Vector2(262, 162)
 script = ExtResource("2_lhw7b")
 
 [node name="PlateSprite" type="Sprite2D" parent="PressurePlate" unique_id=299152634]
 texture = ExtResource("3_gxodk")
 
 [node name="PlateCollision" type="CollisionShape2D" parent="PressurePlate" unique_id=393280111]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_33g8w")
 
 [node name="RedWall" type="StaticBody2D" parent="." unique_id=2091662260 groups=["red_wall"]]
 position = Vector2(326, 170)
@@ -67,6 +96,24 @@ polygon = PackedVector2Array(-56, 0, -56, 16, 39, 16, 39, -48, 119, -48, 119, -6
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="RedWall" unique_id=653468034]
 polygon = PackedVector2Array(-9, 80, -9, 0, 87, 0, 87, 16, 8, 16, 8, 80)
 
+[node name="SmallBox9" type="StaticBody2D" parent="." unique_id=731717190]
+position = Vector2(406, 210)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox9" unique_id=1988547564]
+texture = ExtResource("7_33g8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox9" unique_id=203026087]
+shape = SubResource("RectangleShape2D_gsg0i")
+
+[node name="SmallBox9" type="StaticBody2D" parent="SmallBox9" unique_id=1217638583]
+position = Vector2(16, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox9/SmallBox9" unique_id=1915111846]
+texture = ExtResource("7_33g8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox9/SmallBox9" unique_id=717487180]
+shape = SubResource("RectangleShape2D_gsg0i")
+
 [node name="BlueWall" type="StaticBody2D" parent="." unique_id=479694566 groups=["blue_wall"]]
 position = Vector2(326, 170)
 
@@ -80,3 +127,172 @@ shape = SubResource("RectangleShape2D_gxodk")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BlueWall" unique_id=1497046077]
 polygon = PackedVector2Array(-56, 16, -56, 48, 72, 48, 72, 80, 88, 80, 88, 32, 120, 32, 120, -33, 152, -33, 152, 64, 168, 64, 168, -48, 104, -48, 104, 16, 88, 16, 88, -81, 71, -81, 71, 32, -40, 32, -40, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlueWall" unique_id=1175834235]
+position = Vector2(-16, 56)
+shape = SubResource("RectangleShape2D_vuuy4")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="BlueWall" unique_id=567836778]
+position = Vector2(48, 56)
+shape = SubResource("RectangleShape2D_vuuy4")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="BlueWall" unique_id=2094511274]
+position = Vector2(16, 72)
+shape = SubResource("RectangleShape2D_vuuy4")
+
+[node name="PressurePlate3" type="Area2D" parent="." unique_id=786490096]
+position = Vector2(342, 226)
+script = ExtResource("2_lhw7b")
+
+[node name="PlateSprite" type="Sprite2D" parent="PressurePlate3" unique_id=506209941]
+texture = ExtResource("3_gxodk")
+
+[node name="PlateCollision" type="CollisionShape2D" parent="PressurePlate3" unique_id=937696447]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_33g8w")
+
+[node name="PressurePlate4" type="Area2D" parent="." unique_id=540471836]
+position = Vector2(422, 162)
+script = ExtResource("2_lhw7b")
+
+[node name="PlateSprite" type="Sprite2D" parent="PressurePlate4" unique_id=1139399576]
+texture = ExtResource("3_gxodk")
+
+[node name="PlateCollision" type="CollisionShape2D" parent="PressurePlate4" unique_id=809327999]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_33g8w")
+
+[node name="PressurePlate5" type="Area2D" parent="." unique_id=753247811]
+position = Vector2(420, 177)
+script = ExtResource("2_lhw7b")
+plate_color = "blue"
+
+[node name="PlateSprite" type="Sprite2D" parent="PressurePlate5" unique_id=617086824]
+position = Vector2(2, 1)
+texture = ExtResource("3_dvj3l")
+
+[node name="PlateCollision" type="CollisionShape2D" parent="PressurePlate5" unique_id=995051737]
+position = Vector2(1.5, 0.5)
+shape = SubResource("RectangleShape2D_dvj3l")
+
+[node name="Shelf" parent="." unique_id=1355337050 instance=ExtResource("8_vuuy4")]
+z_index = -10
+position = Vector2(243, 93)
+
+[node name="SmallBox10" type="StaticBody2D" parent="." unique_id=1324814794]
+position = Vector2(246, 130)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox10" unique_id=1422511672]
+texture = ExtResource("7_33g8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox10" unique_id=791827655]
+shape = SubResource("RectangleShape2D_gsg0i")
+
+[node name="SmallBox9" type="StaticBody2D" parent="SmallBox10" unique_id=599600727]
+position = Vector2(16, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox10/SmallBox9" unique_id=80296750]
+texture = ExtResource("7_33g8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox10/SmallBox9" unique_id=1702411252]
+shape = SubResource("RectangleShape2D_gsg0i")
+
+[node name="Box5" type="StaticBody2D" parent="." unique_id=367457300]
+z_index = 2
+y_sort_enabled = true
+position = Vector2(350, 146)
+
+[node name="Sprite2D" type="Sprite2D" parent="Box5" unique_id=1048443646]
+texture = ExtResource("9_gsg0i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Box5" unique_id=163464091]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_82tbg")
+
+[node name="GrabAbleBox2" type="Area2D" parent="." unique_id=465402085]
+position = Vector2(422, 226)
+script = ExtResource("10_m1fhw")
+
+[node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox2" unique_id=1812674747]
+texture = ExtResource("11_yg8cl")
+
+[node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox2" unique_id=1032972357]
+shape = SubResource("RectangleShape2D_7j51j")
+debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)
+
+[node name="GrabAbleBox3" type="Area2D" parent="." unique_id=2147236779]
+position = Vector2(470, 146)
+script = ExtResource("10_m1fhw")
+
+[node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox3" unique_id=769373176]
+texture = ExtResource("12_yg8cl")
+
+[node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox3" unique_id=1281225083]
+shape = SubResource("RectangleShape2D_7j51j")
+debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)
+
+[node name="PressurePlate6" type="Area2D" parent="." unique_id=153357682]
+position = Vector2(484, 241)
+script = ExtResource("2_lhw7b")
+plate_color = "blue"
+
+[node name="PlateSprite" type="Sprite2D" parent="PressurePlate6" unique_id=1169452829]
+position = Vector2(2, 1)
+texture = ExtResource("3_dvj3l")
+
+[node name="PlateCollision" type="CollisionShape2D" parent="PressurePlate6" unique_id=408221626]
+position = Vector2(1.5, 0.5)
+shape = SubResource("RectangleShape2D_dvj3l")
+
+[node name="SmallBox11" type="StaticBody2D" parent="." unique_id=1823755508]
+position = Vector2(246, 226)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox11" unique_id=1623809289]
+texture = ExtResource("7_33g8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox11" unique_id=1139145813]
+shape = SubResource("RectangleShape2D_gsg0i")
+
+[node name="SmallBox9" type="StaticBody2D" parent="SmallBox11" unique_id=141476902]
+position = Vector2(16, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="SmallBox11/SmallBox9" unique_id=1404138903]
+texture = ExtResource("7_33g8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmallBox11/SmallBox9" unique_id=1751772410]
+shape = SubResource("RectangleShape2D_gsg0i")
+
+[node name="Box6" type="StaticBody2D" parent="." unique_id=768284476]
+z_index = 2
+y_sort_enabled = true
+position = Vector2(318, 146)
+
+[node name="Sprite2D" type="Sprite2D" parent="Box6" unique_id=1714677733]
+texture = ExtResource("9_gsg0i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Box6" unique_id=1560025347]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_82tbg")
+
+[node name="Box5" type="StaticBody2D" parent="Box6" unique_id=1897471733]
+z_index = 2
+y_sort_enabled = true
+position = Vector2(64, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Box6/Box5" unique_id=1812642631]
+texture = ExtResource("9_gsg0i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Box6/Box5" unique_id=563568091]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_82tbg")
+
+[node name="GrabAbleBox4" type="Area2D" parent="." unique_id=1408949353]
+position = Vector2(310, 194)
+script = ExtResource("10_m1fhw")
+
+[node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox4" unique_id=241148322]
+texture = ExtResource("12_yg8cl")
+
+[node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox4" unique_id=1457773243]
+shape = SubResource("RectangleShape2D_7j51j")
+debug_color = Color(0.16372725, 0.64452595, 0.006086037, 0.41960785)

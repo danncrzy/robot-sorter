@@ -17,7 +17,10 @@
 [ext_resource type="Texture2D" uid="uid://pp1dybc5gfys" path="res://Assets/UI/ExitBtn_Pressed.png" id="8_lrjdf"]
 [ext_resource type="Resource" uid="uid://bfu3tpee8tyby" path="res://Resources/Levels/level_02.tres" id="8_oslnl"]
 [ext_resource type="Texture2D" uid="uid://ntpguta4lr8n" path="res://Assets/UI/Menu_Icon_4.png" id="8_ypsd1"]
+[ext_resource type="Resource" uid="uid://6trnu8lkwrse" path="res://Resources/Levels/level_03.tres" id="9_ifxty"]
+[ext_resource type="Resource" uid="uid://7pwrj8mxnpu2" path="res://Resources/Levels/level_04.tres" id="10_ayn3n"]
 [ext_resource type="Texture2D" uid="uid://b10drm0kaoc5u" path="res://Assets/UI/StageBtn.png" id="11_3h8o7"]
+[ext_resource type="Resource" uid="uid://tlvpoowognnt" path="res://Resources/Levels/level_06.tres" id="11_py2ge"]
 [ext_resource type="Theme" uid="uid://dnlaop0tx6go2" path="res://Resources/Shader/level_text.tres" id="12_3h8o7"]
 [ext_resource type="Shader" uid="uid://7fkopuiyk71w" path="res://Shaders/highlight.gdshader" id="12_46hhv"]
 [ext_resource type="Texture2D" uid="uid://dttd3at3o0y2a" path="res://Assets/UI/StageBtn_Pressed.png" id="12_q6o50"]
@@ -128,7 +131,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u7lva")
 random_textures = Array[Texture2D]([ExtResource("5_lrjdf"), ExtResource("6_cejvf"), ExtResource("7_ru8vt"), ExtResource("8_ypsd1")])
-level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv"), ExtResource("8_oslnl"), ExtResource("5_0gipi")])
+level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv"), ExtResource("8_oslnl"), ExtResource("9_ifxty"), ExtResource("10_ayn3n"), ExtResource("5_0gipi"), ExtResource("11_py2ge")])
 empty_star_texture = ExtResource("5_hbsmt")
 filled_star_texture = ExtResource("17_tr32r")
 

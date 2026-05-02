@@ -21,6 +21,9 @@ extends Control
 @onready var level1_btn   := $LevelsContainer/GridContainer/Level1
 @onready var level2_btn   := $LevelsContainer/GridContainer/Level2
 @onready var level3_btn   := $LevelsContainer/GridContainer/Level3
+@onready var level4_btn   := $LevelsContainer/GridContainer/Level4
+@onready var level5_btn   := $LevelsContainer/GridContainer/Level5
+@onready var level6_btn   := $LevelsContainer/GridContainer/Level6
 
 @export var hover_sound:  AudioStream = null
 @export var press_sound:  AudioStream = null
@@ -57,6 +60,9 @@ func _ready() -> void:
 	level1_btn.pressed.connect(_on_level_pressed.bind(0))
 	level2_btn.pressed.connect(_on_level_pressed.bind(1))
 	level3_btn.pressed.connect(_on_level_pressed.bind(2))
+	level4_btn.pressed.connect(_on_level_pressed.bind(3))
+	level5_btn.pressed.connect(_on_level_pressed.bind(4))
+	level6_btn.pressed.connect(_on_level_pressed.bind(5))
 
 	_refresh_level_stars()
 
