@@ -2,251 +2,407 @@
 extends Node
 
 var pages: Array[Dictionary] = [
+	# ── 0. Daftar Isi ─────────────────────────────────────────
 	{
-		"title": "Daftar Isi",
-		"content": "",
-		"is_toc": true,
+		"title":       "Daftar Isi",
+		"content":     "",
+		"is_toc":      true,
 		"toc_visible": true,
-		"toc_indent": 0
-	},
-	
-	# ============================================================
-	#   DASAR-DASAR GDSCRIPT
-	# ============================================================
-	{
-		"title": "1. Variabel",
-		"content": "Variabel adalah wadah untuk menyimpan data. Gunakan kata kunci 'var' untuk membuatnya.\n\nContoh:\nvar skor = 0\nvar nama = \"Bot\"\nvar aktif = true",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 0
-	},
-	{
-		"title": "1.1 Tipe Data",
-		"content": "GDScript memiliki beberapa tipe data utama:\n\nint      → Bilangan bulat (10, -5, 0)\nfloat    → Bilangan desimal (3.14, -2.5)\nString   → Teks (\"Halo\", \"Bot\")\nbool     → Benar atau salah (true, false)\nVector2  → Posisi 2D (x, y)\n\nContoh:\nvar umur: int = 10\nvar tinggi: float = 1.75\nvar nama: String = \"SOR\"\nvar hidup: bool = true\nvar pos: Vector2 = Vector2(3, 5)",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "1.2 Boolean (bool)",
-		"content": "Boolean hanya memiliki dua nilai: true atau false.\n\nDigunakan untuk kondisi dan pengecekan status.\n\nContoh:\nvar sedang_gerak = false\nvar memegang_barang = true",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "1.3 String",
-		"content": "String digunakan untuk menyimpan teks. Teks ditulis dalam tanda kutip.\n\nContoh:\nvar nama = \"Robot\"\nvar arah = \"up\"\n\nGabung string dengan operator +:\nvar pesan = \"Halo, \" + nama",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  0
 	},
 
-	# ============================================================
-	#   FUNGSI
-	# ============================================================
+	# ── 1. Pembukaan ───────────────────────────────────────────
 	{
-		"title": "2. Fungsi",
-		"content": "Fungsi adalah blok kode yang dapat digunakan ulang. Definisikan dengan kata kunci 'func'.\n\nStruktur:\nfunc nama_fungsi(parameter):\n    # kode di sini\n\nContoh:\nfunc sapa():\n    print(\"Halo!\")\n\nfunc tambah(a, b):\n    return a + b",
-		"is_toc": false,
+		"title": "Pembukaan",
+		"content": """Selamat datang di Game ini.
+
+Buku ini berisi  seluruh informasi penting mengenai game ini, buka ketika kamu sedang bingung atau tersesat.
+Setiap perintah memiliki parameter dan cara kerjanya masing masing, pelajari baik-baik.
+
+Semua perintah ditulis di dalam fungsi run().
+Tekan Play untuk menjalankan kode.
+Tekan Reset jika bot tidak sesuai harapan.
+
+Selamat Bersenang-senang ^^
+
+— @Muhammad Zaidan Abdi Fairus""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
-	},
-	{
-		"title": "2.1 Fungsi run()",
-		"content": "Fungsi run() adalah titik masuk utama program kamu. Kode yang ditulis di sini akan dieksekusi saat tombol Play ditekan.\n\nContoh:\nfunc run():\n    move(3, 0)\n    grab()",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  0
 	},
 
-	# ============================================================
-	#   PERINTAH SOR-BOT - PERGERAKAN
-	# ============================================================
+	# ── 2. Memulai ─────────────────────────────────────────────
 	{
-		"title": "3. Pergerakan",
-		"content": "Perintah untuk menggerakkan bot pada grid.",
-		"is_toc": false,
+		"title": "Memulai",
+		"content": """Satu-satunya tempat kamu menulis kode adalah di dalam fungsi run().
+
+func run():
+    # tulis perintahmu di sini
+
+Kode dijalankan dari atas ke bawah, baris per baris.
+Bot akan menyelesaikan setiap perintah sebelum lanjut ke perintah berikutnya.
+
+Contoh paling sederhana:
+
+func run():
+    move_right(3)
+    grab()
+
+Bot akan bergerak 3 langkah ke kanan, lalu mengambil kotak di depannya.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
-	},
-	{
-		"title": "3.1 move(x, y)",
-		"content": "Menggeser posisi bot berdasarkan koordinat relatif.\n\nParameter:\n  x (int) → Geser horizontal (+ kanan, - kiri)\n  y (int) → Geser vertikal (+ bawah, - atas)\n\nContoh:\nmove(3, 0)   # gerak 3 langkah ke kanan\nmove(0, -2)  # gerak 2 langkah ke atas\nmove(-1, 1)  # gerak 1 kiri, 1 bawah",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "3.2 move_right / move_left / move_up / move_down",
-		"content": "Gerak ke arah tertentu sejumlah langkah.\n\nParameter:\n  steps (int, opsional) → jumlah langkah (default: 1)\n\nContoh:\nmove_right()     # 1 langkah kanan\nmove_right(5)    # 5 langkah kanan\nmove_left(3)     # 3 langkah kiri\nmove_up(2)       # 2 langkah atas\nmove_down()      # 1 langkah bawah",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "3.3 move_to(x, y)",
-		"content": "Memindahkan bot langsung ke posisi koordinat tertentu.\n\nParameter:\n  x (int) → koordinat horizontal tujuan\n  y (int) → koordinat vertikal tujuan\n\nContoh:\nmove_to(5, 3)  # pindah langsung ke posisi (5, 3)\nmove_to(0, 0)  # kembali ke pojok kiri atas",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "3.4 step_forward / step_back",
-		"content": "Maju atau mundur 1 langkah sesuai arah hadap bot.\n\nContoh:\nstep_forward()  # maju 1 langkah ke depan\nstep_back()     # mundur 1 langkah ke belakang",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "3.5 stop",
-		"content": "Menghentikan semua pergerakan bot secara instan.\n\nContoh:\nstop()",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  0
 	},
 
-	# ============================================================
-	#   PERINTAH SOR-BOT - ARAH & ROTASI
-	# ============================================================
+	# ── 3. Pergerakan ──────────────────────────────────────────
 	{
-		"title": "4. Arah dan Rotasi",
-		"content": "Perintah untuk mengubah arah hadap bot.",
-		"is_toc": false,
+		"title":       "Pergerakan",
+		"content":     "Perintah untuk menggerakkan SOR-BOT di atas grid.",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
+		"toc_indent":  0
 	},
 	{
-		"title": "4.1 turn_left / turn_right",
-		"content": "Memutar bot 90 derajat.\n\nContoh:\nturn_left()   # putar 90° berlawanan jarum jam\nturn_right()  # putar 90° searah jarum jam",
-		"is_toc": false,
+		"title": "move_right / move_left / move_up / move_down",
+		"content": """Gerakkan bot ke arah tertentu.
+
+move_right()      → 1 langkah ke kanan
+move_right(4)     → 4 langkah ke kanan
+move_left(2)      → 2 langkah ke kiri
+move_up()         → 1 langkah ke atas
+move_down(3)      → 3 langkah ke bawah
+
+Parameter steps bersifat opsional. Tanpa angka = 1 langkah.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "4.2 rotate_deg",
-		"content": "Memutar bot dengan derajat yang ditentukan.\n\nParameter:\n  deg (float) → sudut rotasi dalam derajat\n\nContoh:\nrotate_deg(45)   # putar 45°\nrotate_deg(-90)  # putar 90° ke kiri\nrotate_deg(180)  # putar balik",
-		"is_toc": false,
+		"title": "move(x, y)",
+		"content": """Gerakkan bot berdasarkan koordinat relatif.
+
+move(3, 0)    → 3 langkah ke kanan
+move(0, -2)   → 2 langkah ke atas
+move(-1, 0)   → 1 langkah ke kiri
+move(0, 4)    → 4 langkah ke bawah
+
+Catatan: x positif = kanan, y positif = bawah.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "4.3 face",
-		"content": "Menghadapkan bot langsung ke arah tertentu.\n\nParameter:\n  direction (string) → \"left\", \"right\", \"up\", atau \"down\"\n\nContoh:\nface(\"up\")    # hadap atas\nface(\"right\") # hadap kanan\nface(\"down\")  # hadap bawah",
-		"is_toc": false,
+		"title": "move_to(x, y)",
+		"content": """Pindahkan bot langsung ke koordinat tertentu di grid.
+
+move_to(5, 3)   → pindah ke posisi (5, 3)
+move_to(1, 1)   → kembali ke pojok kiri atas
+
+Koordinat dilihat dari label pada grid di layar.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
+	},
+	{
+		"title": "step_forward / step_back",
+		"content": """Maju atau mundur 1 langkah sesuai arah hadap bot saat ini.
+
+step_forward()   → maju 1 langkah
+step_back()      → mundur 1 langkah
+
+Berguna jika kamu sudah mengatur arah bot dengan turn atau face.""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+	{
+		"title": "stop()",
+		"content": """Hentikan semua pergerakan bot secara instan.
+
+stop()
+
+Semua antrian gerak dibatalkan. Bot berhenti di posisinya.""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
 	},
 
-	# ============================================================
-	#   PERINTAH SOR-BOT - QUERY (PENGECEKAN)
-	# ============================================================
+	# ── 4. Arah ────────────────────────────────────────────────
 	{
-		"title": "5. Query (Pengecekan Status)",
-		"content": "Perintah untuk mendapatkan informasi status bot.",
-		"is_toc": false,
+		"title":       "Arah",
+		"content":     "Perintah untuk mengubah arah hadap bot.",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
+		"toc_indent":  0
 	},
 	{
-		"title": "5.1 is_moving",
-		"content": " Mengecek apakah bot sedang bergerak.\n\nReturn:\n  bool → true jika sedang bergerak, false jika diam\n\nContoh:\nif is_moving():\n    print(\"Bot sedang bergerak\")",
-		"is_toc": false,
+		"title": "turn_left / turn_right",
+		"content": """Putar bot 90 derajat tanpa bergerak.
+
+turn_left()    → putar ke kiri
+turn_right()   → putar ke kanan
+
+Contoh: bot menghadap kanan → turn_left() → kini menghadap atas.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "5.2 get_facing",
-		"content": " Mendapatkan arah hadap bot saat ini.\n\nReturn:\n  string → \"left\", \"right\", \"up\", atau \"down\"\n\nContoh:\nvar arah = get_facing()\nif arah == \"up\":\n    print(\"Bot menghadap atas\")",
-		"is_toc": false,
+		"title": "face(arah)",
+		"content": """Hadapkan bot langsung ke arah tertentu.
+
+face(\"right\")   → hadap kanan
+face(\"left\")    → hadap kiri
+face(\"up\")      → hadap atas
+face(\"down\")    → hadap bawah
+
+Lebih cepat dari turn jika arah tujuan jauh dari arah saat ini.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "5.3 get_grid_position",
-		"content": " Mendapatkan posisi bot pada grid.\n\nReturn:\n  Vector2 → posisi (x, y) pada grid\n\nContoh:\nvar pos = get_grid_position()\nprint(\"Posisi X: \", pos.x)\nprint(\"Posisi Y: \", pos.y)",
-		"is_toc": false,
+		"title": "rotate_deg(derajat)",
+		"content": """Putar bot sejumlah derajat.
+
+rotate_deg(90)    → putar 90° ke kanan
+rotate_deg(-90)   → putar 90° ke kiri
+rotate_deg(180)   → balik arah
+
+Gunakan kelipatan 90 agar hasilnya tepat.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
-	},
-	{
-		"title": "5.4 is_holding",
-		"content": " Mengecek apakah bot sedang memegang barang.\n\nReturn:\n  bool → true jika memegang barang, false jika tidak\n\nContoh:\nif is_holding():\n    drop()\nelse:\n    grab()",
-		"is_toc": false,
-		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 
-	# ============================================================
-	#   PERINTAH SOR-BOT - INTERAKSI
-	# ============================================================
+	# ── 5. Interaksi ───────────────────────────────────────────
 	{
-		"title": "6. Interaksi",
-		"content": "Perintah untuk berinteraksi dengan objek dan barang.",
-		"is_toc": false,
+		"title":       "Interaksi",
+		"content":     "Perintah untuk mengambil dan meletakkan kotak.",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
+		"toc_indent":  0
 	},
 	{
-		"title": "6.1 grab",
-		"content": " Mengambil barang yang berada di depan bot.\n\nContoh:\ngrab()",
-		"is_toc": false,
+		"title": "grab()",
+		"content": """Ambil kotak yang berada di depan bot.
+
+grab()
+
+Bot harus menghadap ke arah kotak.
+Bot hanya bisa memegang satu kotak dalam satu waktu.
+Jika sudah memegang kotak, grab() tidak akan bekerja.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "6.2 drop",
-		"content": " Meletakkan barang yang sedang dipegang.\n\nContoh:\ndrop()",
-		"is_toc": false,
+		"title": "drop()",
+		"content": """Letakkan kotak yang sedang dipegang.
+
+drop()
+
+Jika bot berada di dekat rak yang tepat, kotak akan tersimpan di rak.
+Jika tidak, kotak dijatuhkan di lantai.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "6.3 interact",
-		"content": " Berinteraksi dengan objek yang berada di depan bot (misalnya: menekan tombol, membuka pintu).\n\nContoh:\ninteract()",
-		"is_toc": false,
+		"title": "interact()",
+		"content": """Berinteraksi dengan objek di depan bot.
+
+interact()
+
+Digunakan untuk menekan tombol, membuka pintu, atau
+mengaktifkan mesin tertentu di level.""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 
-	# ============================================================
-	#   KONTROL ALUR PROGRAM
-	# ============================================================
+	# ── 6. Pengecekan ──────────────────────────────────────────
 	{
-		"title": "7. Kontrol Alur Program",
-		"content": "Mengontrol bagaimana kode dieksekusi.",
-		"is_toc": false,
+		"title":       "Pengecekan",
+		"content":     "Perintah untuk mengecek status bot. Digunakan bersama if.",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
+		"toc_indent":  0
 	},
 	{
-		"title": "7.1 Percabangan (if/else)",
-		"content": "Menjalankan kode berdasarkan kondisi.\n\nContoh:\nif get_facing() == \"right\":\n    move_forward()\nelse:\n    turn_right()\n\nOperator perbandingan:\n  ==  sama dengan\n  !=  tidak sama dengan\n  >   lebih besar\n  <   lebih kecil\n  >=  lebih besar atau sama\n  <=  lebih kecil atau sama",
-		"is_toc": false,
+		"title": "is_holding()",
+		"content": """Cek apakah bot sedang memegang kotak.
+
+Mengembalikan: true atau false
+
+Contoh penggunaan:
+if is_holding():
+    drop()
+else:
+	grab()""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
 	},
 	{
-		"title": "7.2 Perulangan (for/while)",
-		"content": "Mengulang kode beberapa kali.\n\nFor loop:\nfor i in range(5):\n    move_right()  # diulang 5 kali\n\nWhile loop:\nvar hitung = 0\nwhile hitung < 3:\n    move_forward()\n    hitung += 1",
-		"is_toc": false,
+		"title": "get_facing()",
+		"content": """Cek arah hadap bot saat ini.
+
+Mengembalikan: \"right\", \"left\", \"up\", atau \"down\"
+
+Contoh penggunaan:
+if get_facing() == \"right\":
+	step_forward()""",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 1
+		"toc_indent":  1
+	},
+	{
+		"title": "is_moving()",
+		"content": """Cek apakah bot sedang bergerak.
+
+Mengembalikan: true atau false
+
+Contoh penggunaan:
+if not is_moving():
+	grab()""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+	{
+		"title": "get_grid_position()",
+		"content": """Dapatkan posisi bot di atas grid.
+
+Mengembalikan: koordinat (x, y)
+
+Contoh penggunaan:
+var pos = get_grid_position()
+if pos.x == 5:
+	stop()""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
 	},
 
-	# ============================================================
-	#   CONTOH LENGKAP
-	# ============================================================
+	# ── 7. Perulangan ──────────────────────────────────────────
 	{
-		"title": "8. Contoh Program",
-		"content": "Beberapa contoh kode lengkap yang bisa langsung digunakan.\n\n--- Contoh 1: Gerak ke kanan lalu ambil item ---\nfunc run():\n    move(3, 0)\n    grab()\n\n--- Contoh 2: Jelajahi bentuk U ---\nfunc run():\n    move_right(3)\n    move_down(2)\n    move_left(3)\n\n--- Contoh 3: Ambil semua item dalam barisan ---\nfunc run():\n    for i in range(5):\n        grab()\n        move_right()\n\n--- Contoh 4: Cek arah sebelum gerak ---\nfunc run():\n    if get_facing() != \"right\":\n        face(\"right\")\n    move_forward()",
-		"is_toc": false,
+		"title":       "Perulangan",
+		"content":     "Mengulang perintah tanpa menulis kode yang sama berkali-kali.",
+		"is_toc":      false,
 		"toc_visible": true,
-		"toc_indent": 0
-	}
+		"toc_indent":  0
+	},
+	{
+		"title": "for (ulang sejumlah kali)",
+		"content": """Ulangi kode sebanyak angka yang ditentukan.
+
+for i in range(5):
+    move_right()
+
+Bot akan bergerak kanan sebanyak 5 kali.
+
+range(n) menghasilkan angka dari 0 sampai n-1.
+Variabel i bisa diabaikan jika tidak dipakai.
+
+Contoh lain:
+for i in range(3):
+    grab()
+    move_right()
+	drop()""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+	{
+		"title": "Kondisi (if / else)",
+		"content": """Jalankan kode hanya jika kondisi terpenuhi.
+
+if is_holding():
+    drop()
+
+if get_facing() == \"right\":
+    move_right()
+else:
+    face(\"right\")
+
+Operator yang bisa digunakan:
+  ==   sama dengan
+  !=   tidak sama dengan
+  >    lebih besar dari
+  <    lebih kecil dari""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+
+	# ── 8. Contoh Program ──────────────────────────────────────
+	{
+		"title":       "Contoh Program",
+		"content":     "Kode siap pakai untuk berbagai situasi.",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  0
+	},
+	{
+		"title": "Ambil kotak lalu taruh di rak",
+		"content": """func run():
+    move_right(3)
+    grab()
+    move_right(2)
+	drop()""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+	{
+		"title": "Ambil 5 kotak berjajar",
+		"content": """func run():
+    for i in range(5):
+        grab()
+        move_right()
+
+Bot mengambil kotak lalu bergeser kanan sebanyak 5 kali.""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+	{
+		"title": "Jelajahi pola U",
+		"content": """func run():
+    move_right(3)
+    move_down(2)
+	move_left(3)""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
+	{
+		"title": "Cek sebelum ambil",
+		"content": """func run():
+    if not is_holding():
+        grab()
+    move_to(8, 4)
+    if is_holding():
+		drop()""",
+		"is_toc":      false,
+		"toc_visible": true,
+		"toc_indent":  1
+	},
 ]
 
 func get_page(index: int) -> Dictionary:
 	if index >= 0 and index < pages.size():
 		return pages[index]
 	return {}
+
+func get_page_count() -> int:
+	return pages.size()
+
+func get_toc_pages() -> Array:
+	var toc := []
+	for i in pages.size():
+		var p: Dictionary = pages[i]
+		if p.get("toc_visible", false) and not p.get("is_toc", false):
+			toc.append({ "index": i, "title": p["title"], "indent": p.get("toc_indent", 0) })
+	return toc

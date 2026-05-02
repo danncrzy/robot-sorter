@@ -71,7 +71,7 @@ func show_results(stars: int, comment: String, is_new_best: bool = false) -> voi
 	personal_best.visible  = is_new_best
 	personal_best.bbcode_enabled = true
 	if is_new_best:
-		personal_best.text = "[center]🏆 Rekor Pribadi Baru![/center]"
+		personal_best.text = "[center]Rekor Pribadi Baru![/center]"
 
 	# Start: fully transparent, slightly below center.
 	modulate.a  = 0.0

@@ -22,10 +22,6 @@ func _ready() -> void:
 	_check_timer.timeout.connect(_run_check)
 	add_child(_check_timer)
 	_lang = _find_gdscript_language()
-	if _lang:
-		print("ErrorHandler: GDScriptLanguage found via get_class(). Pass 2 active.")
-	else:
-		push_warning("ErrorHandler: GDScriptLanguage not found. Pass 2 disabled.")
 
 func init(text_editor: TextEditorUI, error_control: Control) -> void:
 	_text_editor   = text_editor

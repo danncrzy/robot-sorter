@@ -51,15 +51,16 @@ func _ready() -> void:
 		title_label.text = ObjectiveTracker.current_mission.mission_title
 		_rebuild_all()
 
-# ── Drag ───────────────────────────────────────────────────────
+# ── Drag (ObjectiveUI) ─────────────────────────────────────────
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
+	if event is InputEventMouseButton or event is InputEventScreenTouch:
+		var pressed = event.pressed
+		if pressed:
 			_dragging    = true
 			_drag_offset = get_global_mouse_position() - position
 		else:
 			_dragging = false
-	elif event is InputEventMouseMotion and _dragging:
+	elif (event is InputEventMouseMotion or event is InputEventScreenDrag) and _dragging:
 		position = get_global_mouse_position() - _drag_offset
 		get_viewport().set_input_as_handled()
 

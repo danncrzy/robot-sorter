@@ -119,26 +119,30 @@ func _ready() -> void:
 	)
 
 
+# ── TextEditorUI drag + resize ─────────────────────────────────
 func _input(event: InputEvent) -> void:
-	if not visible:
-		return
+	if not visible: return
+
+	var is_release := false
+	var is_motion  := false
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		is_release = true
+	elif event is InputEventScreenTouch and not event.pressed:
+		is_release = true
+	elif event is InputEventMouseMotion or event is InputEventScreenDrag:
+		is_motion = true
 
 	if _is_dragging:
-		if event is InputEventMouseButton \
-		   and event.button_index == MOUSE_BUTTON_LEFT \
-		   and not event.pressed:
+		if is_release:
 			_is_dragging = false
-		elif event is InputEventMouseMotion:
+		elif is_motion:
 			global_position = get_global_mouse_position() - _drag_offset
 
 	if _is_resizing:
-		if event is InputEventMouseButton \
-		   and event.button_index == MOUSE_BUTTON_LEFT \
-		   and not event.pressed:
+		if is_release:
 			_is_resizing = false
-		elif event is InputEventMouseMotion:
+		elif is_motion:
 			_apply_resize(get_global_mouse_position())
-
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -336,23 +340,36 @@ func _position_handles(w: float, h: float) -> void:
 ##  TITLE BAR DRAG & CLOSE
 ## ═══════════════════════════════════════════════════════════════
 func _on_title_bar_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton \
-	   and event.button_index == MOUSE_BUTTON_LEFT:
-		_is_dragging = event.pressed
-		if event.pressed:
-			_drag_offset = get_global_mouse_position() - global_position
+	var pressed := false
+	var released := false
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		pressed  = event.pressed
+		released = not event.pressed
+	elif event is InputEventScreenTouch:
+		pressed  = event.pressed
+		released = not event.pressed
 
+	if pressed:
+		_is_dragging = true
+		_drag_offset = get_global_mouse_position() - position
+	elif released:
+		_is_dragging = false
 ## ═══════════════════════════════════════════════════════════════
 ##  RESIZE (Jitter-Free Offset Math)
 ## ═══════════════════════════════════════════════════════════════
 func _on_handle_input(event: InputEvent, handle: Control) -> void:
+	var is_press := false
 	if event is InputEventMouseButton \
 	   and event.button_index == MOUSE_BUTTON_LEFT \
 	   and event.pressed:
+		is_press = true
+	elif event is InputEventScreenTouch and event.pressed:
+		is_press = true
+
+	if is_press:
 		_is_resizing       = true
 		_resize_mouse_orig = get_global_mouse_position()
-		_resize_rect_orig  = Rect2(global_position, size)
-		
+		_resize_rect_orig  = Rect2(position, size)
 		var n: String = handle.name
 		_resize_dir = Vector2i(
 			(1 if "E" in n else (-1 if "W" in n else 0)),

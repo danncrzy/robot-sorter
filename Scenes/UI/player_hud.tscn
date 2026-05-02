@@ -39,7 +39,6 @@
 [ext_resource type="Texture2D" uid="uid://b4utc3btbiel0" path="res://Assets/UI/ErrorMessageUI.png" id="24_tjl1h"]
 [ext_resource type="Texture2D" uid="uid://dcwsanm73xlvx" path="res://Assets/UI/TableOfContentsBtn_Visible_Pressed.png" id="25_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://bdsdefghhfa1i" path="res://Assets/UI/TabBtn.png" id="25_12fup"]
-[ext_resource type="Script" uid="uid://u8d21k65cl26" path="res://Scripts/UI/tab_btn.gd" id="25_te5h3"]
 [ext_resource type="Texture2D" uid="uid://wye8nfiamsm1" path="res://Assets/UI/TabBtn_Pressed.png" id="26_76u45"]
 [ext_resource type="Texture2D" uid="uid://b751cl7lvvkop" path="res://Assets/UI/PinkStickyNotes_Visible.png" id="27_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://b2x8feyj134ha" path="res://Assets/UI/StickyNoteChoicesTexture.png" id="27_pj538"]
@@ -57,8 +56,6 @@
 [ext_resource type="Texture2D" uid="uid://badxk3jxidlu2" path="res://Assets/UI/DocumentsBtn.png" id="42_22it0"]
 [ext_resource type="Script" uid="uid://cgalkilev53vj" path="res://Scripts/UI/hover_shader.gd" id="42_wx7vk"]
 [ext_resource type="Texture2D" uid="uid://5h5lqniuqf3a" path="res://Assets/UI/DocumentsBtn_Pressed.png" id="43_71ecm"]
-[ext_resource type="Texture2D" uid="uid://dgs8fwtqx7lol" path="res://Assets/Cursor/Test.png" id="47_bwg1y"]
-[ext_resource type="Script" uid="uid://dtmunv1akydex" path="res://Scripts/UI/cursor.gd" id="48_535bs"]
 [ext_resource type="Script" uid="uid://gviuq3b86mig" path="res://Scripts/UI/setting_ui.gd" id="49_8aao3"]
 [ext_resource type="Texture2D" uid="uid://dp2s1bheal16b" path="res://Assets/UI/SettingUITexture.png" id="50_yt6eb"]
 [ext_resource type="Texture2D" uid="uid://dfqslus72yvj8" path="res://Assets/UI/HomeBtn.png" id="51_04ph4"]
@@ -431,7 +428,6 @@ offset_right = 64.0
 offset_bottom = -5.0
 texture_normal = ExtResource("25_12fup")
 texture_pressed = ExtResource("26_76u45")
-script = ExtResource("25_te5h3")
 
 [node name="DocumentsUI" type="Control" parent="." unique_id=1886270900]
 visible = false
@@ -784,16 +780,6 @@ offset_bottom = 37.0
 texture_normal = ExtResource("65_6sklo")
 texture_pressed = ExtResource("66_w3gig")
 
-[node name="Cursor" type="TextureRect" parent="." unique_id=1430354279]
-z_index = 1000
-custom_minimum_size = Vector2(15, 15)
-offset_right = 139.0
-offset_bottom = 138.0
-scale = Vector2(0.1, 0.1)
-mouse_filter = 2
-texture = ExtResource("47_bwg1y")
-script = ExtResource("48_535bs")
-
 [node name="GameController" type="Control" parent="." unique_id=206267171]
 layout_mode = 3
 anchors_preset = 0
@@ -1024,6 +1010,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="FinishBtn" type="Button" parent="." unique_id=1069024105]
+visible = false
 offset_left = 225.0
 offset_right = 293.0
 offset_bottom = 31.0

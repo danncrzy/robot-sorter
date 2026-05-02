@@ -1,26 +1,22 @@
 # res://Scripts/Autoload/audio_manager.gd
 extends Node
 
-## ────────────────────── Bus Names ──────────────────────
 const BUS_MASTER := "Master"
 const BUS_SFX    := "SFX"
 const BUS_MUSIC  := "Music"
 const BUS_UI     := "UI"
 
-## ────────────────────── Pools ──────────────────────
 const SFX_POOL_SIZE := 8
 
 var _sfx_pool:   Array[AudioStreamPlayer] = []
 var _music_player: AudioStreamPlayer      = null
 var _ui_player:    AudioStreamPlayer      = null
 
-## ────────────────────── State ──────────────────────
 var _music_volume: float = 1.0
 var _sfx_volume:   float = 1.0
 var _ui_volume:    float = 1.0
 
 
-# ── Internal ───────────────────────────────────────────
 const FOOTSTEP_POOL_SIZE := 2
 
 var _footstep_pool:   Array[AudioStreamPlayer] = []
@@ -35,9 +31,6 @@ var _footstep_volume:    float       = 1.0
 @export var footstep_interval: float = 0.32
 
 
-## ═══════════════════════════════════════════════════════
-##  LIFECYCLE
-## ═══════════════════════════════════════════════════════
 func _ready() -> void:
 	_ensure_buses()
 	_create_music_player()
@@ -74,9 +67,6 @@ func _create_sfx_pool() -> void:
 		_sfx_pool.append(p)
 
 
-## ═══════════════════════════════════════════════════════
-##  MUSIC  (with LOOPING!)
-## ═══════════════════════════════════════════════════════
 func play_music(stream: AudioStream, fade_in: float = 0.5) -> void:
 	if _music_player.stream == stream and _music_player.playing:
 		return
@@ -101,22 +91,19 @@ func stop_music(fade_out: float = 0.5) -> void:
 
 func set_music_volume(linear: float) -> void:
 	_music_volume           = clampf(linear, 0.0, 1.0)
-	_music_player.volume_db = _safe_db(_music_volume)  # 👈 FIXED
+	_music_player.volume_db = _safe_db(_music_volume)
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_MUSIC),
-		_safe_db(_music_volume)  # 👈 FIXED
+		_safe_db(_music_volume)
 	)
 
 
-## ═══════════════════════════════════════════════════════
-##  SFX
-## ═══════════════════════════════════════════════════════
 func play_sfx(stream: AudioStream, pitch: float = 1.0, volume: float = 1.0) -> void:
 	var player := _get_free_sfx_player()
 	if not player: return
 	player.stream     = stream
 	player.pitch_scale = pitch
-	player.volume_db  = _safe_db(volume * _sfx_volume)  # 👈 Already safe
+	player.volume_db  = _safe_db(volume * _sfx_volume)
 	player.play()
 
 func play_sfx_random_pitch(stream: AudioStream,
@@ -127,29 +114,22 @@ func set_sfx_volume(linear: float) -> void:
 	_sfx_volume = clampf(linear, 0.0, 1.0)
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_SFX),
-		_safe_db(_sfx_volume)  # 👈 Already safe
+		_safe_db(_sfx_volume)
 	)
 
 
-## ═══════════════════════════════════════════════════════
-##  UI SFX
-## ═══════════════════════════════════════════════════════
 func play_ui(stream: AudioStream, volume: float = 1.0) -> void:
 	_ui_player.stream    = stream
-	_ui_player.volume_db = _safe_db(volume * _ui_volume)  # 👈 Already safe
+	_ui_player.volume_db = _safe_db(volume * _ui_volume)
 	_ui_player.play()
 
 func set_ui_volume(linear: float) -> void:
 	_ui_volume = clampf(linear, 0.0, 1.0)
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_UI),
-		_safe_db(_ui_volume)  # 👈 Already safe
+		_safe_db(_ui_volume)
 	)
 
-
-## ═══════════════════════════════════════════════════════
-##  FOOTSTEPS
-## ═══════════════════════════════════════════════════════
 
 func _create_footstep_pool() -> void:
 	for i in FOOTSTEP_POOL_SIZE:
@@ -206,7 +186,7 @@ func _play_footstep_once() -> void:
 	if not player: return
 	player.stream      = _footstep_stream
 	player.pitch_scale = randf_range(_footstep_pitch_min, _footstep_pitch_max)
-	player.volume_db   = _safe_db(_footstep_volume * _sfx_volume)  # 👈 Already safe
+	player.volume_db   = _safe_db(_footstep_volume * _sfx_volume)
 	player.play()
 
 
@@ -217,13 +197,10 @@ func _get_free_footstep_player() -> AudioStreamPlayer:
 	return _footstep_pool[0]
 
 
-## ═══════════════════════════════════════════════════════
-##  MASTER
-## ═══════════════════════════════════════════════════════
 func set_master_volume(linear: float) -> void:
 	AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index(BUS_MASTER),
-		_safe_db(clampf(linear, 0.0, 1.0))  # 👈 Already safe
+		_safe_db(clampf(linear, 0.0, 1.0))
 	)
 
 
@@ -231,9 +208,6 @@ func mute_all(muted: bool) -> void:
 	AudioServer.set_bus_mute(AudioServer.get_bus_index(BUS_MASTER), muted)
 
 
-## ═══════════════════════════════════════════════════════
-##  HELPERS
-## ═══════════════════════════════════════════════════════
 func _get_free_sfx_player() -> AudioStreamPlayer:
 	for p in _sfx_pool:
 		if not p.playing:
@@ -255,16 +229,11 @@ func _fade_out(player: AudioStreamPlayer, dur: float) -> void:
 	await t.finished
 
 
-## ═══════════════════════════════════════════════════════
-##  SAFE DB  (THE FIX!)
-## ═══════════════════════════════════════════════════════
 func _safe_db(linear: float) -> float:
-	# Catch ALL bad values: NaN, negative, zero, infinity
 	if not is_finite(linear):
-		print("⚠️ AudioManager: NaN/Inf volume detected, clamping to 0.001")
-		return -60.0  # -60 dB = basically silent but valid
+		return -60.0
 	
 	if linear <= 0.0001:
-		return -80.0  # Silent but valid dB value
+		return -80.0
 	
 	return linear_to_db(clampf(linear, 0.0001, 1.0))

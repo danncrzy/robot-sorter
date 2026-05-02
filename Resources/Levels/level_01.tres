@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://diw4cry25rcr8" path="res://Scripts/Resources/node_definition.gd" id="1_kaej2"]
 [ext_resource type="Script" uid="uid://c2l2nn08fabd4" path="res://Scripts/Resources/level_data.gd" id="2_g62qf"]
-[ext_resource type="PackedScene" uid="uid://b3p7xn1crret2" path="res://Scenes/GameNodes/shelf.tscn" id="2_rquka"]
+[ext_resource type="PackedScene" uid="uid://bdxpo0cxlh2me" path="res://Scenes/GameNodes/level_01_obstacles.tscn" id="2_rquka"]
 
 [sub_resource type="Resource" id="Resource_kaej2"]
 script = ExtResource("1_kaej2")

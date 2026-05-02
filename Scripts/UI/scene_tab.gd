@@ -58,10 +58,17 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_update_manual_layout()
 
+# ── Scene Tab click ────────────────────────────────────────────
 func _on_tab_gui_input(event: InputEvent) -> void:
+	var is_press := false
 	if event is InputEventMouseButton \
 	   and event.button_index == MOUSE_BUTTON_LEFT \
 	   and event.pressed:
+		is_press = true
+	elif event is InputEventScreenTouch and event.pressed:
+		is_press = true
+
+	if is_press:
 		tab_clicked.emit(_script_data)
 		get_viewport().set_input_as_handled()
 
