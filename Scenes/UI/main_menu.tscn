@@ -25,6 +25,7 @@
 [ext_resource type="Shader" uid="uid://7fkopuiyk71w" path="res://Shaders/highlight.gdshader" id="12_46hhv"]
 [ext_resource type="Texture2D" uid="uid://dttd3at3o0y2a" path="res://Assets/UI/StageBtn_Pressed.png" id="12_q6o50"]
 [ext_resource type="Texture2D" uid="uid://ceur3h3hra2c3" path="res://Assets/UI/RobotSorterTitle.png" id="13_ru8vt"]
+[ext_resource type="Resource" uid="uid://bk7d7nff8uegq" path="res://Resources/Levels/level_07.tres" id="13_wm46x"]
 [ext_resource type="Texture2D" uid="uid://vlqo7nkm76x3" path="res://Assets/UI/YellowStickyNotes_Visible.png" id="17_tr32r"]
 
 [sub_resource type="Gradient" id="Gradient_i2xx2"]
@@ -127,11 +128,13 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u7lva")
 random_textures = Array[Texture2D]([ExtResource("5_lrjdf"), ExtResource("6_cejvf"), ExtResource("7_ru8vt"), ExtResource("8_ypsd1")])
-level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv"), ExtResource("8_oslnl"), ExtResource("9_ifxty"), ExtResource("10_ayn3n"), ExtResource("5_0gipi"), ExtResource("11_py2ge")])
+level_resources = Array[ExtResource("6_q6o50")]([ExtResource("7_46hhv"), ExtResource("8_oslnl"), ExtResource("9_ifxty"), ExtResource("10_ayn3n"), ExtResource("5_0gipi"), ExtResource("11_py2ge"), ExtResource("13_wm46x")])
 empty_star_texture = ExtResource("5_hbsmt")
 filled_star_texture = ExtResource("17_tr32r")
 
@@ -257,17 +260,14 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level1/StarsContainer" unique_id=596710796]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level1/StarsContainer" unique_id=668783743]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level1/StarsContainer" unique_id=1944887456]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Level2" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=561926328]
@@ -296,17 +296,14 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level2/StarsContainer" unique_id=1629616348]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level2/StarsContainer" unique_id=1737957864]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level2/StarsContainer" unique_id=235221096]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Level3" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1735929394]
@@ -338,19 +335,16 @@ mouse_filter = 2
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level3/StarsContainer" unique_id=2091510816]
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level3/StarsContainer" unique_id=1430544764]
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level3/StarsContainer" unique_id=106089470]
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Level4" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=68391627]
@@ -380,17 +374,14 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level4/StarsContainer" unique_id=606889053]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level4/StarsContainer" unique_id=1825830051]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level4/StarsContainer" unique_id=1129705382]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Level5" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1850388381]
@@ -420,17 +411,14 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level5/StarsContainer" unique_id=241353816]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level5/StarsContainer" unique_id=1973949320]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level5/StarsContainer" unique_id=1939526714]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Level6" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1518025336]
@@ -459,17 +447,14 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level6/StarsContainer" unique_id=911092121]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level6/StarsContainer" unique_id=297864923]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level6/StarsContainer" unique_id=805606854]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Level7" type="TextureButton" parent="LevelsContainer/GridContainer" unique_id=1408789111]
@@ -499,17 +484,14 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Star" type="TextureRect" parent="LevelsContainer/GridContainer/Level7/StarsContainer" unique_id=834452983]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star2" type="TextureRect" parent="LevelsContainer/GridContainer/Level7/StarsContainer" unique_id=582907095]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="Star3" type="TextureRect" parent="LevelsContainer/GridContainer/Level7/StarsContainer" unique_id=1828262080]
 layout_mode = 2
-texture = ExtResource("17_tr32r")
 stretch_mode = 5
 
 [node name="BackBtn" type="TextureButton" parent="LevelsContainer" unique_id=90996952]

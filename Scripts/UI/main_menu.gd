@@ -24,6 +24,7 @@ extends Control
 @onready var level4_btn   := $LevelsContainer/GridContainer/Level4
 @onready var level5_btn   := $LevelsContainer/GridContainer/Level5
 @onready var level6_btn   := $LevelsContainer/GridContainer/Level6
+@onready var level7_btn   := $LevelsContainer/GridContainer/Level7
 
 @export var hover_sound:  AudioStream = null
 @export var press_sound:  AudioStream = null
@@ -34,7 +35,7 @@ extends Control
 @export var filled_star_texture: Texture2D = null
 
 # level_ids must match LevelData.level_id for each button, in order.
-const LEVEL_IDS := ["level_01", "level_02", "level_03"]
+const LEVEL_IDS := ["level_01", "level_02", "level_03", "level_04", "level_05", "level_06", "level_07"]
 
 var _in_levels_view := false
 var _transitioning  := false
@@ -63,6 +64,7 @@ func _ready() -> void:
 	level4_btn.pressed.connect(_on_level_pressed.bind(3))
 	level5_btn.pressed.connect(_on_level_pressed.bind(4))
 	level6_btn.pressed.connect(_on_level_pressed.bind(5))
+	level7_btn.pressed.connect(_on_level_pressed.bind(6))
 
 	_refresh_level_stars()
 
@@ -70,7 +72,7 @@ func _ready() -> void:
 ##  STAR DISPLAY
 ## ════════════════════════════════════════════════════════════
 func _refresh_level_stars() -> void:
-	var level_btns := [level1_btn, level2_btn]
+	var level_btns := [level1_btn, level2_btn, level3_btn, level4_btn, level5_btn, level6_btn, level7_btn]
 	for i in level_btns.size():
 		if i >= LEVEL_IDS.size(): break
 		var stars_earned: int = SaveManager.get_stars(LEVEL_IDS[i])

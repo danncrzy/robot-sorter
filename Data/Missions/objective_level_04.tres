@@ -35,6 +35,7 @@ metadata/_custom_type_script = "uid://b4jo5havffjul"
 
 [resource]
 script = ExtResource("2_c77s6")
+mission_title = "Menguasai Kode interaksi"
 objectives = Array[ExtResource("1_5jrkc")]([SubResource("Resource_6sypn"), SubResource("Resource_vnpkq"), SubResource("Resource_rydy7"), SubResource("Resource_dkel6")])
 level_id = "level_4"
 metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

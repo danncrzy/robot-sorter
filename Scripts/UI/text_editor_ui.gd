@@ -44,6 +44,8 @@ class_name TextEditorUI
 @onready var code_bg:                 NinePatchRect  = $TextEditorPanel/CodeBG
 @onready var code_edit:               CodeEdit       = $TextEditorPanel/CodeEdit
 
+@onready var tab_btn:                 TextureButton  = $TabBtn
+
 @onready var resize_handles:          Control        = $ResizeHandles
 
 @onready var error_control:           Control        = $TextEditorPanel/ErrorControl
@@ -110,6 +112,11 @@ func _ready() -> void:
 
 	_update_layout()
 	visible = false
+	
+	tab_btn.pressed.connect(func() -> void:
+		code_edit.insert_text_at_caret("\t")
+		code_edit.grab_focus()
+	)
 
 
 func _input(event: InputEvent) -> void:

@@ -50,6 +50,7 @@ metadata/_custom_type_script = "uid://b4jo5havffjul"
 
 [resource]
 script = ExtResource("2_r7hgx")
+mission_title = "Tantangan"
 objectives = Array[ExtResource("1_whhe1")]([SubResource("Resource_6sypn"), SubResource("Resource_vnpkq"), SubResource("Resource_rydy7"), SubResource("Resource_dkel6"), SubResource("Resource_whhe1"), SubResource("Resource_r7hgx")])
 level_id = "level_6"
 metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

@@ -3,53 +3,24 @@
 [ext_resource type="Script" uid="uid://b4jo5havffjul" path="res://Scenes/Resources/level_objective.gd" id="1_me6by"]
 [ext_resource type="Script" uid="uid://ed6d8rf7nrwf" path="res://Scenes/Resources/level_mission.gd" id="2_ojpm6"]
 
-[sub_resource type="Resource" id="Resource_6sypn"]
+[sub_resource type="Resource" id="Resource_me6by"]
 script = ExtResource("1_me6by")
 type = 1
-description = "Ambil kotak hijau di titik (13,8) "
-hint = "Gunakan move() dan grab()"
-target_pos = Vector2(13, 8)
+description = "Ambil Kotak Kuning"
+hint = "Gunakan for loop untuk penulisan kode"
+target_pos = Vector2(19, 9)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
 
-[sub_resource type="Resource" id="Resource_vnpkq"]
+[sub_resource type="Resource" id="Resource_ojpm6"]
 script = ExtResource("1_me6by")
 type = 3
-description = "Taruh kotak hijau ke dalam rak"
-target_pos = Vector2(2, 1)
-metadata/_custom_type_script = "uid://b4jo5havffjul"
-
-[sub_resource type="Resource" id="Resource_rydy7"]
-script = ExtResource("1_me6by")
-type = 1
-description = "Ambil kotak kuning di titik (19,0)"
-hint = "Gunakan perintah grab() untuk mengambil kotak"
-target_pos = Vector2(16, 3)
-metadata/_custom_type_script = "uid://b4jo5havffjul"
-
-[sub_resource type="Resource" id="Resource_dkel6"]
-script = ExtResource("1_me6by")
-type = 3
-description = "Taruh kotak kuning ke dalam rak"
-hint = "Gunakan perintah drop() ketika dekat dengan rak"
-target_pos = Vector2(2, 1)
-metadata/_custom_type_script = "uid://b4jo5havffjul"
-
-[sub_resource type="Resource" id="Resource_whhe1"]
-script = ExtResource("1_me6by")
-type = 1
-description = "Ambil Kotak hijau di titik (6,6)"
-target_pos = Vector2(6, 6)
-metadata/_custom_type_script = "uid://b4jo5havffjul"
-
-[sub_resource type="Resource" id="Resource_r7hgx"]
-script = ExtResource("1_me6by")
-type = 3
-description = "Kembalikan ke rak"
+description = "Kembalikan Kotak ke Rak"
 target_pos = Vector2(2, 1)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
 
 [resource]
 script = ExtResource("2_ojpm6")
-objectives = Array[ExtResource("1_me6by")]([SubResource("Resource_6sypn"), SubResource("Resource_vnpkq"), SubResource("Resource_rydy7"), SubResource("Resource_dkel6"), SubResource("Resource_whhe1"), SubResource("Resource_r7hgx")])
+mission_title = "Mempelajari Kode Loop"
+objectives = Array[ExtResource("1_me6by")]([SubResource("Resource_me6by"), SubResource("Resource_ojpm6")])
 level_id = "level_7"
 metadata/_custom_type_script = "uid://ed6d8rf7nrwf"

@@ -38,6 +38,9 @@
 [ext_resource type="Texture2D" uid="uid://bbxamt8okmpkk" path="res://Assets/UI/TableOfContentsBtn_Visible.png" id="24_a3btw"]
 [ext_resource type="Texture2D" uid="uid://b4utc3btbiel0" path="res://Assets/UI/ErrorMessageUI.png" id="24_tjl1h"]
 [ext_resource type="Texture2D" uid="uid://dcwsanm73xlvx" path="res://Assets/UI/TableOfContentsBtn_Visible_Pressed.png" id="25_2kxgo"]
+[ext_resource type="Texture2D" uid="uid://bdsdefghhfa1i" path="res://Assets/UI/TabBtn.png" id="25_12fup"]
+[ext_resource type="Script" uid="uid://u8d21k65cl26" path="res://Scripts/UI/tab_btn.gd" id="25_te5h3"]
+[ext_resource type="Texture2D" uid="uid://wye8nfiamsm1" path="res://Assets/UI/TabBtn_Pressed.png" id="26_76u45"]
 [ext_resource type="Texture2D" uid="uid://b751cl7lvvkop" path="res://Assets/UI/PinkStickyNotes_Visible.png" id="27_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://b2x8feyj134ha" path="res://Assets/UI/StickyNoteChoicesTexture.png" id="27_pj538"]
 [ext_resource type="Texture2D" uid="uid://c44npcp6m4o8n" path="res://Assets/UI/PinkStickyNotes_Visible_Pressed.png" id="28_7cu5x"]
@@ -222,7 +225,6 @@ theme_override_styles/grabber_pressed = SubResource("StyleBoxTexture_w24h7")
 value = 20.0
 
 [node name="TextEditorUI" type="Control" parent="." unique_id=925118085 groups=["text_editor_ui"]]
-visible = false
 z_index = 3000
 layout_mode = 3
 anchors_preset = 0
@@ -421,6 +423,15 @@ theme = ExtResource("6_eqykv")
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="TabBtn" type="TextureButton" parent="TextEditorUI" unique_id=362678962]
+layout_mode = 0
+offset_top = -55.0
+offset_right = 64.0
+offset_bottom = -5.0
+texture_normal = ExtResource("25_12fup")
+texture_pressed = ExtResource("26_76u45")
+script = ExtResource("25_te5h3")
 
 [node name="DocumentsUI" type="Control" parent="." unique_id=1886270900]
 visible = false
@@ -905,6 +916,7 @@ texture_normal = ExtResource("79_3x627")
 texture_pressed = ExtResource("80_1775v")
 
 [node name="FinishUI" type="Control" parent="." unique_id=2054754105]
+visible = false
 z_index = 4000
 layout_mode = 3
 anchors_preset = 15
