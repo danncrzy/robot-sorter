@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://4f8iukfe2cy2"]
+
+[ext_resource type="Script" uid="uid://o4njvsy7qp13" path="res://Scripts/UI/tutorial_ui.gd" id="1_mjrlj"]
+[ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="2_3fpl7"]
+[ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="3_mc6ed"]
+[ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="4_20m4d"]
+[ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="5_orv3c"]
+[ext_resource type="Texture2D" uid="uid://ddq4ylrfm38wk" path="res://Assets/UI/VScrollBarTrack.png" id="7_4cfvy"]
+[ext_resource type="Texture2D" uid="uid://o3734pqcwqep" path="res://Assets/UI/VScrollBar.png" id="8_ke2de"]
+[ext_resource type="Texture2D" uid="uid://cnd32sn33oy2w" path="res://Assets/UI/VScrollBar_Pressed.png" id="9_ibvo8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d0h73"]
+texture = ExtResource("7_4cfvy")
+texture_margin_top = 1.0
+texture_margin_right = 16.0
+texture_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mc78r"]
+texture = ExtResource("8_ke2de")
+texture_margin_top = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bltgc"]
+texture = ExtResource("9_ibvo8")
+texture_margin_top = 16.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i0lq3"]
+texture = ExtResource("9_ibvo8")
+texture_margin_top = 16.0
+texture_margin_bottom = 16.0
+
+[node name="Tutorial" type="CanvasLayer" unique_id=845020908]
+layer = 1000
+
+[node name="TutorialUI" type="Control" parent="." unique_id=533406732]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -63.0
+offset_top = -43.0
+offset_right = 591.0
+offset_bottom = 444.0
+script = ExtResource("1_mjrlj")
+
+[node name="TextureRect" type="TextureRect" parent="TutorialUI" unique_id=1056236283]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 28.0
+offset_right = 856.0
+offset_bottom = 422.0
+texture = ExtResource("2_3fpl7")
+
+[node name="CloseBtn" type="TextureButton" parent="TutorialUI" unique_id=394762444]
+layout_mode = 0
+offset_left = 558.0
+offset_top = 49.0
+offset_right = 566.0
+offset_bottom = 58.0
+scale = Vector2(5, 5)
+texture_normal = ExtResource("4_20m4d")
+texture_pressed = ExtResource("5_orv3c")
+
+[node name="VScrollBar" type="VScrollBar" parent="TutorialUI" unique_id=327207937]
+z_index = 2
+layout_mode = 0
+offset_left = 576.0
+offset_top = 102.0
+offset_right = 592.0
+offset_bottom = 346.0
+theme_override_styles/scroll = SubResource("StyleBoxTexture_d0h73")
+theme_override_styles/grabber = SubResource("StyleBoxTexture_mc78r")
+theme_override_styles/grabber_highlight = SubResource("StyleBoxTexture_bltgc")
+theme_override_styles/grabber_pressed = SubResource("StyleBoxTexture_i0lq3")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TutorialUI" unique_id=793926632]
+clip_contents = false
+layout_mode = 0
+offset_left = 77.0
+offset_top = 84.0
+offset_right = 563.0
+offset_bottom = 395.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TutorialUI/ScrollContainer" unique_id=1961028615]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("3_mc6ed")
+bbcode_enabled = true
+fit_content = true
+vertical_alignment = 1

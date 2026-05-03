@@ -76,8 +76,14 @@
 [ext_resource type="Shader" uid="uid://b8hokr7b4y51h" path="res://Shaders/gray_overlay.gdshader" id="61_w24h7"]
 [ext_resource type="Texture2D" uid="uid://oyw5qhgsgd0g" path="res://Assets/UI/SettingBtn.png" id="65_6sklo"]
 [ext_resource type="Texture2D" uid="uid://cfrybtkr68bb3" path="res://Assets/UI/SettingBtn_Pressed.png" id="66_w3gig"]
+[ext_resource type="Texture2D" uid="uid://bmwwad663yo4i" path="res://Assets/UI/MoveBtn.png" id="71_8s3fq"]
+[ext_resource type="Texture2D" uid="uid://cd3v4suulyfd2" path="res://Assets/UI/MoveBtn_Pressed.png" id="72_12fup"]
+[ext_resource type="Script" uid="uid://dqetarqdwa3ib" path="res://Scripts/UI/move_btn.gd" id="73_12fup"]
+[ext_resource type="Texture2D" uid="uid://bqp3qtwehpau7" path="res://Assets/UI/SeeBtn.png" id="74_j2hfl"]
+[ext_resource type="Texture2D" uid="uid://cdrnc05cloup6" path="res://Assets/UI/SeeBtn_Pressed.png" id="75_pgotk"]
 [ext_resource type="Script" uid="uid://c0kq3em2rcas7" path="res://Scripts/UI/objective_ui.gd" id="75_w3gig"]
 [ext_resource type="Texture2D" uid="uid://deaxak7s2ro6q" path="res://Assets/UI/ObjectiveUI.png" id="76_o47rn"]
+[ext_resource type="Script" uid="uid://bbebsy3344562" path="res://Scripts/UI/visibility_btn.gd" id="76_pgotk"]
 [ext_resource type="Texture2D" uid="uid://dvy2jh4vf560b" path="res://Assets/UI/MinimizeBtn.png" id="77_4sxk8"]
 [ext_resource type="Texture2D" uid="uid://dphkqyed3s4ea" path="res://Assets/UI/HelpBtn.png" id="77_wan8y"]
 [ext_resource type="Texture2D" uid="uid://cwch6ayi1yqlp" path="res://Assets/UI/HelpBtn_Pressed.png" id="78_0427r"]
@@ -135,15 +141,6 @@ default_font_size = 9
 [node name="PlayerHUD" type="CanvasLayer" unique_id=1140191964]
 layer = 10
 script = ExtResource("1_y31ga")
-
-[node name="Background" type="ColorRect" parent="." unique_id=411459841]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.8784314, 0.76862746, 0.70980394, 1)
 
 [node name="SceneTreePanel" type="Control" parent="." unique_id=986379462 groups=["scene_tree_panel"]]
 custom_minimum_size = Vector2(140, 140)
@@ -748,10 +745,10 @@ texture_normal = ExtResource("51_gt56o")
 texture_pressed = ExtResource("52_v8j2s")
 
 [node name="GridBtn" type="TextureButton" parent="." unique_id=1328431703]
-offset_left = 360.0
-offset_top = 1.0
-offset_right = 400.0
-offset_bottom = 41.0
+offset_left = 350.0
+offset_top = 3.0
+offset_right = 390.0
+offset_bottom = 43.0
 texture_normal = ExtResource("60_231bg")
 texture_pressed = ExtResource("61_m16oa")
 
@@ -779,6 +776,24 @@ offset_right = 39.0
 offset_bottom = 37.0
 texture_normal = ExtResource("65_6sklo")
 texture_pressed = ExtResource("66_w3gig")
+
+[node name="MoveBtn" type="TextureButton" parent="." unique_id=1556041919 groups=["move_toggle_btn"]]
+offset_left = 304.0
+offset_top = 3.0
+offset_right = 344.0
+offset_bottom = 43.0
+texture_normal = ExtResource("71_8s3fq")
+texture_pressed = ExtResource("72_12fup")
+script = ExtResource("73_12fup")
+
+[node name="VisibilityBtn" type="TextureButton" parent="." unique_id=257545333]
+offset_left = 44.0
+offset_top = 3.0
+offset_right = 84.0
+offset_bottom = 43.0
+texture_normal = ExtResource("74_j2hfl")
+texture_pressed = ExtResource("75_pgotk")
+script = ExtResource("76_pgotk")
 
 [node name="GameController" type="Control" parent="." unique_id=206267171]
 layout_mode = 3

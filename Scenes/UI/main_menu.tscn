@@ -142,15 +142,16 @@ filled_star_texture = ExtResource("17_tr32r")
 material = SubResource("ShaderMaterial_k33u3")
 custom_minimum_size = Vector2(700, 360)
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -237.0
+offset_right = 829.0
+offset_bottom = 360.0
 
 [node name="GodRay" type="ColorRect" parent="." unique_id=665650244]
 material = SubResource("ShaderMaterial_u7lva")
 layout_mode = 0
 offset_left = -63.0
 offset_top = -40.0
-offset_right = 743.0
+offset_right = 908.0
 offset_bottom = 231.0
 
 [node name="Sun" type="ColorRect" parent="." unique_id=715987461]

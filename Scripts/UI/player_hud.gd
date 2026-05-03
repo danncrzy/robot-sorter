@@ -1,13 +1,23 @@
 extends CanvasLayer
 
-@onready var scene_tree_panel: Control      = $SceneTreePanel
-@onready var text_editor:      Control      = $TextEditorUI
-@onready var documents:        Control      = $DocumentsUI
-@onready var script_btn:       TextureButton = $ScriptBtn
-@onready var documents_btn:    TextureButton = $DocumentsBtn
-@onready var setting_btn: TextureButton = $SettingBtn
-@onready var setting_ui:  Control       = $SettingUI
-@onready var grid_btn: TextureButton = $GridBtn 
+@onready var scene_tree_panel: Control        = $SceneTreePanel
+@onready var text_editor:      Control        = $TextEditorUI
+@onready var documents:        Control        = $DocumentsUI
+@onready var script_btn:       TextureButton  = $ScriptBtn
+@onready var documents_btn:    TextureButton  = $DocumentsBtn
+@onready var setting_btn:      TextureButton  = $SettingBtn
+@onready var setting_ui:       Control        = $SettingUI
+@onready var grid_btn:         TextureButton  = $GridBtn 
+@onready var visibility_btn:   TextureButton  = $VisibilityBtn
+@onready var scene_tree:       Control        = $SceneTreePanel
+@onready var documents_ui:     Control        = $DocumentsUI
+@onready var move_btn:         TextureButton  = $MoveBtn
+@onready var gray_overlay:     ColorRect      = $GrayOverlay
+@onready var objective_ui:     Control        = $ObjectiveUI
+
+var _ui_hidden := false
+var _toggleable: Array[Node] = []
+var _saved_states: Dictionary = {}
 
 var _tile_labels_visible: bool = false 
 func _ready() -> void:
@@ -20,8 +30,14 @@ func _ready() -> void:
 
 	grid_btn.pressed.connect(_on_grid_btn_pressed)
 	
-	# Start with labels hidden (optional - change if you want them visible by default)
 	_set_tile_labels_visible(false)
+	
+	_toggleable = [
+		scene_tree, documents_ui, setting_ui,
+		grid_btn, script_btn, documents_btn, setting_btn,
+		move_btn, gray_overlay, objective_ui
+	]
+	visibility_btn.pressed.connect(_toggle_ui)
 func _toggle_editor() -> void:
 	text_editor.visible = !text_editor.visible
 	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/script_btn_open.ogg"))
@@ -61,3 +77,19 @@ func _set_tile_labels_visible(visible: bool) -> void:
 		var label = tile_hint.get_node_or_null("TileVector")
 		if label:
 			label.visible = visible
+			
+func _toggle_ui() -> void:
+	if not _ui_hidden:
+		# Save current visible state of each node, then hide all
+		_saved_states.clear()
+		for node in _toggleable:
+			if is_instance_valid(node):
+				_saved_states[node] = node.visible
+				node.visible = false
+		_ui_hidden = true
+	else:
+		# Restore exact previous state
+		for node in _toggleable:
+			if is_instance_valid(node) and _saved_states.has(node):
+				node.visible = _saved_states[node]
+		_ui_hidden = false

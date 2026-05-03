@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://grg1v8if6vj5" path="res://Scripts/Game/game_player.gd" id="7_344ge"]
 [ext_resource type="Script" uid="uid://gjo61jfwrq0q" path="res://Scripts/Game/game_movement_component.gd" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://fswqxytnbi0d" path="res://Scripts/Game/game_interaction_component.gd" id="10_hptm8"]
+[ext_resource type="Script" uid="uid://ct5ndgvcrxfe8" path="res://Scripts/UI/dragger.gd" id="12_6iyac"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_6bp64"]
 frequency = 0.0218
@@ -399,7 +400,7 @@ material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 739.0
+offset_right = 923.0
 offset_bottom = 364.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -408,12 +409,13 @@ color = Color(0.8784314, 0.76862746, 0.70980394, 1)
 [node name="Vignette" type="ColorRect" parent="." unique_id=799111294]
 z_index = -2
 material = SubResource("ShaderMaterial_ynf5e")
-offset_right = 682.0
+offset_right = 923.0
 offset_bottom = 366.0
 
 [node name="PlayerHUD" parent="." unique_id=1140191964 instance=ExtResource("1_jjgbg")]
 
-[node name="GameNodes" type="Node2D" parent="." unique_id=631463655]
+[node name="GameNodes" type="Node2D" parent="." unique_id=631463655 groups=["game_nodes"]]
+position = Vector2(33, 18)
 
 [node name="Main" type="Node2D" parent="GameNodes" unique_id=868521722]
 y_sort_enabled = true
@@ -480,3 +482,18 @@ script = ExtResource("9_ynf5e")
 
 [node name="InteractionComponent" type="Node" parent="GameNodes/Main/Player" unique_id=1255003875]
 script = ExtResource("10_hptm8")
+
+[node name="Dragger" type="Control" parent="GameNodes" unique_id=2075311345]
+z_index = 4000
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -85.0
+offset_top = -333.0
+offset_right = 915.0
+offset_bottom = 667.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("12_6iyac")

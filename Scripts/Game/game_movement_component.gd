@@ -35,7 +35,7 @@ func _ready() -> void:
 		_tilemap = _parent.get_node_or_null("../FactoryFloor")
 
 	# Captures the exact position you placed the player at in the editor
-	_start_position = Vector2(0.3,0.5)
+	_start_position =  Vector2(96,22)
 	_start_facing   = _facing
 
 	var tracker = get_tree().get_first_node_in_group("objective_tracker")
@@ -311,7 +311,7 @@ func reset() -> void:
 	stop(false)
 	_celebrating = false
 	# Always resets to the exact position placed in the editor
-	_parent.global_position =  Vector2(0.3,0.5)
+	_parent.global_position = _start_position
 	_facing = _start_facing
 	_sync_sprite_flip()
 	_play_anim("Idle")
@@ -341,7 +341,7 @@ func _sync_sprite_flip() -> void:
 	_animations.flip_h = (_facing == Direction.LEFT)
 
 func _set_start(pos: Vector2) -> void:
-	_start_position =  Vector2(0.3,0.5)
+	_start_position =    Vector2(96,22)
 	
 	
 func set_carrying(carrying: bool, color: String) -> void:

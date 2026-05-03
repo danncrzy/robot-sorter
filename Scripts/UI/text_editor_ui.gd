@@ -76,6 +76,8 @@ var _force_show_panel:  bool     = false
 
 const SCRIPT_BTN_SCENE: String = "res://Scenes/UI/script_btn.tscn"
 
+var _first_open: bool = true
+
 ## ────────────────────── Signals ──────────────────────
 signal script_content_changed(script_name: String, new_content: String)
 signal editor_opened
@@ -414,8 +416,16 @@ func add_script(script_name: String, content: String = "") -> void:
 	_scripts[script_name] = content
 	for child in script_tab_list.get_children():
 		if _get_tab_name(child) == script_name:
+			# Script tab exists — update content and re-open if it's the active one
+			if _current_script == script_name:
+				code_edit.text = content
 			return
 	_spawn_script_tab(script_name)
+
+	# Once game_player.gd arrives, open it automatically the very first time
+	if script_name == "game_player.gd" and _first_open:
+		_first_open = false
+		open_script("game_player.gd")
 
 func remove_script(script_name: String) -> void:
 	_scripts.erase(script_name)
@@ -519,7 +529,7 @@ func open_editor() -> void:
 	_editor_open = true
 	visible      = true
 	editor_opened.emit()
-
+	
 func close_editor() -> void:
 	_editor_open = false
 	visible      = false

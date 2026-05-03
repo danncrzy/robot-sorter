@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Robot Sorter"
-run/main_scene="uid://dh48nmho3ngk0"
+run/main_scene="uid://d20618lbjxefw"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -42,6 +42,8 @@ text_editor_ui=""
 player=""
 red_wall=""
 blue_wall=""
+game_nodes=""
+move_toggle_btn=""
 
 [input]
 

@@ -104,32 +104,32 @@ func _fit_size() -> void:
 	_update_layout()
 
 func _on_minimize() -> void:
-	var w := size.x
 	_minimized           = true
 	_normal_size         = size
-	minimize_btn.visible = false
-	maximize_btn.visible = true
+	# Hide everything
+	objective_bg.visible = false
 	mission_text.visible = false
+	title_label.visible  = false
 	hint_btn.visible     = false
 	hint_label.visible   = false
-
-	var target_h := TITLE_H + PAD * 2.0
-	# Set both size AND objective_bg directly — don't rely on NOTIFICATION_RESIZED
-	size                = Vector2(size.x, target_h)
-	objective_bg.size   = Vector2(size.x, target_h)
-
-	# Reposition ControlBtn within the shrunk height
-	control_btn.position   = Vector2(w - PAD - 5, PAD + (TITLE_H - 20) * (-2))
+	minimize_btn.visible = false
+	# Show only the maximize button
+	maximize_btn.visible = true
+	maximize_btn.position = Vector2.ZERO
+	size = maximize_btn.size
+	mouse_filter = MOUSE_FILTER_IGNORE
 	
 func _on_maximize() -> void:
-	_minimized   = false
-	maximize_btn.visible = false
-	minimize_btn.visible = true
+	_minimized           = false
+	objective_bg.visible = true
 	mission_text.visible = true
+	title_label.visible  = true
 	hint_btn.visible     = true
+	minimize_btn.visible = true
+	maximize_btn.visible = false
 	size = _normal_size if _normal_size != Vector2.ZERO else size
+	mouse_filter = MOUSE_FILTER_PASS
 	_update_layout()
-
 # Update _update_layout to position ControlBtn:
 func _update_layout() -> void:
 	if not is_node_ready(): return

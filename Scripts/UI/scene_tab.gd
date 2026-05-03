@@ -168,6 +168,10 @@ func set_data(data: Dictionary) -> void:
 		script_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _on_script_pressed() -> void:
+	if _node_ref and _node_ref.get_script():
+		var script = _node_ref.get_script()
+		_script_data["content"] = script.source_code
+		_script_data["script_name"] = script.resource_path.get_file()
 	script_requested.emit(_script_data)
 	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/script_scene_tree.ogg"))
 
