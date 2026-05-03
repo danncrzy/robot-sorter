@@ -76,6 +76,7 @@ perbaiki kode, coba lagi.
 [color=#278c40]✓[/color]  Lihat label [color=#278c40](x,y)[/color] pada grid untuk menghitung langkah
 [color=#278c40]✓[/color]  Kode berjalan dari atas ke bawah, urutan penulisan itu penting
 [color=#278c40]✓[/color]  Buka [b]Docs[/b] jika butuh referensi perintah lengkap
+[color=#278c40]✓[/color]  Tekan tombol mata untuk masuk mode [color=#278c40][b]Fokus[/b][/color], [color=#278c40]pastikan Text Editor[/color] dan [color=#278c40]Dokumentasi[/color]  sudah terbuka.
 [color=#6d2a39]✗[/color]  Jangan tulis kode di luar [color=#90A4AE]func run()[/color]
 [color=#6d2a39]✗[/color]  Jangan menulis sintaks yang salah
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://o4njvsy7qp13" path="res://Scripts/UI/tutorial_ui.gd" id="1_mjrlj"]
 [ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="2_3fpl7"]
-[ext_resource type="Theme" uid="uid://814xcewrjila" path="res://Assets/Fonts/Cultured16.tres" id="3_mc6ed"]
+[ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="3_1sfh0"]
 [ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="4_20m4d"]
 [ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="5_orv3c"]
 [ext_resource type="Texture2D" uid="uid://ddq4ylrfm38wk" path="res://Assets/UI/VScrollBarTrack.png" id="7_4cfvy"]
@@ -30,6 +30,10 @@ texture = ExtResource("9_ibvo8")
 texture_margin_top = 16.0
 texture_margin_bottom = 16.0
 
+[sub_resource type="Theme" id="Theme_1syig"]
+default_font = ExtResource("3_1sfh0")
+default_font_size = 9
+
 [node name="Tutorial" type="CanvasLayer" unique_id=845020908]
 layer = 1000
 
@@ -46,7 +50,7 @@ script = ExtResource("1_mjrlj")
 layout_mode = 0
 offset_left = 37.0
 offset_top = 28.0
-offset_right = 856.0
+offset_right = 1117.0
 offset_bottom = 422.0
 texture = ExtResource("2_3fpl7")
 
@@ -84,7 +88,12 @@ offset_bottom = 395.0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource("3_mc6ed")
+theme = SubResource("Theme_1syig")
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+theme_override_font_sizes/bold_italics_font_size = 15
+theme_override_font_sizes/italics_font_size = 15
+theme_override_font_sizes/mono_font_size = 15
 bbcode_enabled = true
 fit_content = true
 vertical_alignment = 1

@@ -7,7 +7,7 @@
 script = ExtResource("1_me6by")
 type = 1
 description = "Ambil Kotak Kuning"
-hint = "Gunakan for loop untuk penulisan kode"
+hint = "Gunakan for untuk  penulisan kode"
 target_pos = Vector2(19, 9)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
 

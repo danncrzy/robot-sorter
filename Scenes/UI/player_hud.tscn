@@ -83,7 +83,6 @@
 [ext_resource type="Texture2D" uid="uid://cdrnc05cloup6" path="res://Assets/UI/SeeBtn_Pressed.png" id="75_pgotk"]
 [ext_resource type="Script" uid="uid://c0kq3em2rcas7" path="res://Scripts/UI/objective_ui.gd" id="75_w3gig"]
 [ext_resource type="Texture2D" uid="uid://deaxak7s2ro6q" path="res://Assets/UI/ObjectiveUI.png" id="76_o47rn"]
-[ext_resource type="Script" uid="uid://bbebsy3344562" path="res://Scripts/UI/visibility_btn.gd" id="76_pgotk"]
 [ext_resource type="Texture2D" uid="uid://dvy2jh4vf560b" path="res://Assets/UI/MinimizeBtn.png" id="77_4sxk8"]
 [ext_resource type="Texture2D" uid="uid://dphkqyed3s4ea" path="res://Assets/UI/HelpBtn.png" id="77_wan8y"]
 [ext_resource type="Texture2D" uid="uid://cwch6ayi1yqlp" path="res://Assets/UI/HelpBtn_Pressed.png" id="78_0427r"]
@@ -793,7 +792,6 @@ offset_right = 84.0
 offset_bottom = 43.0
 texture_normal = ExtResource("74_j2hfl")
 texture_pressed = ExtResource("75_pgotk")
-script = ExtResource("76_pgotk")
 
 [node name="GameController" type="Control" parent="." unique_id=206267171]
 layout_mode = 3

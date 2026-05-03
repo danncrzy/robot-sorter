@@ -1,6 +1,5 @@
 [gd_scene format=4 uid="uid://dh48nmho3ngk0"]
 
-[ext_resource type="Shader" uid="uid://ctmc5hfr3fo8v" path="res://Shaders/cloud.gdshader" id="1_6bp64"]
 [ext_resource type="PackedScene" uid="uid://cmrqrpcyqnwfk" path="res://Scenes/UI/player_hud.tscn" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://m8npayhjqkdn" path="res://Assets/Tile/FactoryWalls.png" id="2_8gbba"]
 [ext_resource type="Shader" uid="uid://dtk4lk3glcwb7" path="res://Shaders/vignette.gdshader" id="2_344ge"]
@@ -13,54 +12,16 @@
 [ext_resource type="Script" uid="uid://fswqxytnbi0d" path="res://Scripts/Game/game_interaction_component.gd" id="10_hptm8"]
 [ext_resource type="Script" uid="uid://ct5ndgvcrxfe8" path="res://Scripts/UI/dragger.gd" id="12_6iyac"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_6bp64"]
-frequency = 0.0218
-offset = Vector3(260.87, 0, 0)
-fractal_weighted_strength = 1.0
-domain_warp_enabled = true
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6bp64"]
-noise = SubResource("FastNoiseLite_6bp64")
-
-[sub_resource type="Gradient" id="Gradient_344ge"]
-offsets = PackedFloat32Array(0, 0, 1)
-colors = PackedColorArray(0.18899998, 0.81704986, 0.9, 1, 0.54523486, 3.946722e-06, 0.3012396, 1, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_ynf5e"]
-frequency = 0.0005
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_344ge"]
-noise = SubResource("FastNoiseLite_ynf5e")
-color_ramp = SubResource("Gradient_344ge")
-
-[sub_resource type="Gradient" id="Gradient_ynf5e"]
-offsets = PackedFloat32Array(0, 0, 1)
-colors = PackedColorArray(0.30980393, 0.45882353, 0.56078434, 1, 0.5803922, 0.70980394, 0.7372549, 1, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_hptm8"]
-gradient = SubResource("Gradient_ynf5e")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_344ge"]
-shader = ExtResource("1_6bp64")
-shader_parameter/pixelation = Vector2(256, 256)
-shader_parameter/cloud_noise1 = SubResource("NoiseTexture2D_6bp64")
-shader_parameter/scroll_speed1 = Vector2(0.02, 0.007)
-shader_parameter/cloud_noise2 = SubResource("NoiseTexture2D_344ge")
-shader_parameter/scroll_speed2 = Vector2(0.59, -0.004)
-shader_parameter/center_pos = Vector2(0.655, 0)
-shader_parameter/position_impact = 0.75
-shader_parameter/color_gardient = SubResource("GradientTexture1D_hptm8")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ynf5e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d1ilt"]
 shader = ExtResource("2_344ge")
-shader_parameter/fog_strength = 0.222000010545
-shader_parameter/noise_scale = 1.3010000585376202
-shader_parameter/noise_speed = 0.1850000087875
+shader_parameter/fog_strength = 0.0
+shader_parameter/noise_scale = 1.30000005849012
+shader_parameter/noise_speed = 0.18000000855
 shader_parameter/noise_direction = Vector2(1, 0.5)
-shader_parameter/vignette_strength = 0.554000026315
-shader_parameter/rect_width = 0.942000044745
+shader_parameter/vignette_strength = 0.390000018525
+shader_parameter/rect_width = 1.0
 shader_parameter/rect_height = 0.7
-shader_parameter/edge_softness = 0.3710000176225
+shader_parameter/edge_softness = 0.370000017575
 shader_parameter/edge_wave_scale = 4.0
 shader_parameter/edge_wave_strength = 0.15
 shader_parameter/edge_wave_speed = 0.08
@@ -396,7 +357,6 @@ animations = [{
 
 [node name="Background" type="ColorRect" parent="." unique_id=1049126244]
 z_index = -2
-material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -404,37 +364,47 @@ offset_right = 923.0
 offset_bottom = 364.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.8784314, 0.76862746, 0.70980394, 1)
+color = Color(0.5803922, 0.70980394, 0.7372549, 1)
 
-[node name="Vignette" type="ColorRect" parent="." unique_id=799111294]
+[node name="Vignette" type="ColorRect" parent="." unique_id=23877617]
+visible = false
 z_index = -2
-material = SubResource("ShaderMaterial_ynf5e")
+material = SubResource("ShaderMaterial_d1ilt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_right = 923.0
-offset_bottom = 366.0
+offset_bottom = 364.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5803922, 0.70980394, 0.7372549, 1)
 
 [node name="PlayerHUD" parent="." unique_id=1140191964 instance=ExtResource("1_jjgbg")]
 
 [node name="GameNodes" type="Node2D" parent="." unique_id=631463655 groups=["game_nodes"]]
-position = Vector2(33, 18)
+position = Vector2(265, 141)
 
 [node name="Main" type="Node2D" parent="GameNodes" unique_id=868521722]
 y_sort_enabled = true
+position = Vector2(-2, 7)
 script = ExtResource("2_jjvhh")
 
 [node name="FactoryFloor" type="TileMapLayer" parent="GameNodes/Main" unique_id=745600187]
-position = Vector2(30, -6)
+position = Vector2(-247, -142)
 tile_map_data = PackedByteArray("AAAMAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAOAAYAAAABAAAAAAAPAAYAAAABAAAAAAAQAAYAAAABAAAAAAARAAYAAAABAAAAAAASAAYAAAABAAAAAAATAAYAAAABAAAAAAAUAAYAAAABAAAAAAAVAAYAAAABAAAAAAAWAAYAAAABAAAAAAAXAAYAAAABAAAAAAAYAAYAAAABAAAAAAAZAAYAAAABAAAAAAAaAAYAAAABAAAAAAAbAAYAAAABAAAAAAAcAAYAAAABAAAAAAAdAAYAAAAAAAAAAAAeAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAeAAcAAAAAAAEAAAAeAAgAAAABAAEAAAAeAAkAAAABAAEAAAAeAAoAAAABAAEAAAAeAAsAAAABAAEAAAAeAAwAAAABAAEAAAAeAA0AAAAAAAEAAAAeAA4AAAAAAAEAAAAeAA8AAAAAAAEAAAAdAA8AAAAAAAEAAAAcAA8AAAABAAEAAAAbAA8AAAAAAAEAAAAaAA8AAAABAAEAAAAZAA8AAAABAAEAAAAYAA8AAAABAAEAAAAXAA8AAAABAAEAAAAWAA8AAAAAAAEAAAAVAA8AAAAAAAEAAAAUAA8AAAABAAEAAAATAA8AAAABAAEAAAASAA8AAAABAAEAAAARAA8AAAABAAEAAAAQAA8AAAABAAEAAAAPAA8AAAABAAEAAAAOAA8AAAABAAEAAAANAA8AAAABAAEAAAAMAA8AAAABAAEAAAALAA8AAAABAAEAAAALAA4AAAABAAEAAAALAA0AAAABAAEAAAALAAwAAAABAAEAAAALAAsAAAABAAEAAAALAAoAAAABAAEAAAALAAkAAAABAAEAAAALAAgAAAAAAAEAAAALAAcAAAAAAAEAAAAVAAsAAAAAAAEAAAAVAAoAAAAAAAEAAAAVAAkAAAAAAAEAAAAVAAgAAAABAAEAAAAVAAcAAAABAAEAAAAUAAcAAAABAAEAAAATAAcAAAABAAEAAAASAAcAAAABAAEAAAARAAcAAAABAAEAAAAQAAcAAAABAAEAAAAPAAcAAAABAAEAAAAOAAcAAAABAAEAAAANAAcAAAABAAEAAAAMAAcAAAAAAAEAAAAMAAgAAAAAAAEAAAAMAAkAAAABAAEAAAAMAAoAAAABAAEAAAAMAAsAAAABAAEAAAAMAAwAAAABAAEAAAAMAA0AAAABAAEAAAAMAA4AAAABAAEAAAANAA4AAAAAAAEAAAANAA0AAAAAAAEAAAANAAwAAAAAAAEAAAANAAsAAAABAAEAAAANAAoAAAABAAEAAAANAAkAAAABAAEAAAANAAgAAAABAAEAAAAOAAgAAAABAAEAAAAOAAkAAAABAAEAAAAOAAoAAAAAAAEAAAAOAAsAAAAAAAEAAAAOAAwAAAAAAAEAAAAOAA0AAAAAAAEAAAAOAA4AAAABAAEAAAAPAA4AAAABAAEAAAAPAA0AAAAAAAEAAAAPAAwAAAAAAAEAAAAPAAsAAAAAAAEAAAAPAAoAAAABAAEAAAAPAAkAAAABAAEAAAAPAAgAAAABAAEAAAAQAAgAAAABAAEAAAAQAAkAAAABAAEAAAAQAAoAAAAAAAEAAAAQAAsAAAABAAEAAAAQAAwAAAABAAEAAAAQAA0AAAABAAEAAAAQAA4AAAABAAEAAAARAA4AAAABAAEAAAARAA0AAAABAAEAAAARAAwAAAABAAEAAAARAAsAAAABAAEAAAARAAoAAAABAAEAAAARAAkAAAABAAEAAAARAAgAAAABAAEAAAASAAgAAAABAAEAAAASAAkAAAABAAEAAAASAAoAAAABAAEAAAASAAsAAAABAAEAAAASAAwAAAABAAEAAAASAA0AAAABAAEAAAASAA4AAAABAAEAAAATAA4AAAABAAEAAAATAA0AAAABAAEAAAATAAwAAAABAAEAAAATAAsAAAABAAEAAAATAAoAAAABAAEAAAATAAkAAAABAAEAAAATAAgAAAABAAEAAAAUAAgAAAABAAEAAAAUAAkAAAABAAEAAAAUAAoAAAAAAAEAAAAUAAsAAAABAAEAAAAUAAwAAAABAAEAAAAUAA0AAAABAAEAAAAUAA4AAAABAAEAAAAVAA4AAAAAAAEAAAAVAA0AAAABAAEAAAAVAAwAAAABAAEAAAAWAAwAAAABAAEAAAAWAAsAAAABAAEAAAAWAAoAAAAAAAEAAAAWAAkAAAABAAEAAAAWAAgAAAAAAAEAAAAWAAcAAAABAAEAAAAXAAcAAAABAAEAAAAXAAgAAAABAAEAAAAXAAkAAAABAAEAAAAXAAoAAAAAAAEAAAAXAAsAAAABAAEAAAAXAAwAAAABAAEAAAAXAA0AAAABAAEAAAAWAA0AAAABAAEAAAAWAA4AAAABAAEAAAAXAA4AAAABAAEAAAAYAA4AAAABAAEAAAAYAA0AAAABAAEAAAAYAAwAAAABAAEAAAAYAAsAAAABAAEAAAAYAAoAAAABAAEAAAAYAAkAAAABAAEAAAAYAAgAAAABAAEAAAAYAAcAAAABAAEAAAAZAAcAAAABAAEAAAAZAAgAAAABAAEAAAAZAAkAAAABAAEAAAAZAAoAAAABAAEAAAAZAAsAAAABAAEAAAAZAAwAAAABAAEAAAAZAA0AAAABAAEAAAAZAA4AAAABAAEAAAAaAA4AAAABAAEAAAAaAA0AAAABAAEAAAAaAAwAAAABAAEAAAAaAAsAAAABAAEAAAAaAAoAAAABAAEAAAAaAAkAAAABAAEAAAAaAAgAAAABAAEAAAAaAAcAAAABAAEAAAAbAAcAAAABAAEAAAAbAAgAAAABAAEAAAAbAAkAAAABAAEAAAAbAAoAAAABAAEAAAAbAAsAAAABAAEAAAAbAAwAAAABAAEAAAAbAA0AAAABAAEAAAAbAA4AAAABAAEAAAAcAA4AAAAAAAEAAAAcAA0AAAAAAAEAAAAcAAwAAAABAAEAAAAcAAsAAAABAAEAAAAcAAoAAAABAAEAAAAcAAkAAAABAAEAAAAcAAgAAAAAAAEAAAAcAAcAAAABAAEAAAAdAAcAAAAAAAEAAAAdAAgAAAAAAAEAAAAdAAkAAAAAAAEAAAAdAAoAAAABAAEAAAAdAAsAAAABAAEAAAAdAAwAAAABAAEAAAAdAA0AAAABAAEAAAAdAA4AAAABAAEAAAA=")
 tile_set = SubResource("TileSet_jjvhh")
+
+[node name="Marker2D" type="Marker2D" parent="GameNodes/Main" unique_id=85319906]
 
 [node name="HintContainer" type="Control" parent="GameNodes/Main" unique_id=1530798722]
 z_index = 4096
 custom_minimum_size = Vector2(320, 160)
 layout_mode = 3
 anchors_preset = 0
-offset_left = 206.0
-offset_top = 90.0
-offset_right = 526.0
-offset_bottom = 250.0
+offset_left = -71.0
+offset_top = -46.0
+offset_right = 249.0
+offset_bottom = 114.0
 script = ExtResource("5_d1ilt")
 
 [node name="Grid" type="GridContainer" parent="GameNodes/Main/HintContainer" unique_id=1547520025]
@@ -446,22 +416,25 @@ columns = 11
 
 [node name="FactoryWalls" type="TextureRect" parent="GameNodes/Main" unique_id=1653868898]
 z_index = -1
-offset_left = 199.0
-offset_top = 37.0
-offset_right = 531.0
-offset_bottom = 256.0
+offset_left = -78.0
+offset_top = -99.0
+offset_right = 256.0
+offset_bottom = 122.0
 texture = ExtResource("2_8gbba")
 
 [node name="WallCollision" type="StaticBody2D" parent="GameNodes/Main" unique_id=793244886]
+position = Vector2(-277, -136)
 
 [node name="WallShape" type="CollisionPolygon2D" parent="GameNodes/Main/WallCollision" unique_id=2104855997]
 position = Vector2(199, 37)
 polygon = PackedVector2Array(8, 60, 1, 60, 1, 44, 333, 44, 333, 220, 1, 220, 1, 60, 8, 60, 8, 213, 326, 213, 326, 54, 8, 54)
 
 [node name="InstancedScenes" type="Node2D" parent="GameNodes/Main" unique_id=25469451]
+position = Vector2(-277, -136)
 
 [node name="Player" type="CharacterBody2D" parent="GameNodes/Main" unique_id=741286152 groups=["player"]]
 y_sort_enabled = true
+position = Vector2(-277, -136)
 script = ExtResource("7_344ge")
 
 [node name="PlayerCollision" type="CollisionShape2D" parent="GameNodes/Main/Player" unique_id=210655958]
@@ -483,16 +456,16 @@ script = ExtResource("9_ynf5e")
 [node name="InteractionComponent" type="Node" parent="GameNodes/Main/Player" unique_id=1255003875]
 script = ExtResource("10_hptm8")
 
-[node name="Dragger" type="Control" parent="GameNodes" unique_id=2075311345]
+[node name="Dragger" type="Control" parent="." unique_id=2075311345]
 z_index = 4000
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -85.0
-offset_top = -333.0
-offset_right = 915.0
-offset_bottom = 667.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 918.0
+offset_bottom = 362.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1

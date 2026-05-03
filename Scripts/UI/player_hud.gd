@@ -33,7 +33,7 @@ func _ready() -> void:
 	_set_tile_labels_visible(false)
 	
 	_toggleable = [
-		scene_tree, documents_ui, setting_ui,
+		scene_tree, setting_ui,
 		grid_btn, script_btn, documents_btn, setting_btn,
 		move_btn, gray_overlay, objective_ui
 	]
