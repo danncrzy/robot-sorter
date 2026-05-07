@@ -21,10 +21,13 @@ class_name DocumentsUI
 @onready var left_page:      NinePatchRect  = $LeftPage
 @onready var left_content:   RichTextLabel  = $LeftPage/LeftContent
 @onready var left_sticky_container: HBoxContainer = $LeftPage/LeftStickyNotesContainer 
+@onready var left_vscroll:  VScrollBar = $LeftPage/LeftVScrollBar
+
 
 @onready var right_page:     NinePatchRect  = $RightPage
 @onready var right_content:  RichTextLabel  = $RightPage/RightContent
 @onready var right_sticky_container: HBoxContainer = $RightPage/RightStickyNotesContainer 
+@onready var right_vscroll: VScrollBar = $RightPage/RightVScrollBar
 
 @onready var sticky_note_btn: TextureButton = $StickyNoteBtn 
 @onready var sticky_choices: Control = $StickyNotesChoices
@@ -88,6 +91,9 @@ func _ready() -> void:
 	right_page.mouse_filter = Control.MOUSE_FILTER_STOP
 	left_content.mouse_filter = Control.MOUSE_FILTER_STOP
 	right_content.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	left_vscroll.size_flags_vertical  = Control.SIZE_SHRINK_BEGIN
+	right_vscroll.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	
 	
 	left_page.patch_margin_left = int(outer_margin)
@@ -117,6 +123,33 @@ func _ready() -> void:
 	
 	sticky_choices_bg.modulate.a = 0.90
 	
+	var left_builtin := left_content.get_v_scroll_bar()
+	left_builtin.modulate.a = 0.0
+	left_builtin.custom_minimum_size.x = 0
+
+	var right_builtin := right_content.get_v_scroll_bar()
+	right_builtin.modulate.a = 0.0
+	right_builtin.custom_minimum_size.x = 0
+
+	# Auto-sync left
+	left_builtin.changed.connect(func() -> void:
+		left_vscroll.max_value = left_builtin.max_value
+		left_vscroll.page      = left_builtin.page
+		left_vscroll.set_value_no_signal(left_builtin.value)
+	)
+	left_vscroll.value_changed.connect(func(val: float) -> void:
+		left_content.get_v_scroll_bar().value = val
+	)
+
+	# Auto-sync right
+	right_builtin.changed.connect(func() -> void:
+		right_vscroll.max_value = right_builtin.max_value
+		right_vscroll.page      = right_builtin.page
+		right_vscroll.set_value_no_signal(right_builtin.value)
+	)
+	right_vscroll.value_changed.connect(func(val: float) -> void:
+		right_content.get_v_scroll_bar().value = val
+	)
 	_create_resize_handles()
 	_connect_signals()
 	
@@ -130,26 +163,40 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if not visible: return
 
+	var is_release := false
+	var is_motion  := false
+	var motion_pos := Vector2.ZERO
+
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		is_release = true
+	elif event is InputEventScreenTouch and not event.pressed:
+		is_release = true
+	elif event is InputEventMouseMotion:
+		is_motion  = true
+		motion_pos = get_global_mouse_position()
+	elif event is InputEventScreenDrag:
+		is_motion  = true
+		motion_pos = event.position
+
 	if _is_dragging:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		if is_release:
 			_is_dragging = false
-		elif event is InputEventMouseMotion:
-			if get_global_mouse_position().distance_to(_drag_offset + global_position) > _drag_threshold:
-				global_position = get_global_mouse_position() - _drag_offset
+		elif is_motion:
+			if motion_pos.distance_to(_drag_offset + global_position) > _drag_threshold:
+				global_position = motion_pos - _drag_offset
 
 	if _is_resizing:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		if is_release:
 			_is_resizing = false
-			
 			if is_instance_valid(_active_resize_handle):
 				var temp_normal = _active_resize_handle.texture_normal
-				_active_resize_handle.texture_normal = _active_resize_handle.texture_pressed
+				_active_resize_handle.texture_normal  = _active_resize_handle.texture_pressed
 				_active_resize_handle.texture_pressed = temp_normal
 				_active_resize_handle = null
+		elif is_motion:
+			_apply_resize(motion_pos)
 			
-		elif event is InputEventMouseMotion:
-			_apply_resize(get_global_mouse_position())
-
+			
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_update_layout()
@@ -250,6 +297,21 @@ func _update_layout() -> void:
 	sticky_note_btn.position = Vector2((w - btn_sz) / 4.0, h - btn_sz - btn_m * (-3.4))
 	sticky_note_btn.size = Vector2(btn_sz, btn_sz)
 	
+	var scroll_w := left_vscroll.size.x  # however wide you set them in the editor
+
+	left_vscroll.position  = Vector2(half_w - scroll_w - m_spine, m_out)
+	left_vscroll.size      = Vector2(scroll_w, h - m_out * 2.0)
+	left_vscroll.custom_minimum_size = Vector2(scroll_w, 0)  # lock width, free height to our set value
+
+	right_vscroll.position = Vector2(half_w - scroll_w - m_spine, m_out)
+	right_vscroll.size     = Vector2(scroll_w, h - m_out * 2.0)
+	right_vscroll.custom_minimum_size = Vector2(scroll_w, 0)
+	# Left content — leave room for scrollbar on the right
+	left_content.size = Vector2(half_w - m_out - m_spine - scroll_w - 4.0, h - m_out * 2.0)
+
+	# Right content — same
+	right_content.size = Vector2(half_w - m_spine - m_out - scroll_w - 4.0, h - m_out * 2.0)
+	
 	
 	# SystemMarker: Top Right
 	system_marker.position = Vector2(w - system_marker.size.x - btn_m  * (-4.4), btn_m)
@@ -265,25 +327,38 @@ func _on_page_gui_input(event: InputEvent) -> void:
 		_is_dragging = event.pressed
 		if event.pressed:
 			_drag_offset = get_global_mouse_position() - global_position
-
+	elif event is InputEventScreenTouch:
+		_is_dragging = event.pressed
+		if event.pressed:
+			_drag_offset = event.position - global_position
 ## ────────────────────── Resizing ──────────────────────
 func _on_handle_input(event: InputEvent, handle: Control) -> void:
+	var is_press  := false
+	var press_pos := Vector2.ZERO
+
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		_is_resizing = true
-		_resize_mouse_orig = get_global_mouse_position()
-		_resize_rect_orig = Rect2(global_position, size)
-		
+		is_press  = true
+		press_pos = event.global_position
+	elif event is InputEventScreenTouch and event.pressed:
+		is_press  = true
+		press_pos = event.position  # ← correct for mobile
+
+	if is_press:
+		_is_resizing       = true
+		_resize_mouse_orig = press_pos
+		_resize_rect_orig  = Rect2(global_position, size)
+
 		var n: String = handle.name
 		_resize_dir = Vector2i(
 			(1 if "E" in n else (-1 if "W" in n else 0)),
 			(1 if "S" in n else (-1 if "N" in n else 0))
 		)
-		
+
 		_active_resize_handle = handle
 		var temp_normal = handle.texture_normal
-		handle.texture_normal = handle.texture_pressed
+		handle.texture_normal  = handle.texture_pressed
 		handle.texture_pressed = temp_normal
-		
+
 		get_viewport().set_input_as_handled()
 
 func _apply_resize(mouse_pos: Vector2) -> void:
@@ -411,6 +486,7 @@ func _on_back_page() -> void:
 		current_spread -= 1
 		_update_pages()
 		AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/page_turn.ogg"))
+		
 
 ## ┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐┐
 ##  STICKY NOTES SPAWNING & DELETE MODE
@@ -508,3 +584,5 @@ func _fade_out_warning() -> void:
 	# Smooth fade-out
 	_warning_tween.tween_property(note_delete_warning, "modulate", Color(1, 1, 1, 0), 0.2).set_trans(Tween.TRANS_SINE)
 	_warning_tween.tween_property(note_delete_warning, "visible", false, 0.0)
+	
+	

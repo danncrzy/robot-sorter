@@ -108,6 +108,16 @@ func _on_play() -> void:
 func _on_reset() -> void:
 	if not _player: return
 	AudioManager.stop_footsteps()
+	
+	var red_wall := get_tree().get_first_node_in_group("red_wall")
+	var blue_wall := get_tree().get_first_node_in_group("blue_wall")
+	
+	if red_wall:
+		red_wall.visible = true
+	if blue_wall:
+		blue_wall.visible = true
+	
+	
 
 	reset_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	play_btn.mouse_filter  = Control.MOUSE_FILTER_STOP

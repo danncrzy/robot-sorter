@@ -62,3 +62,10 @@ func get_color() -> String:
 
 func is_held() -> bool:
 	return _is_held
+
+
+func reset() -> void:
+	_is_held  = false
+	_holder   = null
+	visible   = true
+	monitoring = true

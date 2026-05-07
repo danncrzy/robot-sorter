@@ -226,7 +226,7 @@ position = Vector2(470, 146)
 script = ExtResource("10_m1fhw")
 
 [node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox3" unique_id=769373176]
-texture = ExtResource("12_yg8cl")
+texture = ExtResource("11_yg8cl")
 
 [node name="BoxCol" type="CollisionShape2D" parent="GrabAbleBox3" unique_id=1281225083]
 shape = SubResource("RectangleShape2D_7j51j")
@@ -290,6 +290,7 @@ shape = SubResource("RectangleShape2D_82tbg")
 [node name="GrabAbleBox4" type="Area2D" parent="." unique_id=1408949353]
 position = Vector2(310, 194)
 script = ExtResource("10_m1fhw")
+box_color = "Green"
 
 [node name="BoxSprite" type="Sprite2D" parent="GrabAbleBox4" unique_id=241148322]
 texture = ExtResource("12_yg8cl")

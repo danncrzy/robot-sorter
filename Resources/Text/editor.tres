@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://crp0fwj2livqe"]
+
+[ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="1_wtp3s"]
+
+[resource]
+default_font = ExtResource("1_wtp3s")
+default_font_size = 9

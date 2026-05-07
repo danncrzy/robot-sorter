@@ -33,26 +33,37 @@
 [ext_resource type="Texture2D" uid="uid://sv1qr51qg1e" path="res://Assets/UI/BackPageBtn_Pressed.png" id="18_htoqs"]
 [ext_resource type="Texture2D" uid="uid://in4ge4nr2vvl" path="res://Assets/UI/NextPageBtn_Pressed.png" id="18_yp1bd"]
 [ext_resource type="Texture2D" uid="uid://bwa8s4aum8taq" path="res://Assets/UI/TableOfContentsBtn.png" id="22_epqro"]
+[ext_resource type="Theme" uid="uid://crp0fwj2livqe" path="res://Resources/Text/editor.tres" id="22_l0520"]
 [ext_resource type="Texture2D" uid="uid://dl03d2queplnb" path="res://Assets/UI/TableOfContentsBtn_Pressed.png" id="23_dlma0"]
 [ext_resource type="Script" uid="uid://c1vk6ekqd5uo6" path="res://Scripts/UI/error_control.gd" id="23_tck48"]
 [ext_resource type="Texture2D" uid="uid://bbxamt8okmpkk" path="res://Assets/UI/TableOfContentsBtn_Visible.png" id="24_a3btw"]
 [ext_resource type="Texture2D" uid="uid://b4utc3btbiel0" path="res://Assets/UI/ErrorMessageUI.png" id="24_tjl1h"]
 [ext_resource type="Texture2D" uid="uid://dcwsanm73xlvx" path="res://Assets/UI/TableOfContentsBtn_Visible_Pressed.png" id="25_2kxgo"]
 [ext_resource type="Texture2D" uid="uid://bdsdefghhfa1i" path="res://Assets/UI/TabBtn.png" id="25_12fup"]
+[ext_resource type="Script" uid="uid://1x8e77b6hev3" path="res://Scripts/UI/setting_ui_text_editor.gd" id="25_pgotk"]
 [ext_resource type="Texture2D" uid="uid://wye8nfiamsm1" path="res://Assets/UI/TabBtn_Pressed.png" id="26_76u45"]
 [ext_resource type="Texture2D" uid="uid://b751cl7lvvkop" path="res://Assets/UI/PinkStickyNotes_Visible.png" id="27_2kxgo"]
+[ext_resource type="Texture2D" uid="uid://qywfos3a3q57" path="res://Assets/UI/SettingTextEditor.png" id="27_o6qxb"]
 [ext_resource type="Texture2D" uid="uid://b2x8feyj134ha" path="res://Assets/UI/StickyNoteChoicesTexture.png" id="27_pj538"]
 [ext_resource type="Texture2D" uid="uid://c44npcp6m4o8n" path="res://Assets/UI/PinkStickyNotes_Visible_Pressed.png" id="28_7cu5x"]
+[ext_resource type="Texture2D" uid="uid://cqsxotm3g2dvb" path="res://Assets/UI/FontIcon.png" id="28_dp56a"]
 [ext_resource type="Texture2D" uid="uid://vlqo7nkm76x3" path="res://Assets/UI/YellowStickyNotes_Visible.png" id="29_hpp2c"]
+[ext_resource type="Texture2D" uid="uid://b5w5pj3b8akqd" path="res://Assets/UI/FontMinusBtn.png" id="29_srqek"]
 [ext_resource type="Texture2D" uid="uid://dpni2glqefaf" path="res://Assets/UI/YellowStickyNotes_Visible_Pressed.png" id="30_7wbvw"]
 [ext_resource type="Script" uid="uid://cd6po0gyhrtc0" path="res://Scripts/UI/draggable_button.gd" id="30_he3vu"]
+[ext_resource type="Texture2D" uid="uid://dmi4d17hnuchf" path="res://Assets/UI/FontMinusBtn_Pressed.png" id="30_kr7fn"]
 [ext_resource type="Texture2D" uid="uid://ibrpcwqqmd61" path="res://Assets/UI/GreenStickyNotes_Visible.png" id="31_7wbvw"]
+[ext_resource type="Texture2D" uid="uid://ug47o6ehbmdl" path="res://Assets/UI/FontPlusBtn.png" id="31_kr7fn"]
+[ext_resource type="Texture2D" uid="uid://cf0au7alxsmxm" path="res://Assets/UI/FontPlusBtn_Pressed.png" id="32_1hnq1"]
 [ext_resource type="Texture2D" uid="uid://lwwm7mc8u6xr" path="res://Assets/UI/RedStickyNotes_Visible.png" id="32_35hbe"]
 [ext_resource type="Texture2D" uid="uid://chjpcrxjl1a5" path="res://Assets/UI/DeleteNoteBtn.png" id="35_htmiw"]
 [ext_resource type="Texture2D" uid="uid://28mif7gs86fn" path="res://Assets/UI/DeleteNoteBtn_Pressed.png" id="36_snfao"]
 [ext_resource type="Texture2D" uid="uid://ckuo4k7kbwg2j" path="res://Assets/UI/WarningBox.png" id="37_snfao"]
+[ext_resource type="Texture2D" uid="uid://bjbaitshu6qsa" path="res://Assets/UI/VScrollBarTrack_Documents.png" id="38_1hnq1"]
 [ext_resource type="Texture2D" uid="uid://cb4ngespb4vqy" path="res://Assets/UI/StickyNoteBtn.png" id="38_ddnq0"]
+[ext_resource type="Texture2D" uid="uid://c0xdubaycpvcd" path="res://Assets/UI/VScrollBar_Document.png" id="39_6vp5m"]
 [ext_resource type="Texture2D" uid="uid://g2kiinmme2n3" path="res://Assets/UI/StickyNoteBtn_Pressed.png" id="39_22it0"]
+[ext_resource type="Texture2D" uid="uid://oy4vgwcj73vw" path="res://Assets/UI/VScrollBar_Document_Pressed.png" id="40_gfom7"]
 [ext_resource type="Texture2D" uid="uid://badxk3jxidlu2" path="res://Assets/UI/DocumentsBtn.png" id="42_22it0"]
 [ext_resource type="Script" uid="uid://cgalkilev53vj" path="res://Scripts/UI/hover_shader.gd" id="42_wx7vk"]
 [ext_resource type="Texture2D" uid="uid://5h5lqniuqf3a" path="res://Assets/UI/DocumentsBtn_Pressed.png" id="43_71ecm"]
@@ -96,6 +107,13 @@
 [ext_resource type="AudioStream" uid="uid://ddxu88mri1uo2" path="res://Assets/Sfx/succes_2.ogg" id="89_te5h3"]
 [ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="90_elakf"]
 [ext_resource type="Script" uid="uid://h4lvlj8lwqq6" path="res://Scripts/Utillity/finish_btn.gd" id="91_e87tu"]
+[ext_resource type="Texture2D" uid="uid://vel7i653676w" path="res://Assets/UI/ResizeBtn.png" id="108_81qgn"]
+[ext_resource type="Texture2D" uid="uid://ynqqfa2nr8xl" path="res://Assets/UI/IncreaseBtn.png" id="108_u4qc0"]
+[ext_resource type="Texture2D" uid="uid://bapmrhhlf1g2g" path="res://Assets/UI/IncreaseBtn_Pressed.png" id="109_ncdsw"]
+[ext_resource type="Texture2D" uid="uid://83ipums55tp4" path="res://Assets/UI/ResizeBtn_Pressed.png" id="109_v7pad"]
+[ext_resource type="Script" uid="uid://c235uhjabj3dg" path="res://Scripts/UI/resize_btn.gd" id="110_v7pad"]
+[ext_resource type="Texture2D" uid="uid://dd7xdcvxgarnd" path="res://Assets/UI/DecreaseBtn.png" id="112_h07gh"]
+[ext_resource type="Texture2D" uid="uid://c1ox8v2sealm1" path="res://Assets/UI/DecreaseBtn_Pressed.png" id="113_1fpr8"]
 
 [sub_resource type="Theme" id="Theme_rmbpn"]
 
@@ -119,6 +137,28 @@ texture_margin_bottom = 16.0
 texture = ExtResource("9_ekh5o")
 texture_margin_top = 16.0
 texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6vp5m"]
+texture = ExtResource("38_1hnq1")
+texture_margin_top = 1.0
+texture_margin_right = 16.0
+texture_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gfom7"]
+texture = ExtResource("39_6vp5m")
+texture_margin_top = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q1cm6"]
+texture = ExtResource("40_gfom7")
+texture_margin_top = 6.0
+texture_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u4qc0"]
+texture = ExtResource("40_gfom7")
+texture_margin_top = 6.0
+texture_margin_right = 16.0
+texture_margin_bottom = 6.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8aao3"]
 shader = ExtResource("61_w24h7")
@@ -367,7 +407,7 @@ offset_left = 4.0
 offset_top = 4.0
 offset_right = 12.0
 offset_bottom = 12.0
-theme = ExtResource("6_eqykv")
+theme = ExtResource("22_l0520")
 theme_override_fonts/font = ExtResource("16_2uf08")
 theme_override_font_sizes/font_size = 9
 placeholder_text = "Tulis Kodemu disini"
@@ -411,6 +451,56 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 theme = ExtResource("6_eqykv")
+
+[node name="SettingUI" type="Control" parent="TextEditorUI" unique_id=1782848084]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("25_pgotk")
+
+[node name="TextEditorSetting" type="NinePatchRect" parent="TextEditorUI/SettingUI" unique_id=310816782]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("27_o6qxb")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="ElementContainer" type="HBoxContainer" parent="TextEditorUI/SettingUI" unique_id=1146717347]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 46.0
+offset_right = 277.0
+offset_bottom = 80.0
+theme_override_constants/separation = 9
+
+[node name="Icon" type="TextureRect" parent="TextEditorUI/SettingUI/ElementContainer" unique_id=1949744984]
+layout_mode = 2
+texture = ExtResource("28_dp56a")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TextEditorUI/SettingUI/ElementContainer" unique_id=614175654]
+layout_mode = 2
+theme = ExtResource("22_l0520")
+text = "Ukuran Font :"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FontLabel" type="Label" parent="TextEditorUI/SettingUI/ElementContainer" unique_id=1603946142]
+layout_mode = 2
+theme = ExtResource("22_l0520")
+
+[node name="MinusBtn" type="TextureButton" parent="TextEditorUI/SettingUI/ElementContainer" unique_id=818332924]
+layout_mode = 2
+texture_normal = ExtResource("29_srqek")
+texture_pressed = ExtResource("30_kr7fn")
+
+[node name="PlusBtn" type="TextureButton" parent="TextEditorUI/SettingUI/ElementContainer" unique_id=1763854752]
+layout_mode = 2
+texture_normal = ExtResource("31_kr7fn")
+texture_pressed = ExtResource("32_1hnq1")
 
 [node name="ResizeHandles" type="Control" parent="TextEditorUI" unique_id=930349480]
 anchors_preset = 0
@@ -457,6 +547,7 @@ mouse_filter = 1
 theme = ExtResource("16_htoqs")
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 bbcode_enabled = true
+scroll_active = false
 
 [node name="LeftStickyNotesContainer" type="HBoxContainer" parent="DocumentsUI/LeftPage" unique_id=1290457053]
 layout_mode = 1
@@ -466,6 +557,16 @@ offset_right = 12.0
 offset_bottom = -12.0
 mouse_filter = 2
 theme_override_constants/separation = 24
+
+[node name="LeftVScrollBar" type="VScrollBar" parent="DocumentsUI/LeftPage" unique_id=518950765]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_styles/scroll = SubResource("StyleBoxTexture_6vp5m")
+theme_override_styles/grabber = SubResource("StyleBoxTexture_gfom7")
+theme_override_styles/grabber_highlight = SubResource("StyleBoxTexture_q1cm6")
+theme_override_styles/grabber_pressed = SubResource("StyleBoxTexture_u4qc0")
+value = 20.0
 
 [node name="RightPage" type="NinePatchRect" parent="DocumentsUI" unique_id=1342350680]
 layout_mode = 0
@@ -490,6 +591,15 @@ offset_right = 5.0
 offset_bottom = 8.0
 mouse_filter = 2
 theme_override_constants/separation = 24
+
+[node name="RightVScrollBar" type="VScrollBar" parent="DocumentsUI/RightPage" unique_id=232868557]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_styles/scroll = SubResource("StyleBoxTexture_6vp5m")
+theme_override_styles/grabber = SubResource("StyleBoxTexture_gfom7")
+theme_override_styles/grabber_highlight = SubResource("StyleBoxTexture_q1cm6")
+theme_override_styles/grabber_pressed = SubResource("StyleBoxTexture_u4qc0")
 
 [node name="BackPageBtn" type="TextureButton" parent="DocumentsUI" unique_id=1007289826]
 z_index = 8
@@ -828,6 +938,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="ObjectiveUI" type="Control" parent="." unique_id=1390570901]
+visible = false
 z_index = 200
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 3
@@ -1029,3 +1140,28 @@ offset_right = 293.0
 offset_bottom = 31.0
 text = "SELESAI"
 script = ExtResource("91_e87tu")
+
+[node name="ResizeBtn" type="TextureButton" parent="." unique_id=1397167814]
+offset_left = 81.0
+offset_top = 3.0
+offset_right = 121.0
+offset_bottom = 43.0
+texture_normal = ExtResource("108_81qgn")
+texture_pressed = ExtResource("109_v7pad")
+script = ExtResource("110_v7pad")
+
+[node name="ResizeContainer" type="HBoxContainer" parent="ResizeBtn" unique_id=1369483534]
+layout_mode = 0
+offset_left = 38.0
+offset_right = 106.0
+offset_bottom = 40.0
+
+[node name="IncreaseBtn" type="TextureButton" parent="ResizeBtn/ResizeContainer" unique_id=1021651585]
+layout_mode = 2
+texture_normal = ExtResource("108_u4qc0")
+texture_pressed = ExtResource("109_ncdsw")
+
+[node name="DecreaseBtn" type="TextureButton" parent="ResizeBtn/ResizeContainer" unique_id=1895438809]
+layout_mode = 2
+texture_normal = ExtResource("112_h07gh")
+texture_pressed = ExtResource("113_1fpr8")

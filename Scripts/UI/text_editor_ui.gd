@@ -144,8 +144,11 @@ func _input(event: InputEvent) -> void:
 		if is_release:
 			_is_resizing = false
 		elif is_motion:
-			_apply_resize(get_global_mouse_position())
-
+			if event is InputEventScreenDrag:
+				_apply_resize(event.position)
+			else:
+				_apply_resize(get_global_mouse_position())
+				
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_update_layout()
@@ -267,6 +270,11 @@ func _update_layout() -> void:
 	
 	close_btn.position = Vector2(w - 16.0, 5.0)
 	close_btn.size     = Vector2(16.0, title_bar_height)
+	
+	var setting_ui := get_node_or_null("SettingUI")
+	if setting_ui:
+		setting_ui.position = code_panel.position
+		setting_ui.size     = code_panel.size
 
 	var below_y: float = title_bar_height
 	var below_h: float = h - title_bar_height
@@ -361,16 +369,20 @@ func _on_title_bar_gui_input(event: InputEvent) -> void:
 ## ═══════════════════════════════════════════════════════════════
 func _on_handle_input(event: InputEvent, handle: Control) -> void:
 	var is_press := false
+	var press_pos := Vector2.ZERO
+
 	if event is InputEventMouseButton \
 	   and event.button_index == MOUSE_BUTTON_LEFT \
 	   and event.pressed:
-		is_press = true
+		is_press  = true
+		press_pos = event.global_position
 	elif event is InputEventScreenTouch and event.pressed:
-		is_press = true
+		is_press  = true
+		press_pos = event.position 
 
 	if is_press:
 		_is_resizing       = true
-		_resize_mouse_orig = get_global_mouse_position()
+		_resize_mouse_orig = press_pos  
 		_resize_rect_orig  = Rect2(position, size)
 		var n: String = handle.name
 		_resize_dir = Vector2i(

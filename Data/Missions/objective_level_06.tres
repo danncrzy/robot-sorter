@@ -6,7 +6,7 @@
 [sub_resource type="Resource" id="Resource_6sypn"]
 script = ExtResource("1_whhe1")
 type = 1
-description = "Ambil kotak hijau di titik (13,8) "
+description = "Ambil kotak kuning di titik (13,8) "
 hint = "Gunakan move() dan grab()"
 target_pos = Vector2(13, 8)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
@@ -14,14 +14,14 @@ metadata/_custom_type_script = "uid://b4jo5havffjul"
 [sub_resource type="Resource" id="Resource_vnpkq"]
 script = ExtResource("1_whhe1")
 type = 3
-description = "Taruh kotak hijau ke dalam rak"
+description = "Taruh kotak kuning ke dalam rak"
 target_pos = Vector2(2, 1)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
 
 [sub_resource type="Resource" id="Resource_rydy7"]
 script = ExtResource("1_whhe1")
 type = 1
-description = "Ambil kotak kuning di titik (19,0)"
+description = "Ambil kotak kuning di titik (16,3)"
 hint = "Gunakan perintah grab() untuk mengambil kotak"
 target_pos = Vector2(16, 3)
 metadata/_custom_type_script = "uid://b4jo5havffjul"
