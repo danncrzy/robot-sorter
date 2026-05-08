@@ -1,37 +1,37 @@
-[gd_scene format=3 uid="uid://4f8iukfe2cy2"]
+[gd_scene format=3 uid="uid://byb37inpi0rgg"]
 
-[ext_resource type="Script" uid="uid://o4njvsy7qp13" path="res://Scripts/UI/tutorial_ui.gd" id="1_mjrlj"]
-[ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="2_3fpl7"]
-[ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="3_1sfh0"]
-[ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="4_20m4d"]
-[ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="5_orv3c"]
-[ext_resource type="Texture2D" uid="uid://ddq4ylrfm38wk" path="res://Assets/UI/VScrollBarTrack.png" id="7_4cfvy"]
-[ext_resource type="Texture2D" uid="uid://o3734pqcwqep" path="res://Assets/UI/VScrollBar.png" id="8_ke2de"]
-[ext_resource type="Texture2D" uid="uid://cnd32sn33oy2w" path="res://Assets/UI/VScrollBar_Pressed.png" id="9_ibvo8"]
+[ext_resource type="Script" uid="uid://d353imupygt1m" path="res://Scripts/UI/tutorial_ui_3.gd" id="1_skdn7"]
+[ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="2_37bsk"]
+[ext_resource type="Texture2D" uid="uid://bl2t7wnpamh2f" path="res://Assets/UI/CloseBtn_Normal.png" id="3_8ckto"]
+[ext_resource type="Texture2D" uid="uid://dj1dgd811whyp" path="res://Assets/UI/CloseBtn_Pressed.png" id="4_vuxa1"]
+[ext_resource type="Texture2D" uid="uid://ddq4ylrfm38wk" path="res://Assets/UI/VScrollBarTrack.png" id="5_wd5b6"]
+[ext_resource type="Texture2D" uid="uid://o3734pqcwqep" path="res://Assets/UI/VScrollBar.png" id="6_1y7pj"]
+[ext_resource type="Texture2D" uid="uid://cnd32sn33oy2w" path="res://Assets/UI/VScrollBar_Pressed.png" id="7_13jr0"]
+[ext_resource type="FontFile" uid="uid://cdhl35ayy7akd" path="res://Assets/Fonts/bpdots.squares-bold.otf" id="8_ncsfb"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d0h73"]
-texture = ExtResource("7_4cfvy")
+texture = ExtResource("5_wd5b6")
 texture_margin_top = 1.0
 texture_margin_right = 16.0
 texture_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mc78r"]
-texture = ExtResource("8_ke2de")
+texture = ExtResource("6_1y7pj")
 texture_margin_top = 16.0
 texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bltgc"]
-texture = ExtResource("9_ibvo8")
+texture = ExtResource("7_13jr0")
 texture_margin_top = 16.0
 texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i0lq3"]
-texture = ExtResource("9_ibvo8")
+texture = ExtResource("7_13jr0")
 texture_margin_top = 16.0
 texture_margin_bottom = 16.0
 
 [sub_resource type="Theme" id="Theme_1syig"]
-default_font = ExtResource("3_1sfh0")
+default_font = ExtResource("8_ncsfb")
 default_font_size = 9
 
 [node name="Tutorial" type="CanvasLayer" unique_id=845020908]
@@ -44,7 +44,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_mjrlj")
+script = ExtResource("1_skdn7")
 
 [node name="TextureRect" type="TextureRect" parent="TutorialUI" unique_id=1056236283]
 layout_mode = 0
@@ -52,7 +52,7 @@ offset_left = -490.0
 offset_top = -75.0
 offset_right = 1117.0
 offset_bottom = 477.0
-texture = ExtResource("2_3fpl7")
+texture = ExtResource("2_37bsk")
 
 [node name="CloseBtn" type="TextureButton" parent="TutorialUI" unique_id=394762444]
 layout_mode = 1
@@ -65,8 +65,8 @@ offset_right = -39.0
 offset_bottom = 22.0
 grow_horizontal = 0
 scale = Vector2(5, 5)
-texture_normal = ExtResource("4_20m4d")
-texture_pressed = ExtResource("5_orv3c")
+texture_normal = ExtResource("3_8ckto")
+texture_pressed = ExtResource("4_vuxa1")
 
 [node name="VScrollBar" type="VScrollBar" parent="TutorialUI" unique_id=327207937]
 z_index = 2

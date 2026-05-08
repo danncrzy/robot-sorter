@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://diw4cry25rcr8" path="res://Scripts/Resources/node_definition.gd" id="1_bf3a6"]
 [ext_resource type="PackedScene" uid="uid://dj84fdx1wuoo" path="res://Scenes/GameNodes/level_3_obstacles.tscn" id="2_bf3a6"]
 [ext_resource type="Script" uid="uid://c2l2nn08fabd4" path="res://Scripts/Resources/level_data.gd" id="3_lny32"]
+[ext_resource type="PackedScene" uid="uid://byb37inpi0rgg" path="res://Scenes/GameNodes/tutorial_3.tscn" id="3_wyoi4"]
 
 [sub_resource type="Resource" id="Resource_kaej2"]
 script = ExtResource("1_bf3a6")
@@ -66,7 +67,7 @@ metadata/_custom_type_script = "uid://diw4cry25rcr8"
 script = ExtResource("3_lny32")
 level_id = "level_03"
 nodes = Array[ExtResource("1_bf3a6")]([SubResource("Resource_kaej2"), SubResource("Resource_g62qf"), SubResource("Resource_rquka"), SubResource("Resource_8mv3r"), SubResource("Resource_vkc5f"), SubResource("Resource_vud4v"), SubResource("Resource_2iv8n"), SubResource("Resource_keb6q")])
-scene_links = Array[PackedScene]([ExtResource("2_bf3a6")])
+scene_links = Array[PackedScene]([ExtResource("2_bf3a6"), ExtResource("3_wyoi4")])
 three_star_commands = 12
 two_star_commands = 16
 metadata/_custom_type_script = "uid://c2l2nn08fabd4"

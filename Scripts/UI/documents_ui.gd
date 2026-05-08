@@ -63,6 +63,7 @@ var _is_dragging:       bool     = false
 var _drag_offset:       Vector2  = Vector2.ZERO
 var _drag_threshold:    float    = 4.0 
 var _active_resize_handle: TextureButton = null
+var _resize_input_type: String = "" 
 
 var current_spread: int = 0
 var marked_page: int = -1
@@ -168,15 +169,19 @@ func _input(event: InputEvent) -> void:
 	var motion_pos := Vector2.ZERO
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
-		is_release = true
+		if _resize_input_type == "mouse" or _resize_input_type == "":
+			is_release = true
+			_resize_input_type = ""
 	elif event is InputEventScreenTouch and not event.pressed:
-		is_release = true
-	elif event is InputEventMouseMotion:
+		if _resize_input_type == "touch" or _resize_input_type == "":
+			is_release = true
+			_resize_input_type = ""
+	elif event is InputEventMouseMotion and _resize_input_type != "touch":
 		is_motion  = true
-		motion_pos = get_global_mouse_position()
-	elif event is InputEventScreenDrag:
+		motion_pos = get_global_mouse_position() # FIX: Always global
+	elif event is InputEventScreenDrag and _resize_input_type != "mouse":
 		is_motion  = true
-		motion_pos = event.position
+		motion_pos = get_global_mouse_position() # FIX: Always global
 
 	if _is_dragging:
 		if is_release:
@@ -326,26 +331,29 @@ func _on_page_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		_is_dragging = event.pressed
 		if event.pressed:
-			_drag_offset = get_global_mouse_position() - global_position
+			_drag_offset = get_global_mouse_position() - global_position 
 	elif event is InputEventScreenTouch:
 		_is_dragging = event.pressed
 		if event.pressed:
-			_drag_offset = event.position - global_position
+			_drag_offset = get_global_mouse_position() - global_position 
 ## ────────────────────── Resizing ──────────────────────
 func _on_handle_input(event: InputEvent, handle: Control) -> void:
 	var is_press  := false
-	var press_pos := Vector2.ZERO
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# Ignore mouse if touch already started the resize
+		if _resize_input_type == "touch": return
 		is_press  = true
-		press_pos = event.global_position
+		_resize_input_type = "mouse"
+
 	elif event is InputEventScreenTouch and event.pressed:
+		if _resize_input_type == "mouse": return
 		is_press  = true
-		press_pos = event.position  # ← correct for mobile
+		_resize_input_type = "touch"
 
 	if is_press:
 		_is_resizing       = true
-		_resize_mouse_orig = press_pos
+		_resize_mouse_orig = get_global_mouse_position() 
 		_resize_rect_orig  = Rect2(global_position, size)
 
 		var n: String = handle.name
@@ -353,13 +361,8 @@ func _on_handle_input(event: InputEvent, handle: Control) -> void:
 			(1 if "E" in n else (-1 if "W" in n else 0)),
 			(1 if "S" in n else (-1 if "N" in n else 0))
 		)
-
-		_active_resize_handle = handle
-		var temp_normal = handle.texture_normal
-		handle.texture_normal  = handle.texture_pressed
-		handle.texture_pressed = temp_normal
-
 		get_viewport().set_input_as_handled()
+
 
 func _apply_resize(mouse_pos: Vector2) -> void:
 	var delta := mouse_pos - _resize_mouse_orig

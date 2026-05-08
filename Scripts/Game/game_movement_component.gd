@@ -1,7 +1,10 @@
 extends Node
 
-const TILE_SIZE:  float = 16.0
-const MOVE_SPEED: float = 120.0
+var TILE_SIZE:  float = 16.0
+var MOVE_SPEED: float = 120.0
+
+const BASE_TILE_SIZE:  float = 16.0
+const BASE_MOVE_SPEED: float = 120.0
 
 enum Direction { RIGHT, LEFT, UP, DOWN }
 
@@ -356,3 +359,7 @@ func queue_action(action: Callable) -> void:
 	_move_queue.append(action)
 	if not _processing:
 		_process_next()
+		
+func apply_world_scale(world_scale: float) -> void:
+	TILE_SIZE  = BASE_TILE_SIZE  * world_scale
+	MOVE_SPEED = BASE_MOVE_SPEED * world_scale

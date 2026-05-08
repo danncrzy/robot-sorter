@@ -96,4 +96,5 @@ func _on_home_pressed() -> void:
 	await tw.finished
 	get_tree().change_scene_to_file("res://Scenes/UI/main_menu.tscn")
 func _on_back_pressed() -> void:
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	close()

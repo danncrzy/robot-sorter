@@ -53,6 +53,7 @@ func populate_scene_tree(node_data: Array) -> void:
 	scene_tree_panel.populate(node_data)
 
 func _on_grid_btn_pressed() -> void:
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	# Toggle state
 	_tile_labels_visible = !_tile_labels_visible
 	_set_tile_labels_visible(_tile_labels_visible)
@@ -79,6 +80,7 @@ func _set_tile_labels_visible(visible: bool) -> void:
 			label.visible = visible
 			
 func _toggle_ui() -> void:
+	AudioManager.play_sfx_random_pitch(preload("res://Assets/Sfx/click_8.ogg"))
 	if not _ui_hidden:
 		# Save current visible state of each node, then hide all
 		_saved_states.clear()

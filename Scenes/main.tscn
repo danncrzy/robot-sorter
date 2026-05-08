@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://dh48nmho3ngk0"]
 
+[ext_resource type="Material" uid="uid://btkbjlfi648df" path="res://Resources/Shader/clouds.tres" id="1_6iyac"]
 [ext_resource type="PackedScene" uid="uid://cmrqrpcyqnwfk" path="res://Scenes/UI/player_hud.tscn" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://m8npayhjqkdn" path="res://Assets/Tile/FactoryWalls.png" id="2_8gbba"]
 [ext_resource type="Shader" uid="uid://dtk4lk3glcwb7" path="res://Shaders/vignette.gdshader" id="2_344ge"]
@@ -357,24 +358,28 @@ animations = [{
 
 [node name="Background" type="ColorRect" parent="." unique_id=1049126244]
 z_index = -2
+material = ExtResource("1_6iyac")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 923.0
-offset_bottom = 364.0
+offset_left = -343.0
+offset_top = 1.0
+offset_right = 943.0
+offset_bottom = 365.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.5803922, 0.70980394, 0.7372549, 1)
 
 [node name="Vignette" type="ColorRect" parent="." unique_id=23877617]
-visible = false
 z_index = -2
 material = SubResource("ShaderMaterial_d1ilt")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 923.0
-offset_bottom = 364.0
+offset_left = -340.0
+offset_top = 1.0
+offset_right = 944.0
+offset_bottom = 365.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.5803922, 0.70980394, 0.7372549, 1)
@@ -470,3 +475,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("12_6iyac")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=152783102]
+position = Vector2(270, 180)

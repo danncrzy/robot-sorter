@@ -1,15 +1,15 @@
 extends Control
 
-@onready var star1          := $StarsContainer/Star
-@onready var star2          := $StarsContainer/Star2
-@onready var star3          := $StarsContainer/Star3
-@onready var comments_label := $StatisticContainer/CommentsLabel as RichTextLabel
-@onready var personal_best  := $StatisticContainer/PersonalBest  as RichTextLabel
-@onready var next_btn       := $NextBtn
-@onready var retry_btn      := $RetryBtn
-@onready var home_btn       := $HomeBtn
+@onready var star1          := $FinishBg/StarsContainer/Star
+@onready var star2          := $FinishBg/StarsContainer/Star2
+@onready var star3          := $FinishBg/StarsContainer/Star3
+@onready var comments_label := $FinishBg/StatisticContainer/CommentsLabel as RichTextLabel
+@onready var personal_best  := $FinishBg/StatisticContainer/PersonalBest  as RichTextLabel
+@onready var next_btn       := $FinishBg/NextBtn
+@onready var retry_btn      := $FinishBg/RetryBtn
+@onready var home_btn       := $FinishBg/HomeBtn
 @onready var finish_bg      := $FinishBg
-@onready var finish_title   := $FinishTttle
+@onready var finish_title   := $FinishBg/FinishTttle
 
 @export var empty_star_texture:  Texture2D = null
 @export var filled_star_texture: Texture2D = null

@@ -73,6 +73,7 @@ var _current_script:    String   = ""
 var _scripts:           Dictionary = {}
 var _editor_open:       bool     = false
 var _force_show_panel:  bool     = false
+var _resize_input_type: String = ""
 
 const SCRIPT_BTN_SCENE: String = "res://Scenes/UI/script_btn.tscn"
 
@@ -127,27 +128,38 @@ func _input(event: InputEvent) -> void:
 
 	var is_release := false
 	var is_motion  := false
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
-		is_release = true
-	elif event is InputEventScreenTouch and not event.pressed:
-		is_release = true
-	elif event is InputEventMouseMotion or event is InputEventScreenDrag:
-		is_motion = true
 
-	if _is_dragging:
-		if is_release:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		if _resize_input_type == "mouse" or _resize_input_type == "":
+			is_release = true
+			_resize_input_type = ""
+		if _is_dragging:
 			_is_dragging = false
-		elif is_motion:
+
+	elif event is InputEventScreenTouch and not event.pressed:
+		if _resize_input_type == "touch" or _resize_input_type == "":
+			is_release = true
+			_resize_input_type = ""
+		if _is_dragging:
+			_is_dragging = false
+
+	elif event is InputEventMouseMotion and _resize_input_type != "touch":
+		is_motion = true
+		if _is_dragging:
+			global_position = get_global_mouse_position() - _drag_offset
+
+	elif event is InputEventScreenDrag and _resize_input_type != "mouse":
+		is_motion = true
+		if _is_dragging:
+			# FIX: Use get_global_mouse_position() to match the offset's coordinate space
 			global_position = get_global_mouse_position() - _drag_offset
 
 	if _is_resizing:
 		if is_release:
 			_is_resizing = false
 		elif is_motion:
-			if event is InputEventScreenDrag:
-				_apply_resize(event.position)
-			else:
-				_apply_resize(get_global_mouse_position())
+			# FIX: Always pass global mouse position for resizing
+			_apply_resize(get_global_mouse_position())
 				
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -361,7 +373,8 @@ func _on_title_bar_gui_input(event: InputEvent) -> void:
 
 	if pressed:
 		_is_dragging = true
-		_drag_offset = get_global_mouse_position() - position
+		# FIX: global - global = accurate offset
+		_drag_offset = get_global_mouse_position() - global_position
 	elif released:
 		_is_dragging = false
 ## ═══════════════════════════════════════════════════════════════
@@ -369,20 +382,23 @@ func _on_title_bar_gui_input(event: InputEvent) -> void:
 ## ═══════════════════════════════════════════════════════════════
 func _on_handle_input(event: InputEvent, handle: Control) -> void:
 	var is_press := false
-	var press_pos := Vector2.ZERO
 
 	if event is InputEventMouseButton \
 	   and event.button_index == MOUSE_BUTTON_LEFT \
 	   and event.pressed:
-		is_press  = true
-		press_pos = event.global_position
+		if _resize_input_type == "touch": return
+		is_press = true
+		_resize_input_type = "mouse"
+
 	elif event is InputEventScreenTouch and event.pressed:
-		is_press  = true
-		press_pos = event.position 
+		if _resize_input_type == "mouse": return
+		is_press = true
+		_resize_input_type = "touch"
 
 	if is_press:
 		_is_resizing       = true
-		_resize_mouse_orig = press_pos  
+		# FIX: Always use global coordinates so it matches the drag coordinates
+		_resize_mouse_orig = get_global_mouse_position()
 		_resize_rect_orig  = Rect2(position, size)
 		var n: String = handle.name
 		_resize_dir = Vector2i(
