@@ -107,7 +107,9 @@
 [ext_resource type="AudioStream" uid="uid://ddxu88mri1uo2" path="res://Assets/Sfx/succes_2.ogg" id="89_te5h3"]
 [ext_resource type="Texture2D" uid="uid://c7aqc43vs70na" path="res://Assets/UI/FinishUI.png" id="90_elakf"]
 [ext_resource type="Script" uid="uid://h4lvlj8lwqq6" path="res://Scripts/Utillity/finish_btn.gd" id="91_e87tu"]
+[ext_resource type="Texture2D" uid="uid://5voc12nwodwk" path="res://Assets/UI/RetryBtn.png" id="107_1fpr8"]
 [ext_resource type="Texture2D" uid="uid://vel7i653676w" path="res://Assets/UI/ResizeBtn.png" id="108_81qgn"]
+[ext_resource type="Texture2D" uid="uid://d3coqwmf8311c" path="res://Assets/UI/RetryBtn_Pressed.png" id="108_qkxor"]
 [ext_resource type="Texture2D" uid="uid://ynqqfa2nr8xl" path="res://Assets/UI/IncreaseBtn.png" id="108_u4qc0"]
 [ext_resource type="Texture2D" uid="uid://bapmrhhlf1g2g" path="res://Assets/UI/IncreaseBtn_Pressed.png" id="109_ncdsw"]
 [ext_resource type="Texture2D" uid="uid://83ipums55tp4" path="res://Assets/UI/ResizeBtn_Pressed.png" id="109_v7pad"]
@@ -1071,9 +1073,9 @@ text = "SELESAI"
 [node name="StarsContainer" type="HBoxContainer" parent="FinishUI/FinishBg" unique_id=1597198229]
 layout_mode = 1
 offset_left = 28.5
-offset_top = 83.5
+offset_top = 67.5
 offset_right = 156.5
-offset_bottom = 123.5
+offset_bottom = 107.5
 
 [node name="Star" type="TextureRect" parent="FinishUI/FinishBg/StarsContainer" unique_id=438651443]
 layout_mode = 2
@@ -1133,15 +1135,15 @@ texture_normal = ExtResource("51_04ph4")
 texture_pressed = ExtResource("52_b1ecp")
 
 [node name="RetryBtn" type="TextureButton" parent="FinishUI/FinishBg" unique_id=1577961248]
-visible = false
 layout_mode = 0
-offset_left = -177.5
-offset_top = -88.5
-offset_right = -137.5
-offset_bottom = -48.5
+offset_left = 76.5
+offset_top = 133.5
+offset_right = 116.5
+offset_bottom = 173.5
+texture_normal = ExtResource("107_1fpr8")
+texture_pressed = ExtResource("108_qkxor")
 
 [node name="FinishBtn" type="Button" parent="." unique_id=1069024105]
-visible = false
 offset_left = 225.0
 offset_right = 293.0
 offset_bottom = 31.0
