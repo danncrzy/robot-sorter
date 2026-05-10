@@ -28,6 +28,7 @@ func grab() -> void:                       ObjectiveTracker.notify_command_execu
 func drop() -> void:                       ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").queue_action(func(): get_node("InteractionComponent").drop())
 func interact() -> void:                   ObjectiveTracker.notify_command_executed(); get_node("MovementComponent").queue_action(func(): get_node("InteractionComponent").interact())
 func is_holding() -> bool:                 return get_node("InteractionComponent").is_holding()
+func set_speed(speed: float) -> void:      get_node("MovementComponent").set_speed(speed)
 """
 
 func _ready() -> void:

@@ -252,6 +252,9 @@ func stop(play_idle: bool = true) -> void:
 	_is_moving  = false
 	_processing = false
 	if play_idle and not _celebrating: _play_anim("Idle")
+	
+func set_speed(speed: float) -> void:
+	MOVE_SPEED = maxf(speed, 1.0)
 
 func turn_left() -> void:
 	if _celebrating: return
@@ -340,7 +343,20 @@ func _facing_vector() -> Vector2i:
 
 func _sync_sprite_flip() -> void:
 	if not _animations: return
-	_animations.flip_h = (_facing == Direction.LEFT)
+	match _facing:
+		Direction.RIGHT:
+			_animations.flip_h = false
+			_play_anim("Idle")
+		Direction.LEFT:
+			_animations.flip_h = true
+			_play_anim("Idle")
+		Direction.DOWN:
+			_animations.flip_h = false
+			_play_anim("Idle_Down")
+		Direction.UP:
+			_animations.flip_h = false
+			_play_anim("Idle_Up")
+
 
 func _set_start(pos: Vector2) -> void:
 	pass

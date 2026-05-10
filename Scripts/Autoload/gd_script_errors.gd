@@ -160,9 +160,25 @@ const BUILTIN_NAMES: Array[String] = [
 	"step_forward", "step_back",
 	"turn_left", "turn_right", "rotate_deg", "face",
 	"is_moving", "get_facing",
-	"grab", "drop", "interact", "is_holding",
+	"grab", "drop", "interact", "is_holding", "set_speed",
 	"reset",
 ]
+
+## ═══════════════════════════════════════════════════════════════
+##  GAME COMMAND DEFINITIONS
+##  name → { min_args, max_args, hint }
+## ═══════════════════════════════════════════════════════════════
+
+const GAME_COMMANDS: Dictionary = {
+	"grab":       { "min": 0, "max": 0, "hint": "grab()"           },
+	"drop":       { "min": 0, "max": 0, "hint": "drop()"           },
+	"move_up":    { "min": 1, "max": 1, "hint": "move_up(langkah)" },
+	"move_down":  { "min": 1, "max": 1, "hint": "move_down(langkah)" },
+	"move_left":  { "min": 1, "max": 1, "hint": "move_left(langkah)" },
+	"move_right": { "min": 1, "max": 1, "hint": "move_right(langkah)" },
+	"move":       { "min": 2, "max": 2, "hint": "move(x, y)"       },
+	"set_speed": { "min": 1, "max": 1, "hint": "set_speed(kecepatan)" },
+}
 
 ## ═══════════════════════════════════════════════════════════════
 ##  DIRTY TOKEN DETECTION
@@ -491,6 +507,55 @@ func check_undeclared(content: String) -> Array:
 				errors.append({ "line": i + 1,
 					"message": '"%s" dideklarasikan di fungsi lain dan tidak bisa digunakan di sini. Deklarasikan ulang dengan "var %s = ..." di dalam fungsi ini, atau jadikan variabel global.' \
 						% [tok, tok] })
+
+	return errors
+	
+func check_game_commands(content: String) -> Array:
+	var errors:    Array  = []
+	var lines             := content.split("\n")
+	var cmd_names: Array  = GAME_COMMANDS.keys()
+
+	for i in lines.size():
+		var raw      := lines[i]
+		var stripped := raw.strip_edges()
+		if stripped == "" or stripped.begins_with("#"): continue
+		if _is_declaration_line(stripped): continue
+
+		var code  := _remove_comment(stripped)
+		var clean := _strip_strings(code)
+
+		for call_info in _extract_calls(clean):
+			var fname: String = call_info["name"]
+			var argc:  int    = call_info["args"]
+
+			# ── Exact match → validate arg count ──────────────────
+			if fname in GAME_COMMANDS:
+				var cmd: Dictionary = GAME_COMMANDS[fname]
+				if argc < cmd["min"]:
+					if cmd["min"] == 1:
+						errors.append({ "line": i + 1,
+							"message": '"%s()" memerlukan 1 parameter berupa jumlah langkah — contoh: %s' \
+								% [fname, cmd["hint"]] })
+					elif cmd["min"] == 2:
+						errors.append({ "line": i + 1,
+							"message": '"%s()" memerlukan 2 parameter (x, y) — contoh: %s' \
+								% [fname, cmd["hint"]] })
+				elif argc > cmd["max"]:
+					errors.append({ "line": i + 1,
+						"message": '"%s()" menerima maksimal %d argumen, tapi %d diberikan — contoh yang benar: %s' \
+							% [fname, cmd["max"], argc, cmd["hint"]] })
+				continue
+
+			# ── Not an exact match — skip if it's a known built-in ─
+			if fname in BUILTIN_NAMES: continue
+			if fname in LINE_KEYWORDS:  continue
+
+			# ── Fuzzy match → typo suggestion ─────────────────────
+			var suggestion := _fuzzy_match(fname, cmd_names, _max_dist(fname))
+			if suggestion != "":
+				errors.append({ "line": i + 1,
+					"message": '"%s()" tidak dikenal sebagai perintah — apakah maksudmu "%s()"?' \
+						% [fname, suggestion] })
 
 	return errors
 
@@ -1128,9 +1193,68 @@ func _is_pascal_case(s: String) -> bool:
 	var c := s[0].unicode_at(0)
 	return c >= 65 and c <= 90
 
+## Count arguments inside a call's parentheses.
+## paren_pos must point at the opening '('.
+## Returns 0 for empty parens, 1+ for actual args.
+func _count_call_args(line: String, paren_pos: int) -> int:
+	var depth := 0
+	var inner := ""
+	var i     := paren_pos
+	while i < line.length():
+		var ch := line[i]
+		if ch == "(":
+			depth += 1
+			if depth > 1:
+				inner += ch
+		elif ch == ")":
+			depth -= 1
+			if depth == 0:
+				break
+			else:
+				inner += ch
+		else:
+			if depth == 1:
+				inner += ch
+		i += 1
+
+	inner = inner.strip_edges()
+	if inner == "": return 0
+
+	var count := 1
+	var d     := 0
+	for ch in inner:
+		if   ch == "(": d += 1
+		elif ch == ")": d -= 1
+		elif ch == "," and d == 0: count += 1
+	return count
+
 func _extract_quoted(msg: String) -> String:
 	var dq_o := msg.find('"');  var dq_c := msg.find('"', dq_o + 1)
 	if dq_o != -1 and dq_c != -1: return msg.substr(dq_o + 1, dq_c - dq_o - 1)
 	var sq_o := msg.find("'");  var sq_c := msg.find("'", sq_o + 1)
 	if sq_o != -1 and sq_c != -1: return msg.substr(sq_o + 1, sq_c - sq_o - 1)
 	return msg
+	
+## Extract all bare function calls from a (string-stripped) code line.
+## Returns: Array of { name: String, args: int }
+func _extract_calls(line: String) -> Array:
+	var calls: Array = []
+	var i := 0
+	while i < line.length():
+		if not _is_word_char_code(line[i].unicode_at(0)):
+			i += 1; continue
+
+		# Read the identifier
+		var j := i; var name := ""
+		while j < line.length() and _is_word_char_code(line[j].unicode_at(0)):
+			name += line[j]; j += 1
+
+		# Skip spaces between name and '('
+		while j < line.length() and line[j] == " ": j += 1
+
+		# Only care about calls (name immediately followed by '(')
+		if j < line.length() and line[j] == "(":
+			calls.append({ "name": name, "args": _count_call_args(line, j) })
+
+		i = j if j > i else i + 1
+	return calls

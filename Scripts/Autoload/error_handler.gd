@@ -71,6 +71,15 @@ func _run_check() -> void:
 		var line: int = e.get("line", 1)
 		if not _line_reported(errors, line):   # don't double-report same line
 			errors.append({ "line": line, "message": e.get("message", "") })
+			
+# ── PASS 0.7  Game command check ─────────────────────────────────────────
+	# Catches: move_down() missing step arg, grab(1) extra arg,
+	#          move_rigth() typo → move_right() suggestion.
+	var cmd_errors := GDScriptErrors.check_game_commands(content)
+	for e in cmd_errors:
+		var line: int = e.get("line", 1)
+		if not _line_reported(errors, line):
+			errors.append({ "line": line, "message": e.get("message", "") })
 
 	# ── PASS 1  Structural parse ──────────────────────────────────────────────
 	# Catches: unmatched quotes/brackets, missing colons, unclosed parens,

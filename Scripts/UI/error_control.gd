@@ -9,8 +9,8 @@ const LINE_HL_COLOR := Color(0.8,  0.0,  0.0,  0.18)
 
 const PADDING := Vector2(10.0, 8.0)
 const LINE_HEIGHT := 10.0       # Height per line of text
-const MIN_LINES := 2        # Minimum lines to show
-const MAX_LINES := 12     # Maximum lines before scrolling
+const MIN_LINES := 3       # Minimum lines to show
+const MAX_LINES := 14    # Maximum lines before scrolling
 
 var _highlighted_lines: Array[int] = []
 var _code_edit: CodeEdit = null

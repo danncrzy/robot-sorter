@@ -118,6 +118,10 @@ region = Rect2(342, 0, 18, 32)
 atlas = ExtResource("5_kry3j")
 region = Rect2(360, 0, 18, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_hdf80"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(90, 0, 18, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_6vcvc"]
 atlas = ExtResource("5_kry3j")
 region = Rect2(306, 0, 18, 32)
@@ -125,6 +129,10 @@ region = Rect2(306, 0, 18, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_7k868"]
 atlas = ExtResource("5_kry3j")
 region = Rect2(324, 0, 18, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8cuat"]
+atlas = ExtResource("5_kry3j")
+region = Rect2(180, 0, 18, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hpc6h"]
 atlas = ExtResource("5_kry3j")
@@ -146,10 +154,6 @@ region = Rect2(54, 0, 18, 32)
 atlas = ExtResource("5_kry3j")
 region = Rect2(72, 0, 18, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hdf80"]
-atlas = ExtResource("5_kry3j")
-region = Rect2(90, 0, 18, 32)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_jwpg7"]
 atlas = ExtResource("5_kry3j")
 region = Rect2(108, 0, 18, 32)
@@ -165,10 +169,6 @@ region = Rect2(144, 0, 18, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqgau"]
 atlas = ExtResource("5_kry3j")
 region = Rect2(162, 0, 18, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8cuat"]
-atlas = ExtResource("5_kry3j")
-region = Rect2(180, 0, 18, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o1aky"]
 atlas = ExtResource("5_kry3j")
@@ -283,6 +283,14 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hdf80")
+}],
+"loop": true,
+"name": &"Idle_Down",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 2.0,
 "texture": SubResource("AtlasTexture_6vcvc")
 }, {
@@ -291,6 +299,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"Idle_Tired",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8cuat")
+}],
+"loop": true,
+"name": &"Idle_Up",
 "speed": 5.0
 }, {
 "frames": [{
@@ -450,8 +466,7 @@ debug_color = Color(0.93727916, 0.8053439, 0, 0.41960785)
 [node name="PlayerAnimations" type="AnimatedSprite2D" parent="GameNodes/Main/Player" unique_id=306957809]
 position = Vector2(230, 105)
 sprite_frames = SubResource("SpriteFrames_344ge")
-animation = &"Carry_Green_Down"
-frame_progress = 0.56276596
+animation = &"Walk_Down"
 
 [node name="PlayerArea" type="Area2D" parent="GameNodes/Main/Player" unique_id=1930996499]
 

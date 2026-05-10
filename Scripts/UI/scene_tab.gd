@@ -8,6 +8,7 @@ const ICON_DEFAULT = preload("res://Assets/Icons/IconNode.png")
 const ICON_TILEMAPLAYER = preload("res://Assets/Icons/TileMapLayer.png")
 const ICON_TEXTURERECT = preload("res://Assets/Icons/TextureRect.png")
 const ICON_ANIMATEDSPRITE2D = preload("res://Assets/Icons/AnimatedSprite2D.png")
+const ICON_COLLISIONSHAPE2D = preload("res://Assets/Icons/CollisionShape2D.png")
 
 const BASE_INDENT: float = 10.0 # Pixels to indent per depth level
 
@@ -144,6 +145,8 @@ func set_data(data: Dictionary) -> void:
 			node_icon.texture = ICON_TEXTURERECT
 		"AnimatedSprite2D":
 			node_icon.texture = ICON_ANIMATEDSPRITE2D
+		"CollisionShape2D":
+			node_icon.texture = ICON_COLLISIONSHAPE2D
 		_:
 			node_icon.texture = ICON_DEFAULT
 

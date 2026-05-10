@@ -1,6 +1,23 @@
 # res://Scripts/Autoload/game_docs.gd
 extends Node
 
+# ── BBCode color helpers ───────────────────────────────────────
+# KW  = keyword    (func, for, if, else, return, var)
+# FN  = function   (method name)
+# PM  = parameter  (numbers, values, strings)
+# TP  = type       (void, bool, int, String)
+# CM  = comment    (# ...)
+# OP  = operator   ((), ->, :, ==, etc.)
+# TX  = plain text
+
+const KW := "[color=#c45c6a][b]%s[/b][/color]"
+const FN := "[color=#263f71]%s[/color]"
+const PM := "[color=#2f9755]%s[/color]"
+const TP := "[color=#2f9755]%s[/color]"
+const CM := "[color=#90A4AE]%s[/color]"
+const OP := "[color=#E8F4F8]%s[/color]"
+const ST := "[color=#b67435]\"%s\"[/color]"   # string literal
+
 var pages: Array[Dictionary] = [
 	# ── 0. Daftar Isi ─────────────────────────────────────────
 	{
@@ -16,16 +33,16 @@ var pages: Array[Dictionary] = [
 		"title": "Pembukaan",
 		"content": """Selamat datang di Game ini.
 
-Buku ini berisi  seluruh informasi penting mengenai game ini, buka ketika kamu sedang bingung atau tersesat.
-Setiap perintah memiliki parameter dan cara kerjanya masing masing, pelajari baik-baik.
+Buku ini berisi seluruh informasi penting mengenai game ini, buka ketika kamu sedang bingung atau tersesat.
+Setiap perintah memiliki parameter dan cara kerjanya masing-masing, pelajari baik-baik.
 
-Semua perintah ditulis di dalam fungsi run().
-Tekan Play untuk menjalankan kode.
-Tekan Reset jika bot tidak sesuai harapan.
+Semua perintah ditulis di dalam fungsi [color=#c45c6a][b]run()[/b][/color].
+Tekan [b]Play[/b] untuk menjalankan kode.
+Tekan [b]Reset[/b] jika bot tidak sesuai harapan.
 
 Selamat Bersenang-senang ^^
 
-— @Muhammad Zaidan Abdi Fairus""",
+[color=#90A4AE]— @Muhammad Zaidan Abdi Fairus[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
@@ -34,21 +51,21 @@ Selamat Bersenang-senang ^^
 	# ── 2. Memulai ─────────────────────────────────────────────
 	{
 		"title": "Memulai",
-		"content": """Satu-satunya tempat kamu menulis kode adalah di dalam fungsi run().
+		"content": """Satu-satunya tempat kamu menulis kode adalah di dalam fungsi [color=#c45c6a][b]run()[/b][/color].
 
-func run():
-    # tulis perintahmu di sini
+[color=#c45c6a][b]func[/b][/color] [color=#4ef3e1]run[/color][color=#E8F4F8]():[/color]
+    [color=#90A4AE]# tulis perintahmu di sini[/color]
 
-Kode dijalankan dari atas ke bawah, baris per baris.
-Bot akan menyelesaikan setiap perintah sebelum lanjut ke perintah berikutnya.
+Kode dijalankan dari [b]atas ke bawah[/b], baris per baris.
+Bot akan menyelesaikan setiap perintah sebelum lanjut ke berikutnya.
 
 Contoh paling sederhana:
 
-func run():
-    move_right(3)
-    grab()
+[color=#c45c6a][b]func[/b][/color] [color=#4ef3e1]run[/color][color=#E8F4F8]():[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8])[/color]
+    [color=#263f71]grab[/color][color=#E8F4F8]()[/color]
 
-Bot akan bergerak 3 langkah ke kanan, lalu mengambil kotak di depannya.""",
+Bot akan bergerak [b]3 langkah ke kanan[/b], lalu [b]mengambil kotak[/b] di depannya.""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
@@ -56,8 +73,8 @@ Bot akan bergerak 3 langkah ke kanan, lalu mengambil kotak di depannya.""",
 
 	# ── 3. Pergerakan ──────────────────────────────────────────
 	{
-		"title":       "Pergerakan",
-		"content":     "Perintah untuk menggerakkan SOR-BOT di atas grid.",
+		"title":   "Pergerakan",
+		"content": "Perintah untuk menggerakkan SOR-BOT di atas grid.",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
@@ -66,13 +83,13 @@ Bot akan bergerak 3 langkah ke kanan, lalu mengambil kotak di depannya.""",
 		"title": "move_right / move_left / move_up / move_down",
 		"content": """Gerakkan bot ke arah tertentu.
 
-move_right()      → 1 langkah ke kanan
-move_right(4)     → 4 langkah ke kanan
-move_left(2)      → 2 langkah ke kiri
-move_up()         → 1 langkah ke atas
-move_down(3)      → 3 langkah ke bawah
+[color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]1[/color][color=#E8F4F8])[/color]   [color=#90A4AE]→ 1 langkah ke kanan[/color]
+[color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]4[/color][color=#E8F4F8])[/color]   [color=#90A4AE]→ 4 langkah ke kanan[/color]
+[color=#263f71]move_left[/color][color=#E8F4F8]([/color][color=#2f9755]2[/color][color=#E8F4F8])[/color]    [color=#90A4AE]→ 2 langkah ke kiri[/color]
+[color=#263f71]move_up[/color][color=#E8F4F8]([/color][color=#2f9755]1[/color][color=#E8F4F8])[/color]      [color=#90A4AE]→ 1 langkah ke atas[/color]
+[color=#263f71]move_down[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8])[/color]    [color=#90A4AE]→ 3 langkah ke bawah[/color]
 
-Parameter steps bersifat opsional. Tanpa angka = 1 langkah.""",
+Parameter [color=#2f9755]steps[/color] wajib diisi dengan jumlah langkah.""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -81,24 +98,12 @@ Parameter steps bersifat opsional. Tanpa angka = 1 langkah.""",
 		"title": "move(x, y)",
 		"content": """Gerakkan bot berdasarkan koordinat relatif.
 
-move(3, 0)    → 3 langkah ke kanan
-move(0, -2)   → 2 langkah ke atas
-move(-1, 0)   → 1 langkah ke kiri
-move(0, 4)    → 4 langkah ke bawah
+[color=#263f71]move[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8], [/color][color=#2f9755]0[/color][color=#E8F4F8])[/color]    [color=#90A4AE]→ 3 langkah ke kanan[/color]
+[color=#263f71]move[/color][color=#E8F4F8]([/color][color=#2f9755]0[/color][color=#E8F4F8], [/color][color=#2f9755]-2[/color][color=#E8F4F8])[/color]   [color=#90A4AE]→ 2 langkah ke atas[/color]
+[color=#263f71]move[/color][color=#E8F4F8]([/color][color=#2f9755]-1[/color][color=#E8F4F8], [/color][color=#2f9755]0[/color][color=#E8F4F8])[/color]   [color=#90A4AE]→ 1 langkah ke kiri[/color]
+[color=#263f71]move[/color][color=#E8F4F8]([/color][color=#2f9755]0[/color][color=#E8F4F8], [/color][color=#2f9755]4[/color][color=#E8F4F8])[/color]    [color=#90A4AE]→ 4 langkah ke bawah[/color]
 
-Catatan: x positif = kanan, y positif = bawah.""",
-		"is_toc":      false,
-		"toc_visible": true,
-		"toc_indent":  1
-	},
-	{
-		"title": "move_to(x, y)",
-		"content": """Pindahkan bot langsung ke koordinat tertentu di grid.
-
-move_to(5, 3)   → pindah ke posisi (5, 3)
-move_to(1, 1)   → kembali ke pojok kiri atas
-
-Koordinat dilihat dari label pada grid di layar.""",
+[color=#2f9755]x[/color] positif = kanan, [color=#2f9755]y[/color] positif = bawah.""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -107,21 +112,10 @@ Koordinat dilihat dari label pada grid di layar.""",
 		"title": "step_forward / step_back",
 		"content": """Maju atau mundur 1 langkah sesuai arah hadap bot saat ini.
 
-step_forward()   → maju 1 langkah
-step_back()      → mundur 1 langkah
+[color=#263f71]step_forward[/color][color=#E8F4F8]()[/color]   [color=#90A4AE]→ maju 1 langkah[/color]
+[color=#263f71]step_back[/color][color=#E8F4F8]()[/color]      [color=#90A4AE]→ mundur 1 langkah[/color]
 
-Berguna jika kamu sudah mengatur arah bot dengan turn atau face.""",
-		"is_toc":      false,
-		"toc_visible": true,
-		"toc_indent":  1
-	},
-	{
-		"title": "stop()",
-		"content": """Hentikan semua pergerakan bot secara instan.
-
-stop()
-
-Semua antrian gerak dibatalkan. Bot berhenti di posisinya.""",
+Berguna jika kamu sudah mengatur arah bot dengan [color=#263f71]face()[/color].""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -129,47 +123,22 @@ Semua antrian gerak dibatalkan. Bot berhenti di posisinya.""",
 
 	# ── 4. Arah ────────────────────────────────────────────────
 	{
-		"title":       "Arah",
-		"content":     "Perintah untuk mengubah arah hadap bot.",
+		"title":   "Arah",
+		"content": "Perintah untuk mengubah arah hadap bot.",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
 	},
 	{
-		"title": "turn_left / turn_right",
-		"content": """Putar bot 90 derajat tanpa bergerak.
-
-turn_left()    → putar ke kiri
-turn_right()   → putar ke kanan
-
-Contoh: bot menghadap kanan → turn_left() → kini menghadap atas.""",
-		"is_toc":      false,
-		"toc_visible": true,
-		"toc_indent":  1
-	},
-	{
 		"title": "face(arah)",
 		"content": """Hadapkan bot langsung ke arah tertentu.
 
-face(\"right\")   → hadap kanan
-face(\"left\")    → hadap kiri
-face(\"up\")      → hadap atas
-face(\"down\")    → hadap bawah
+[color=#263f71]face[/color][color=#E8F4F8]([/color][color=#b67435]"right"[/color][color=#E8F4F8])[/color]   [color=#90A4AE]→ hadap kanan[/color]
+[color=#263f71]face[/color][color=#E8F4F8]([/color][color=#b67435]"left"[/color][color=#E8F4F8])[/color]    [color=#90A4AE]→ hadap kiri[/color]
+[color=#263f71]face[/color][color=#E8F4F8]([/color][color=#b67435]"up"[/color][color=#E8F4F8])[/color]      [color=#90A4AE]→ hadap atas[/color]
+[color=#263f71]face[/color][color=#E8F4F8]([/color][color=#b67435]"down"[/color][color=#E8F4F8])[/color]    [color=#90A4AE]→ hadap bawah[/color]
 
 Lebih cepat dari turn jika arah tujuan jauh dari arah saat ini.""",
-		"is_toc":      false,
-		"toc_visible": true,
-		"toc_indent":  1
-	},
-	{
-		"title": "rotate_deg(derajat)",
-		"content": """Putar bot sejumlah derajat.
-
-rotate_deg(90)    → putar 90° ke kanan
-rotate_deg(-90)   → putar 90° ke kiri
-rotate_deg(180)   → balik arah
-
-Gunakan kelipatan 90 agar hasilnya tepat.""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -177,21 +146,20 @@ Gunakan kelipatan 90 agar hasilnya tepat.""",
 
 	# ── 5. Interaksi ───────────────────────────────────────────
 	{
-		"title":       "Interaksi",
-		"content":     "Perintah untuk mengambil dan meletakkan kotak.",
+		"title":   "Interaksi",
+		"content": "Perintah untuk mengambil dan meletakkan kotak.",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
 	},
 	{
 		"title": "grab()",
-		"content": """Ambil kotak yang berada di depan bot.
+		"content": """Ambil kotak yang berada di dekat bot.
 
-grab()
+[color=#263f71]grab[/color][color=#E8F4F8]()[/color]
 
-Bot harus menghadap ke arah kotak.
-Bot hanya bisa memegang satu kotak dalam satu waktu.
-Jika sudah memegang kotak, grab() tidak akan bekerja.""",
+Bot hanya bisa memegang [b]satu kotak[/b] dalam satu waktu.
+Jika sudah memegang kotak, [color=#263f71]grab()[/color] tidak akan bekerja.""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -200,22 +168,10 @@ Jika sudah memegang kotak, grab() tidak akan bekerja.""",
 		"title": "drop()",
 		"content": """Letakkan kotak yang sedang dipegang.
 
-drop()
+[color=#263f71]drop[/color][color=#E8F4F8]()[/color]
 
-Jika bot berada di dekat rak yang tepat, kotak akan tersimpan di rak.
+Jika bot berada di dekat rak yang tepat, kotak akan [b]tersimpan di rak[/b].
 Jika tidak, kotak dijatuhkan di lantai.""",
-		"is_toc":      false,
-		"toc_visible": true,
-		"toc_indent":  1
-	},
-	{
-		"title": "interact()",
-		"content": """Berinteraksi dengan objek di depan bot.
-
-interact()
-
-Digunakan untuk menekan tombol, membuka pintu, atau
-mengaktifkan mesin tertentu di level.""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -223,8 +179,8 @@ mengaktifkan mesin tertentu di level.""",
 
 	# ── 6. Pengecekan ──────────────────────────────────────────
 	{
-		"title":       "Pengecekan",
-		"content":     "Perintah untuk mengecek status bot. Digunakan bersama if.",
+		"title":   "Pengecekan",
+		"content": "Perintah untuk mengecek status bot. Digunakan bersama [color=#c45c6a][b]if[/b][/color].",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
@@ -233,13 +189,12 @@ mengaktifkan mesin tertentu di level.""",
 		"title": "is_holding()",
 		"content": """Cek apakah bot sedang memegang kotak.
 
-Mengembalikan: true atau false
+Mengembalikan: [color=#2f9755]true[/color] atau [color=#2f9755]false[/color]
 
-Contoh penggunaan:
-if is_holding():
-    drop()
-else:
-	grab()""",
+[color=#c45c6a][b]if[/b][/color] [color=#263f71]is_holding[/color][color=#E8F4F8]():[/color]
+    [color=#263f71]drop[/color][color=#E8F4F8]()[/color]
+[color=#c45c6a][b]else[/b][/color][color=#E8F4F8]:[/color]
+	[color=#263f71]grab[/color][color=#E8F4F8]()[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -248,24 +203,10 @@ else:
 		"title": "get_facing()",
 		"content": """Cek arah hadap bot saat ini.
 
-Mengembalikan: \"right\", \"left\", \"up\", atau \"down\"
+Mengembalikan: [color=#b67435]"right"[/color], [color=#b67435]"left"[/color], [color=#b67435]"up"[/color], atau [color=#b67435]"down"[/color]
 
-Contoh penggunaan:
-if get_facing() == \"right\":
-	step_forward()""",
-		"is_toc":      false,
-		"toc_visible": true,
-		"toc_indent":  1
-	},
-	{
-		"title": "is_moving()",
-		"content": """Cek apakah bot sedang bergerak.
-
-Mengembalikan: true atau false
-
-Contoh penggunaan:
-if not is_moving():
-	grab()""",
+[color=#c45c6a][b]if[/b][/color] [color=#263f71]get_facing[/color][color=#E8F4F8]() == [/color][color=#b67435]"right"[/color][color=#E8F4F8]:[/color]
+	[color=#263f71]step_forward[/color][color=#E8F4F8]()[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -274,12 +215,11 @@ if not is_moving():
 		"title": "get_grid_position()",
 		"content": """Dapatkan posisi bot di atas grid.
 
-Mengembalikan: koordinat (x, y)
+Mengembalikan: koordinat [color=#2f9755](x, y)[/color]
 
-Contoh penggunaan:
-var pos = get_grid_position()
-if pos.x == 5:
-	stop()""",
+[color=#c45c6a][b]var[/b][/color] [color=#E8F4F8]pos = [/color][color=#263f71]get_grid_position[/color][color=#E8F4F8]()[/color]
+[color=#c45c6a][b]if[/b][/color] [color=#E8F4F8]pos.x == [/color][color=#2f9755]5[/color][color=#E8F4F8]:[/color]
+	[color=#263f71]grab[/color][color=#E8F4F8]()[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -287,8 +227,8 @@ if pos.x == 5:
 
 	# ── 7. Perulangan ──────────────────────────────────────────
 	{
-		"title":       "Perulangan",
-		"content":     "Mengulang perintah tanpa menulis kode yang sama berkali-kali.",
+		"title":   "Perulangan",
+		"content": "Mengulang perintah tanpa menulis kode yang sama berkali-kali.",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
@@ -297,19 +237,17 @@ if pos.x == 5:
 		"title": "for (ulang sejumlah kali)",
 		"content": """Ulangi kode sebanyak angka yang ditentukan.
 
-for i in range(5):
-    move_right()
+[color=#c45c6a][b]for[/b][/color] [color=#E8F4F8]i [/color][color=#c45c6a][b]in[/b][/color] [color=#263f71]range[/color][color=#E8F4F8]([/color][color=#2f9755]5[/color][color=#E8F4F8]):[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]1[/color][color=#E8F4F8])[/color]
 
-Bot akan bergerak kanan sebanyak 5 kali.
-
-range(n) menghasilkan angka dari 0 sampai n-1.
-Variabel i bisa diabaikan jika tidak dipakai.
+Bot akan bergerak kanan sebanyak [color=#2f9755]5[/color] kali.
+[color=#263f71]range[/color][color=#E8F4F8]([/color][color=#2f9755]n[/color][color=#E8F4F8])[/color] menghasilkan angka dari [color=#2f9755]0[/color] sampai [color=#2f9755]n-1[/color].
 
 Contoh lain:
-for i in range(3):
-    grab()
-    move_right()
-	drop()""",
+[color=#c45c6a][b]for[/b][/color] [color=#E8F4F8]i [/color][color=#c45c6a][b]in[/b][/color] [color=#263f71]range[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8]):[/color]
+    [color=#263f71]grab[/color][color=#E8F4F8]()[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]1[/color][color=#E8F4F8])[/color]
+	[color=#263f71]drop[/color][color=#E8F4F8]()[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -318,19 +256,19 @@ for i in range(3):
 		"title": "Kondisi (if / else)",
 		"content": """Jalankan kode hanya jika kondisi terpenuhi.
 
-if is_holding():
-    drop()
+[color=#c45c6a][b]if[/b][/color] [color=#263f71]is_holding[/color][color=#E8F4F8]():[/color]
+    [color=#263f71]drop[/color][color=#E8F4F8]()[/color]
 
-if get_facing() == \"right\":
-    move_right()
-else:
-    face(\"right\")
+[color=#c45c6a][b]if[/b][/color] [color=#263f71]get_facing[/color][color=#E8F4F8]() == [/color][color=#b67435]"right"[/color][color=#E8F4F8]:[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]1[/color][color=#E8F4F8])[/color]
+[color=#c45c6a][b]else[/b][/color][color=#E8F4F8]:[/color]
+    [color=#263f71]face[/color][color=#E8F4F8]([/color][color=#b67435]"right"[/color][color=#E8F4F8])[/color]
 
 Operator yang bisa digunakan:
-  ==   sama dengan
-  !=   tidak sama dengan
-  >    lebih besar dari
-  <    lebih kecil dari""",
+  [color=#E8F4F8]==[/color]   sama dengan
+  [color=#E8F4F8]!=[/color]   tidak sama dengan
+  [color=#E8F4F8]>[/color]    lebih besar dari
+  [color=#E8F4F8]<[/color]    lebih kecil dari""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
@@ -338,53 +276,52 @@ Operator yang bisa digunakan:
 
 	# ── 8. Contoh Program ──────────────────────────────────────
 	{
-		"title":       "Contoh Program",
-		"content":     "Kode siap pakai untuk berbagai situasi.",
+		"title":   "Contoh Program",
+		"content": "Kode siap pakai untuk berbagai situasi.",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  0
 	},
 	{
 		"title": "Ambil kotak lalu taruh di rak",
-		"content": """func run():
-    move_right(3)
-    grab()
-    move_right(2)
-	drop()""",
+		"content": """[color=#c45c6a][b]func[/b][/color] [color=#4ef3e1]run[/color][color=#E8F4F8]():[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8])[/color]
+    [color=#263f71]grab[/color][color=#E8F4F8]()[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]2[/color][color=#E8F4F8])[/color]
+	[color=#263f71]drop[/color][color=#E8F4F8]()[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
 	},
 	{
-		"title": "Ambil 5 kotak berjajar",
-		"content": """func run():
-    for i in range(5):
-        grab()
-        move_right()
+		"title": "Ambil 3 kotak berjajar",
+		"content": """[color=#c45c6a][b]func[/b][/color] [color=#4ef3e1]run[/color][color=#E8F4F8]():[/color]
+    [color=#c45c6a][b]for[/b][/color] [color=#E8F4F8]i [/color][color=#c45c6a][b]in[/b][/color] [color=#263f71]range[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8]):[/color]
+        [color=#263f71]grab[/color][color=#E8F4F8]()[/color]
+        [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]1[/color][color=#E8F4F8])[/color]
 
-Bot mengambil kotak lalu bergeser kanan sebanyak 5 kali.""",
+[color=#90A4AE]# Bot mengambil kotak lalu bergeser kanan sebanyak 3 kali.[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
 	},
 	{
 		"title": "Jelajahi pola U",
-		"content": """func run():
-    move_right(3)
-    move_down(2)
-	move_left(3)""",
+		"content": """[color=#c45c6a][b]func[/b][/color] [color=#4ef3e1]run[/color][color=#E8F4F8]():[/color]
+    [color=#263f71]move_right[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8])[/color]
+    [color=#263f71]move_down[/color][color=#E8F4F8]([/color][color=#2f9755]2[/color][color=#E8F4F8])[/color]
+	[color=#263f71]move_left[/color][color=#E8F4F8]([/color][color=#2f9755]3[/color][color=#E8F4F8])[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1
 	},
 	{
 		"title": "Cek sebelum ambil",
-		"content": """func run():
-    if not is_holding():
-        grab()
-    move_to(8, 4)
-    if is_holding():
-		drop()""",
+		"content": """[color=#c45c6a][b]func[/b][/color] [color=#4ef3e1]run[/color][color=#E8F4F8]():[/color]
+    [color=#c45c6a][b]if[/b][/color] [color=#c45c6a][b]not[/b][/color] [color=#263f71]is_holding[/color][color=#E8F4F8]():[/color]
+        [color=#263f71]grab[/color][color=#E8F4F8]()[/color]
+    [color=#c45c6a][b]if[/b][/color] [color=#263f71]is_holding[/color][color=#E8F4F8]():[/color]
+		[color=#263f71]drop[/color][color=#E8F4F8]()[/color]""",
 		"is_toc":      false,
 		"toc_visible": true,
 		"toc_indent":  1

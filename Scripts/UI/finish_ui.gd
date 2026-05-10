@@ -149,7 +149,8 @@ func _on_next_btn() -> void:
 	_play_sfx(click_sound)
 	var next_index := LevelManager.current_level_index + 1
 	if next_index < LevelManager.level_resources.size():
-		LevelManager.current_level = LevelManager.level_resources[next_index]
+		LevelManager.current_level_index = next_index
+		LevelManager.current_level       = LevelManager.level_resources[next_index]
 		get_tree().change_scene_to_file("res://Scenes/main.tscn")
 
 func _on_retry_btn() -> void:
